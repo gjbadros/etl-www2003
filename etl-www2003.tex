@@ -607,49 +607,6 @@ and the nodes in the resulting node set are serialized in turn to
 generate the resulting single string.
 
 
-\subsection{Template overriding \& brand profiles}
-\label{ssec-template-dispatch}
-
-Requests made of the ETL server always have an associated abstract
-``brand''.  The brand can be explicitly specified as part of the URI
-itself, or can be implicit based on the \smtexttt{Hostname} header of
-the HTTP request (e.g., when multiple hostnames or domains refer to
-the same server).  That brand identifies the customer for whom ETLS is
-generating the page.\footnote{This branding feature is heavily
-influenced by InfoSpace's business model of building a site once and
-customizing it often for different partners.}  The brand is used for
-two primary purposes.  First, it is used as a means of populating a
-dictionary of configuration variables over which templates may be
-parameterized.  Second, it is used to to select which template is
-invoked for the initial processing of a request and whenever the
-\smtexttt{bl:call} primitive is used to execute another template as a
-subroutine.
-
-\gjb{explain building of brand profile dictionary and
-bl:call, template resolution order.  Probably need a figure of a
-directory tree to support this and the next section.  Give analogy to
-OO programming languages as the brand being an implicit receiver
-object.}
-
-\subsection{I18N \& Localization}
-\label{ssec-localization}
-
-To support internationalization of templates, developers can choose to
-use the \smtexttt{bl:tt} (token translation) primitive in all places
-where literal text would appear.  For example, instead of writing
-\smtexttt{Hello <bl:get var="name"/>}, a properly internationalized
-template might read \smtexttt{<bl:tt id="greeting1">Hello</bl:tt>
-<bl:get var="name"/>}. Each template has a corresponding dictionary of
-token-translation definitions for the various locales that have been
-defined.  Based on the request's locale selection (either from a
-stylized URL or the \smtexttt{Accepts-language} header), the
-appropriate dictionary is used to replace each \smtexttt{bl:tt} use
-with the XML document fragment to which the given identifier maps.
-
-\gjb{clarify ordering.  Footnote that this is not yet
-implemented this way?  I need to find the right place to give that
-caveat more globally.}
-
 \subsection{Transformers \& formatters}
 \label{ssec-transformers}
 
@@ -702,26 +659,98 @@ transformation file.   The events will be used to directly construct a
 DOM tree that is then transformed via the named stylesheet, letting the
 stylesheet generate the formatter's response string.
 
-\subsection{Comments}
 
-For templating languages that generate markup, there are two very
-different classes of comments we must consider: 1) traditional
-comments intended for the developers never to be part of the generated
-output; and 2) target-language markup comments that are intended to be
-sent over the wire as part of the response document.  The first
-category of comments are created as simple XML comments using the
-\smtexttt{<!-- .... -->} syntax, while the comments intended for the
-response are constructed using the \smtexttt{bl:comment} primitive.
-For example:
+\subsection{Literal markup}
+\label{ssec-literal-markup}
 
-\begin{smallverbatim}
-<!-- This comment is not seen by end user -->
-<bl:comment> 
-This text gets copied into the response 
-document inside of &lt;!-- .. --&gt; delimiters.
-</bl:comment>
-\end{smallverbatim}
+\gjb{write this section!}
 
+** conditional tags
+
+** at:*
+
+** ?foo syntax, explain the tradeoff here
+
+** building URIs
+
+Markup comments fall into two categories: 1) traditional comments
+intended for the developers never to be part of the generated output;
+and 2) target-language markup comments that are intended to be sent
+over the wire as part of the response document.  Similar to XSLT, the
+former are written as simple XML comments using the \smtexttt{<!--
+... -->} syntax, while comments intended for the response are
+constructed using the \smtexttt{bl:comment} primitive.
+
+%For example:
+%\begin{smallverbatim}
+%<!-- This comment is not seen by end user -->
+%<bl:comment> 
+%This text gets copied into the response 
+%document inside of &lt;!-- .. --&gt; delimiters.
+%</bl:comment>
+%\end{smallverbatim}
+
+\subsection{Control flow}
+\label{ssec-control}
+
+\gjb{write this section!}
+
+** bl:if, with lots of slots to avoid a domain specific language
+(ignore the fact that we have gotos and labels)
+
+** bl:choose/bl:when/bl:otherwise
+
+\subsubsection{Exception handling}
+
+** bl:try/bl:catch/bl:finally and bl:throw
+
+\subsubsection{Remote invocation}
+
+** HTTP GET/POST
+
+** ws-call
+
+\subsubsection{Template selection}
+
+Requests made of the ETL server always have an associated abstract
+``brand''.  The brand can be explicitly specified as part of the URI
+itself, or can be implicit based on the \smtexttt{Hostname} header of
+the HTTP request (e.g., when multiple hostnames or domains refer to
+the same server).  That brand identifies the customer for whom ETLS is
+generating the page.\footnote{This branding feature is heavily
+influenced by InfoSpace's business model of building a site once and
+customizing it often for different partners.}  The brand is used for
+two primary purposes.  First, it is used as a means of populating a
+dictionary of configuration variables over which templates may be
+parameterized.  Second, it is used to to select which template is
+invoked for the initial processing of a request and whenever the
+\smtexttt{bl:call} primitive is used to execute another template as a
+subroutine.
+
+\gjb{explain building of brand profile dictionary and
+bl:call, template resolution order.  Probably need a figure of a
+directory tree to support this and the next section.  Give analogy to
+OO programming languages as the brand being an implicit receiver
+object.}
+
+\subsection{I18N \& Localization}
+\label{ssec-localization}
+
+To support internationalization of templates, developers can choose to
+use the \smtexttt{bl:tt} (token translation) primitive in all places
+where literal text would appear.  For example, instead of writing
+\smtexttt{Hello <bl:get var="name"/>}, a properly internationalized
+template might read \smtexttt{<bl:tt id="greeting1">Hello</bl:tt>
+<bl:get var="name"/>}. Each template has a corresponding dictionary of
+token-translation definitions for the various locales that have been
+defined.  Based on the request's locale selection (either from a
+stylized URL or the \smtexttt{Accepts-language} header), the
+appropriate dictionary is used to replace each \smtexttt{bl:tt} use
+with the XML document fragment to which the given identifier maps.
+
+\gjb{clarify ordering.  Footnote that this is not yet
+implemented this way?  I need to find the right place to give that
+caveat more globally.}
 
 \subsection{Controlling whitespace}
 
@@ -776,31 +805,6 @@ Importantly, these whitespace rules are statically-scoped: a called
 template is not impacted by a calling template's attribute
 annotations.
 
-\subsection{Literal markup}
-\label{ssec-literal-markup}
-
-\gjb{write this section!}
-
-** conditional tags
-
-** at:*
-
-** ?foo syntax, explain the tradeoff here
-
-** building URIs
-
-\subsection{Control constructs}
-\label{ssec-control}
-
-\gjb{write this section!}
-
-** bl:if, with lots of slots to avoid a domain specific language
-(ignore the fact that we have gotos and labels)
-
-** bl:choose/bl:when/bl:otherwise
-
-** bl:try/bl:catch/bl:finally
-
 \subsection{Custom tags}
 \label{ssec-custom-tags}
 
@@ -830,17 +834,6 @@ manipulate and analyze the AST thus simplifying the system.
 \label{fig-processing-stages}}
 \end{centering}
 \end{figure}
-
-
-\subsection{Invoking applications}
-
-** HTTP GET/POST
-
-** ws-call
-
-** accessing abstract data model keyed off of content source name
-(this is kevxml -- maybe call it kxmlinclude?)
-
 
 %%% 
 \section{Benefits of ETL}
@@ -979,7 +972,8 @@ Pulvermiller \& Sarstedt;
 XSLT -- declarative and that confuses folks.  Plus too limited in
 terms of ability to interact with external components -- you end up
 having to use a mix of XSLT and a scripting language with all the
-problems that entails.  Also, no streaming mechanism.
+problems that entails.  Also, no streaming mechanism -- a DOM is built-up
+internally then serialized. 
 
 LAML -- the dual of ETL -- took markup and embedded it in Scheme,
 whereas ETL takes only the most critical programming constructs and
