@@ -70,17 +70,17 @@
 % e-mail address. Additionally, tag each line of
 % affiliation/address with \affaddr, and tag the
 %% e-mail address with \email.
-\alignauthor Greg J. Badros, Abhishek Parmaar\\
+\alignauthor Greg J. Badros, Abhishek Parmar\\
        \affaddr{InfoSpace, Inc., 601 108th Ave. NE, Suite 1200, Bellevue, WA 98004, USA}\\
        \email{badros@cs.washington.edu, aparmar@infospace.com}}
 
 \date{17 February 2003}
 \maketitle
-\vspace*{-.7in}
+\vspace*{-.9in}
 \begin{abstract}
 { \small Unlike most popular web templating languages, the Extensible
 Templating Language does not embed a general-purpose programming
-language. Instead \etl{} restricts the set of language features, hence
+language. Instead \etl{} \emph{restricts} the set of language features, hence
 limiting what can be done by templates and ensuring a better
 separation of presentation from business logic. Furthermore,
 \etl{} makes source templates easier to analyze by using an
@@ -89,7 +89,7 @@ elements corresponding to programming constructs. This approach helps
 ensure proper markup and facilitates tool-building. \etl{} runs inside
 of InfoSpace's ETL Server which serves millions of requests per
 day. (A more thorough discussion of ETL is available
-online.~\cite{ETL-full}) }
+online.~\cite{ETL-full})}
 
 
 \end{abstract}
@@ -139,7 +139,8 @@ code such as proving that processing terminates.
 \end{smalllisting}
 %$
 \caption{Cleanly-written PHP templates require only the simplest
-programming language constructs.\label{fig-php-books}}
+programming language constructs.  Because PHP is not markup-aware,
+it does not catch the error on line 11.\label{fig-php-books}}
 \end{figure}
 
 Instead of embedding a general-purpose programming language, the
@@ -228,21 +229,22 @@ only if the variable's value is non-empty.
 Many primitives derive their arguments not from individual attributes
 but from pairs of attributes that are together called a \emph{slot}.
 For example, the \smtexttt{bl:cr} directive outputs a number of
-linefeeds determined by a slot called \smtexttt{count}.  That slot is
-specified using a pair of mutually-exclusive attributes: \smtexttt{count} and
+linefeeds determined by a slot called \smtexttt{count} 
+which is specified by the mutually-exclusive attributes \smtexttt{count} and
 \smtexttt{count-var}.  The \smtexttt{count} attribute has type
 \smtexttt{xsd:integer} and is used to provide a literal integer
 argument to the primitive.  In contrast, the \smtexttt{count-var}
-attribute has type \smtexttt{bl:identifierType} (a restriction of
-\smtexttt{xsd:string}) and names a variable to evaluate at runtime.
-In both cases, the resulting value is used as the number of linefeeds
-to generate, but for \smtexttt{@count} that number is set statically
-while for \smtexttt{@count-var} it is determined dynamically.
+attribute has type \smtexttt{xsd:string} and names a variable to
+evaluate at runtime.  In both cases, the resulting value is used as
+the number of linefeeds to generate, but for \smtexttt{@count} that
+number is set statically while for \smtexttt{@count-var} it is
+determined dynamically.  Other primitives include \smtexttt{uri},
+\smtexttt{redir}, and \smtexttt{set-cookie}.
 
 As with all imperative programming languages, \etl{} has the notion of
-variables that store values. Variables are assigned values using the
-\smtexttt{bl:set} primitive: the value is determined by executing the
-contained elements. For example:
+variables that store values. Variables are assigned values (determined
+by executing the contained elements) using the
+\smtexttt{bl:set} primitive:
 
 \begin{smallverbatim}
 <bl:set var="baseuri"><bl:http/>://<bl:get
@@ -284,9 +286,9 @@ There are five primary means of control flow in \etl{}: 1)
 \emph{template selection} dispatches to the most specific template on
 the basis of the current cobrand; 2) \emph{conditionals} include
 \smtexttt{bl:if} and \smtexttt{bl:choose}/\B{}\smtexttt{bl:when}; 3)
-\emph{loops} are allowed but are all data-driven; 4) \emph{exceptions} 
-transfer control non-locally; and 5) \emph{remote invocations} allow
-calling other web services as subroutines.
+\emph{loops} are allowed but are all data-driven or explicitly bounded; 
+4) \emph{exceptions} transfer control non-locally; and 5) \emph{remote
+invocations} allow calling other web services as subroutines.
 
 \emph{Literal markup elements} are copied directly to the response
 stream from the source template.  We support the common need to
