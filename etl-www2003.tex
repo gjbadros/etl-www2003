@@ -37,6 +37,10 @@
 \newcommand{\tm}{{\scriptsize $^{\mbox{tm}}$}}
 \newcommand{\gjb}[1]{{\sc gjb:}\textbf{#1}}
 
+\newenvironment{smallverbatim}%
+{\renewcommand{\baselinestretch}{1}\small\verbatim}%
+{\renewcommand{\baselinestretch}{2}\endverbatim}
+
 \begin{document}
 %
 \title{The Extensible Templating Language: \\
@@ -536,10 +540,10 @@ the same template.  The target variable is named via the
 \smtexttt{@value}, \smtexttt{@value-var}, or by executing the
 children of the \smtexttt{bl:set} element.  For example:
 
-\begin{verbatim}
+\begin{smallverbatim}
 <bl:set var="baseuri"><bl:http/>://<bl:get
  var="hostname"/>/</bl:set>
-\end{verbatim}
+\end{smallverbatim}
 
 \noindent will set the variable named ``baseuri'' to the value
 ``http://www.\B{}infospace.\B{}com'' when the request comes as an
@@ -573,16 +577,16 @@ templates.  They replace field references and accessor methods of
 distinguished objects in languages such as Java.  For example, where a
 JSP developer might write:
 
-\begin{verbatim}
+\begin{smallverbatim}
 <%= request.getHeader("User-Agent") %>
-\end{verbatim}
+\end{smallverbatim}
 
 \noindent the ETL developer accesses the \smtexttt{\#http}
 bucket instead:
 
-\begin{verbatim}
+\begin{smallverbatim}
 <bl:get var="#http/User-Agent"/>
-\end{verbatim}
+\end{smallverbatim}
 
 \noindent Numerous buckets exist in the XML data model providing ways
 to access URL parameters, HTTP headers, user settings,
@@ -669,18 +673,18 @@ using the \smtexttt{transform} attribute of those directives.
 Transformers can also be chained together by including the names of
 multiple transformers in a whitespace-separated list.  For example:
 
-\begin{verbatim}
+\begin{smallverbatim}
 <bl:get var="a" transform="trim urlencode"/>
-\end{verbatim}
+\end{smallverbatim}
 
 \noindent results in writing out the value of the variable \smtexttt{a}
 after first eliminating leading and trailing whitespace and then
 subsequently URL-encoding the resulting trimmed string.  Importantly,
 transformation ordering \textbf{is} significant: changing the order to:
 
-\begin{verbatim}
+\begin{smallverbatim}
 <bl:get var="a" transform="urlencode trim"/>
-\end{verbatim}
+\end{smallverbatim}
 
 \noindent results in a different output string.  If \smtexttt{a} contains
 ``\smtexttt{ Hello World }'', the former example produces ``\smtexttt{Hello+World}'' while
@@ -710,15 +714,13 @@ category of comments are created as simple XML comments using the
 response are constructed using the \smtexttt{bl:comment} primitive.
 For example:
 
-\begin{verbatim}
-<!-- This comment is never seen
-     by the end user -->
-<bl:comment>
-  This text gets copied into the
-response document inside of &lt;!--
-.. --&gt; delimiters.
+\begin{smallverbatim}
+<!-- This comment is not seen by end user -->
+<bl:comment> 
+This text gets copied into the response 
+document inside of &lt;!-- .. --&gt; delimiters.
 </bl:comment>
-\end{verbatim}
+\end{smallverbatim}
 
 
 \subsection{Controlling whitespace}
@@ -935,7 +937,7 @@ problem of needing to have stderr output for web development.
 
 
 \begin{figure}[htbp]
-\begin{verbatim}
+\begin{smallverbatim}
 Template `books.html.etl' has 0 errors.
 0 template('books.html.etl') {
 1  set_simple(#xml/books := '...')
@@ -954,7 +956,7 @@ Template `books.html.etl' has 0 errors.
     } // #nocmd('<table>','</table>')
    } // #nocmd('<html>','</html>')
   } // template('books.html.etl')
-\end{verbatim}
+\end{smallverbatim}
 \caption{A server-generated decompilation of the internal representation
 of the ETL template from \figref{etl-books}.  The nesting of elements
 is preserved, but the byte-codes have been linearized for performance.
