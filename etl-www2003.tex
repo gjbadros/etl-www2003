@@ -1,0 +1,95 @@
+%%% $Id$
+%%% Copyright (C) 2002 Greg J. Badros <greg.badros@infospace.com>
+%%
+%
+% This file should be compiled with V1.0 of "www2003-submission.cls"
+%
+% ----------------------------------------------------------------------------------------------------------------
+% This .tex file (and associated .cls V1.0) produces:
+%       1) NO Permission Statement
+%       2) WWW'03-specific conference (location) information
+%       3) The Copyright Line with ACM data
+%       4) NO page numbers
+%
+% ---------------------------------------------------------------------------------------------------------------
+% This .tex source is an example which *does* use
+% the .bib file (from which the .bbl file % is produced).
+% REMEMBER HOWEVER: After having produced the .bbl file,
+% and prior to final submission, you *NEED* to 'insert'
+% your .bbl file into your source .tex file so as to provide
+% ONE 'self-contained' source file.
+%
+
+\documentclass{www2003-submission}
+\usepackage{times}
+\begin{document}
+%
+\title{A Statically Analyzable \\ Extensible Templating Language}
+
+\numberofauthors{1}
+
+\author{
+%
+% The command \alignauthor (no curly braces needed) should
+% precede each author name, affiliation/snail-mail address and
+% e-mail address. Additionally, tag each line of
+% affiliation/address with \affaddr, and tag the
+%% e-mail address with \email.
+\alignauthor Greg J. Badros\\
+       \affaddr{InfoSpace, Inc.}\\
+       \affaddr{601 108th Ave. NE, Suite 1200}\\
+       \affaddr{Bellevue, WA ~ USA}\\
+       \email{greg.badros@infospace.com}
+}
+\date{10 October 2002}
+\maketitle
+\begin{abstract}
+ETL....
+\end{abstract}
+
+% A category with only the three required fields
+%% GREGB:FIXME::
+\category{H.4.m}{Information Systems}{Miscellaneous}
+\category{D.2}{Software}{Software Engineering}
+%A category including the fourth, optional field follows...
+\category{D.2.8}{Software Engineering}{Metrics}[complexity measures,
+performance measures]
+
+% GREGB:FIXME:: any terms?
+%\terms{}
+
+\keywords{Static analysis, web server, templates, XML, HTML. }
+
+\section{Introduction}
+
+\subsection{Outline of paper}
+
+\section{Background}
+
+
+\section{Related work}
+
+\section{Conclusion}
+
+\begin{table}
+\centering
+\caption{}
+\begin{tabular}{|c|c|l|} \hline
+\\ \hline
+\hline\end{tabular}
+\end{table}
+
+%ACKNOWLEDGMENTS are optional
+\section{Acknowledgments}
+
+\bibliographystyle{abbrv}
+\bibliography{etl-www2003}  % sigproc.bib is the name of the Bibliography in this case
+
+%
+%\balancecolumns
+\appendix
+%Appendix A
+%\section{}
+%\balancecolumns % GM July 2000
+
+\end{document}
