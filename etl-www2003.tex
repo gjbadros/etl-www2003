@@ -291,7 +291,7 @@ Or suppose a new handheld device has a limitation in its
 handling of cookies: we need a means of narrowing the scope for careful
 review to only places where that cookie is manipulated.
 
-Typically, web developers approach to the above scenarios with an arsenal
+Typically, web developers approach the above scenarios with an arsenal
 of imprecise lexical tools.  While these tools may satisfy some simple
 queries, when the desired query has additional structure, lexical
 approaches fall short.  Suppose we wish to find dead code to simplify
@@ -450,7 +450,7 @@ avoids the mistake from line 11 of the PHP example.
 
 An example \etl{} template appears in \figref{etl-books} and is analogous
 to the PHP example from \figref{php-books}.  The source code is simply
-an XML document with root element \smtexttt{bl:template}\footnote{The
+an XML document with root element \smtexttt{bl:template}.\footnote{The
 ``bl'' stands for ``base language.'' For brevity, we use namespace
 prefixes consistently to refer to elements in distinguished namespace URIs.}
 The template contains other elements
@@ -676,7 +676,7 @@ selection, conditionals and loops, exceptions, and remote invocations.
 
 Requests made of the \etl{} server always have an associated abstract
 \emph{site} that can be explicitly specified as part of the URL,
-or can be implicit based on the \smtexttt{Hostname} header of the HTTP
+or can be implicitly based on the \smtexttt{Hostname} header of the HTTP
 request (e.g., when multiple hostnames refer to the same server).
 That site name is used to select which template is invoked for the
 initial processing of a request and whenever the
@@ -822,8 +822,8 @@ is used to make this format more concise than the long-winded
 \smtexttt{at:*} element is used as the name of the attribute, and the
 contents can be arbitrary \etl{} code (e.g., including conditionals and
 subroutines). No matter which form is used to specify dynamic
-attribute values, the language ensures that proper quotations and
-encoding are used.  Furthermore, by using the DTD or XSD of the
+attribute values, the language ensures the proper quotations and
+encoding.  Furthermore, by using the DTD or XSD of the
 output document's desired markup language, we can confirm that
 attribute names (and sometimes their values) are correct.
 
@@ -910,9 +910,8 @@ standard~\cite[2.10]{XML} is not sufficiently expressive to support
 the diverse needs of the template author. Careful control over which
 whitespace is deemed meaningful is critical to generating the right
 markup. It also can improve performance and reduce memory and
-bandwidth consumption by eliminating unnecessary extra characters from
-going over the wire.
-
+bandwidth consumption by eliminating the need to process, store, 
+and transmit unnecessary extra characters.
 
 \begin{figure}[tb]
 \begin{centering}
@@ -988,7 +987,7 @@ system. \label{fig-processing-stages}}
 A byte-code compiler and runtime for the Extensible Templating
 Language is an integral part of InfoSpace's \etl{} Server 2.0.
 Byte-compilation happens transparently and results in up to a
-100\% performance improvement over the fully interpreted language \etl{}
+100\% performance improvement over the fully interpreted language that \etl{}
 replaces. The \etl{} Server is architected as an ISAPI extension to
 Microsoft's IIS and could be easily ported to any web server that
 exposes a similar Extension Control Block interface.  IIS is used to
@@ -1221,7 +1220,7 @@ documents is a noble goal and time will tell whether our needs will
 justify applying \verb|<bigwig>|'s lessons.  Another interesting area
 for future work is using Perl-like taint checking on input variables
 to improve the security of the server. Combined with server-integrated
-support for input parameter integrity and checking, these features could defeat many
+support for input parameter integrity and validation, these features could defeat many
 attacks~\cite{ScottSharp02}.
 
 Over the coming months, we expect to learn a great deal from the
