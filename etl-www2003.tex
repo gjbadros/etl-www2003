@@ -922,8 +922,8 @@ template's attribute annotations.
 
 ETL allows custom tags to define new abstractions in terms of only
 built-in primitives.  The mechanism ETL provides is based on abstract
-syntax tree (AST) rewriting similar to Scheme's hygienic macros~\cite{R5RS}
-and other syntactic macro systems.~\cite{Aitken97,Brabrand2002}.
+syntax tree (AST) rewriting similar to Scheme's hygienic macros
+and other syntactic macro systems.~\cite{R5RS,Aitken97}
 Given that the AST of an ETL template is simply the XML source code
 itself, we simply use XSLT to describe the rewrite rules (see
 \figref{processing-stages}).  Those rules are then applied to the
@@ -953,14 +953,14 @@ system. \label{fig-processing-stages}}
 \section{Implementation \& experience}
 \label{sec-implementation}
 
-A byte-code compiler and runtime for the Extensible Templating Language is
-an integral part of InfoSpace's ETL Server 2.0.  ETLS is architected as an
-ISAPI extension to Microsoft's IIS and could be easily ported to any
-web server that exposes a similar Extension Control Block interface.
-IIS is used to manage the raw socket connections and many HTTP
-protocol details, but ETLS generates the response for all incoming
-requests (including static files which are still subject to template
-selection rules~\ssecref{selection}).
+A byte-code compiler and runtime for the Extensible Templating
+Language is an integral part of InfoSpace's ETL Server 2.0.  ETLS is
+architected as an ISAPI extension to Microsoft's IIS and could be
+easily ported to any web server that exposes a similar Extension
+Control Block interface.  IIS is used to manage the raw socket
+connections and many HTTP protocol details, but ETLS generates the
+response for all incoming requests.  The implementation of ETLS is
+about sixty thousand non-comment, non-blank lines of C++ code.
 
 In addition to supporting the ETL language, our secondary design goals
 in building ETLS were: 1) to be an appliance network box, so that all
@@ -1110,7 +1110,7 @@ embeds them in XML.  Mention S-exp and XML similarity.~\cite{Laml,Laml-WWW2002}
 
 Modeling HTML in Haskell \& Typed representation for HTML \& XML in
 Haskell, WASH. Web Scripting in
-Curry.~\cite{Thiemann2002,Meijer2000,Meijer2001,Hanus2001}
+Curry.~\cite{Thiemann2002,Meijer2000,Hanus2001}
 
 BigWig -- similar goals, but take a general purpose programming
 language and extend it with a first class markup fragment type with
@@ -1150,19 +1150,19 @@ XExpr~\cite{XExpr}
 \label{sec-ack}
 This research is supported by InfoSpace and its advanced server
 development group.  I thank Russ Arun and Steve Newman for their early
-recognition of the value of this approach and their support.  ETL
-itself was designed in collaboration with Abhishek Parmar and is
-influenced by the legacy language of its predecessor web server which
-was implemented by Jean-Remy Facq.  The ETL Server was built by the
-author along with Abhishek Parmar, Venkatesh Juryala, Sridhar Koneru,
-Mark Sandori, Michael Harrison, Kris Bradley, Angela Plyler, Sunil
-Thomas, and Howard Zhao.  Testing of ETLS was ably performed by Zine
-Rif, Sriram Krishnan, Michael Schaffer, Shavkat Azimov, Jeff Wells,
-Ilian Georgeiw, and Russell Ashmun, and credit goes to Antonio
-Casacuberta for continued support of the server group.  I also thank
-Jeff Torgerson, Matthew Benedict, Vasanth Cattamanchi and all of the
-InfoSpace web developers for their input and contributions to
-the system. ETLS is a trademark of InfoSpace, Inc.
+recognition of the value of this approach and support.  ETL itself was
+designed in collaboration with Abhishek Parmar and is influenced by
+the legacy language of its predecessor which was implemented by
+Jean-Remy Facq.  The ETL Server was built by the author along with
+Abhishek Parmar, Venkatesh Juryala, Sridhar Koneru, Mark Sandori,
+Michael Harrison, Kris Bradley, Angela Plyler, Sunil Thomas, and
+Howard Zhao.  Testing of ETLS was ably performed by Zine Rif, Sriram
+Krishnan, Michael Schaffer, Shavkat Azimov, Jeff Wells, Ilian
+Georgeiw, and Russell Ashmun, and credit goes to Antonio Casacuberta
+for continued support of the server group.  I also thank Jeff
+Torgerson, Matthew Benedict, Vasanth Cattamanchi and all of the
+InfoSpace web developers for their contributions. ETLS is a trademark
+of InfoSpace, Inc.
 
 
 \bibliographystyle{abbrv}
