@@ -86,23 +86,23 @@ development is the need to generate HTML, WML, or other markup
 languages to describe client-side presentation and behaviour.
 
 The original server-side dynamic markup-generation capabilities of the
-Web were defined by the Common Gateway Interface.\cite{CGI} For each
+Web were defined by the Common Gateway Interface.\cite{CGI11} For each
 request of a CGI, the web server maps HTTP request details into environment
 variables, command-line arguments, and the standard file descriptors.
 In particular, the standard output written by that process was sent by
 the Web server as the response to the client browser (instead of
 simply responding with an unchanging file from disk).  Over time,
 various techniques arose to reduce the cost of each request: extension
-mechanisms such as the Apache module system~\cite{ApacheModules} and
+mechanisms such as the Apache module system~\cite{Apache} and
 scripting languages hosted by the Web server have increased
 performance by eliminating process creation overhead.
 
 Today, server-side markup generation is dominated by expressive and
 flexible general-purpose programming languages such as
-Java~\cite{Java}, Perl~\cite{Perl}, and PHP~\cite{PHP}.  Ironically,
+Java~\cite{Arnold98}, Perl~\cite{Camel3rd}, and PHP~\cite{pro_php}.  Ironically,
 the languages are then used in fairly restricted ways, often being
-tied to a templating syntax (e.g., JSP~\cite{JSP} for Java or
-HTML::Template~\cite{HTML-Template} for Perl).  For example, consider
+tied to a templating syntax (e.g., JSP~\cite{JSP12} for Java or
+HTML::Template~\cite{HTML-Template} or Mason~\cite{Perl-Mason} for Perl).  For example, consider
 the PHP template in \figref{php-books}.  The only constructs required
 by the template are a) some means of populating a data model from the
 back-end business logic (line 1); b) data-driven iteration (line 4-5);
@@ -131,7 +131,9 @@ terminates is undecidable for these general purpose languages.
 </htm>
 \end{listing}%$
 \caption{PHP template illustrating the simplicity of the programming
-language constructs required by typical templates.
+language constructs required by typical templates.  Unfortunately,
+because a powerful language is provided, PHP templates often engage in
+far broader interactions than the above ideal example.
 \label{fig-php-books}}
 \end{figure}
 
@@ -155,7 +157,7 @@ larger architecture.
 Another substantial problem with existing templating technologies is
 that they often involve the lexical mixing of two separate programming
 paradigms.  JSP, for example, is implemented in terms of a
-pre-processing rewrite of the template into a Java servlet.~\cite{JavaServlet}
+pre-processing rewrite of the template into a Java servlet.~\cite{JavaServlet23}
 Pre-processing approaches are convenient for programmer expressiveness
 but have a huge hidden cost in complicating software engineering
 analyses and tools that would otherwise help understand, maintain, and
@@ -179,9 +181,9 @@ generate markup to be returned to the requesting user agent.  It is
 important that the markup created conforms to appropriate Internet
 standards.  For example, WML markup needs to first be well-formed XML
 and second be valid with respect to the appropriate
-schema or DTD~\cite{WML}.  Although HTML browsers are more forgiving of
+schema or DTD~\cite{WML12}.  Although HTML browsers are more forgiving of
 variations in syntax, best-practices still dictate that the markup returned
-be in compliance with the HTML specification~\cite{HTML}.  
+be in compliance with the HTML specification~\cite{HTML4}.
 Popular templating languages including PHP, JSP, ASP, and others
 all process arbitrary text and are ignorant of the rules of the markup
 being generated: the mistaken close tag on line 14 of \figref{php-books}
@@ -222,7 +224,7 @@ unreachable templates to satisfy that query.  To analyze more deeply,
 we need to uncover the semantic structure of the templating language.
 Typically, that requires a language-specific parsing approach and much
 greater effort in building a valuable tool or an extensible integrated
-development environment~\cite{Montana,Eclipse}.
+development environment~\cite{Soroker97,Eclipse}.
 
 \subsection{XML supports analyses and tools}
 
@@ -398,7 +400,7 @@ other metadata.  Generally, an ETL template is similar to a method in
 a general purpose object-oriented programming language: it can invoke
 other templates as subroutines and can also perform subsidiary HTTP
 requests to other servers.  In fact, HTTP-bound
-web-service~\cite{WebServices} calls are the primary means of using
+web-service~\cite{WebServicesActivity} calls are the primary means of using
 back-end application logic.
 
 The remainder of this section informally describes the structure and
@@ -515,9 +517,7 @@ side-effects and are used internally for conveying request parameters or
 other system-level details.  These reserved variables always start with
 the octothorpe (``\smtexttt{\#}'') character and may be read-only (e.g.,
 \smtexttt{\#browsertype}) or may alter the behaviour of primitives based
-on the value they are assigned (e.g., \smtexttt{\#currencysign}).  A
-full list of reserved variables is available
-online.~\cite{etl-reserved-variables}
+on the value they are assigned (e.g., \smtexttt{\#currencysign}).  
 
 Unlike ordinary variables, there is no guarantee that the value
 retrieved from a variable is identical to the value last stored in that
