@@ -19,7 +19,7 @@ Also included in the distribution is:
 p310-badros.pdf
 
 which is the PDF version of the document (more suitable for the print
-proceedings).
+proceedings -- we have removed the page numbers).
 
 For questions, please feel free to contact either of the authors:
 
