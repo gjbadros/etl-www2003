@@ -43,7 +43,7 @@ PS: $(POSTSCRIPT)
 PDF: $(PDF)
 
 %.ps: %.dvi
-	dvips $< -o - | ps-add-text-footer -d > $@
+	dvips $< -o - > $@ # | ps-add-text-footer -d > $@
 
 %.pdf: %.ps
 	ps2pdf $<
