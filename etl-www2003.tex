@@ -326,8 +326,8 @@ schema-aware XML editors to easily provide syntax coloring and
 completion capabilities.
 
 In this paper, I introduce the Extensible Templating Language.  From
-one perspective, \etl{} is a 100\% XML-based templating language that
-embeds programming language constructs directly in the XML
+one perspective, \etl{} is an XML-based templating language that
+embeds programming constructs directly in the XML
 representation, intermingled with literal target-language markup.
 Alternatively, we can view \etl{} as an imperative domain-specific
 programming language that uses XML as its surface syntax and
@@ -344,7 +344,7 @@ representation, \etl{} simplifies ad-hoc software engineering analyses to
 better support evolution and maintenance of large dynamic web
 applications.  We have built an \etl{} runtime inside of a
 production-quality web server, the Extensible Templating Language
-Server.  \etls{} is currently employed by InfoSpace to serve 
+Server.  InfoSpace runs \etls{} to serve 
 millions of requests per day using over sixty thousand \etl{} templates.
 
 \subsection{Outline of paper}
@@ -365,10 +365,9 @@ and \secref{conclusion} concludes.
 The Extensible Templating Language is an imperative markup templating
 language that allows web developers to intermingle literal XML markup
 with XML-based programming language constructs.  Our primary design
-goals for \etl{} were to:\footnote{A fifth important design goal was to
-enable automatic translation of our legacy templating language into
-\etl{}\@. That need occasionally complicated our design. This paper
-focuses on the essential language, and
+goals for \etl{} were to:\footnote{A fifth design goal was to
+enable automatic translation of our legacy language into
+\etl{}\@. This paper focuses only on the essential language, and
 \secref{implementation} mentions our migration to \etl{} a bit more.}
 
 \begin{enumerate}
@@ -1175,6 +1174,7 @@ approaches that use a general-purpose language, the benefits \etl{}
 provides in separating the presentation details from back-end
 applications are lost.
 
+
 %%% 
 \section{Conclusions \& future work}
 \label{sec-conclusion}
@@ -1249,10 +1249,9 @@ of InfoSpace, Inc.
 
 
 \bibliographystyle{abbrv}
-\bibliography{etl-www2003}  % sigproc.bib is the name of the Bibliography in this case
+\bibliography{etl-www2003}
+\balancecolumns
 
-%
-%\balancecolumns
 %\appendix
 %Appendix A
 %\section{}
