@@ -163,8 +163,8 @@ of the markup being generated: the mistaken close tag on line 11 of
 \figref{php-books} goes unnoticed by PHP, yet will break under an XHTML browser.
 
 To combat the above problem, ETL directly intermingles literal markup
-elements and XML-based representations of programming-language
-constructs are intermingled directly.  By using XML as the surface
+elements and XML-based representations of programming
+constructs.  By using XML as the surface
 syntax, standard XML tools such as XSLT  can be used to perform
 analyses and transformations~\cite{Badros-www9}.  An example \etl{}
 template appears in \figref{etl-books} and is analogous to the PHP
@@ -203,8 +203,8 @@ large class of programming errors very early in the development
 process without need for the \etl{} compiler at all.  Those schemas
 are also used to support syntax coloring and completion of element and
 attribute names.  \etl{} templates are processed within the context of
-an HTTP request and have the primary goal of generating an HTTP
-response (including the document and headers).
+an HTTP request and generate an HTTP
+response (including the markup document and headers).
 
 \etl{} supports dynamic behaviours by means of \emph{primitives} which
 are elements in the \ns{bl} namespace.  Primitives either output text
@@ -252,8 +252,7 @@ contained elements. For example:
 After assignment, values are retrieved by referencing them by name in
 a slot or by copying them directly to the output stream using
 \smtexttt{bl:get}.  There are numerous special reserved variables that may have
-side-effects and convey request parameters
-or other system-level details such as \smtexttt{\#browsertype}.
+side-effects and expose system-level details or request parameters such as \smtexttt{\#browsertype}.
 Various other data are accessible to \etl{} templates via
 \emph{buckets}. Buckets replace field references and accessor methods of
 distinguished objects in languages such as Java.  For example, where a
@@ -270,7 +269,7 @@ to another.  For example, the \smtexttt{url-encode} transformer
 converts ``hello world'' into ``hello+world''.  Transformers can be
 used whenever a variable is being set (via
 \smtexttt{bl:set}) or accessed (via \smtexttt{bl:get}) using the
-\smtexttt{transform} attribute which specifies an ordered whitespace-separated
+\smtexttt{transform} attribute which specifies an ordered 
 list of transformers to apply.  For example:
 
 \begin{smallverbatim}
@@ -279,20 +278,19 @@ list of transformers to apply.  For example:
 
 \noindent results in writing out the value of the variable \smtexttt{a}
 after first eliminating leading and trailing whitespace and then
-URL-encoding the resulting trimmed string (the order of
-transformations does matter).
+URL-encoding the resulting trimmed string.
 
 There are five primary means of control flow in \etl{}: 1)
 \emph{template selection} dispatches to the most specific template on
 the basis of the current cobrand; 2) \emph{conditionals} include
 \smtexttt{bl:if} and \smtexttt{bl:choose}/\B{}\smtexttt{bl:when}; 3)
-\emph{loops} are only allowed to be data-driven; 4) \emph{exceptions} 
+\emph{loops} are allowed but are all data-driven; 4) \emph{exceptions} 
 transfer control non-locally; and 5) \emph{remote invocations} allow
 calling other web services as subroutines.
 
 \emph{Literal markup elements} are copied directly to the response
-stream from the source template.  One important common need is to
-conditionally include a tag which \etl{} supports using a special
+stream from the source template.  We support the common need to
+conditionally include a tag by using a special
 \smtexttt{bl:if-var} attribute on an arbitrary literal result element:
 
 \begin{smallverbatim}
@@ -306,30 +304,31 @@ executed). This technique also lets us factor out the guard, thus
 eliminating the possibility of a mismatch between the test used for
 the start tag and the one used for the end tag.
 
-\etl{} permits fine-grained control over the \emph{whitespace} that will be
-generated via two orthogonal special attributes that are allowed on
+\etl{} permits fine-grained control over the \emph{whitespace} that is
+meaningful via two orthogonal special attributes that are allowed on
 every XML element in source \etl{} documents:
 \smtexttt{@bl:space-nodes} and \smtexttt{@bl:text-nodes}.  These
 attributes are inherited by child elements and their contents unless
 overridden.
 
-\emph{custom tags} define new abstractions in terms of 
+\emph{Custom tags} define new abstractions in terms of 
 built-in primitives using an XSLT transformation rule.  Those
-rules are then applied to subtrees of the source template and rewrite
+rules are applied to subtrees of the source template and rewrite
 that code to contain only the core language.  This approach allows a
 great deal of flexibility in new abstractions without compromising our
 tight control over the limited behaviour we permit the presentation
 layer.
 
 A byte-code compiler and runtime for the Extensible Templating
-Language is an integral part of InfoSpace's \etl{} Server 2.0,
+Language is an integral part of InfoSpace's \etl{} Server,
 an ISAPI extension to IIS.  The server supports configuration 
 via special \smtexttt{admin} primitives, has a powerful
 HTTP-based reflection interface, and understands various special
-\smtexttt{etl-*} URL parameters that help with debugging.
-InfoSpace's production web tree contains over sixty thousand \etl{}
-templates and the clusters of \etl{} Servers serve millions of
-requests per day.
+\smtexttt{etl-*} URL parameters that help with debugging (e.g., 
+\smtexttt{etl-decompile} dumps a template's byte-codes
+instead of running it).  InfoSpace's production web tree
+contains over sixty thousand \etl{} templates and the clusters of
+\etl{} Servers serve millions of requests per day.
 
 %%% 
 \section{Related work \& conclusion}
