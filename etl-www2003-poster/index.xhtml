@@ -1,0 +1,391 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--Converted with LaTeX2HTML 99.2beta8 (1.46)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name="generator" content="HTML Tidy, see www.w3.org" />
+<title>The Extensible Templating Language: An XML-based Restricted
+Markup-Generating Language</title>
+<meta name="description"
+content="The Extensible Templating Language: An XML-based Restricted Markup-Generating Language" />
+<meta name="keywords" content="etl-www2003-poster" />
+<meta name="resource-type" content="document" />
+<meta name="distribution" content="global" />
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1" />
+<meta name="Generator" content="LaTeX2HTML v99.2beta8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="STYLESHEET" href="etl-www2003-poster.css" />
+</head>
+<body>
+<p></p>
+
+<p></p>
+
+<p></p>
+
+<h1 align="CENTER">The Extensible Templating Language:<br />
+ An XML-based Restricted Markup-Generating Language<br />
+</h1>
+
+<p align="CENTER"><strong>Greg J. Badros*, Abhishek Parmar<br />
+ InfoSpace, Inc., 601 108th Ave. NE, Suite 1200, Bellevue, WA
+98004, USA<br />
+</strong></p>
+
+<p align="CENTER"><strong>17 February 2003</strong></p>
+
+<p align="LEFT"><small><a id="tex2html1" name="tex2html1"
+href="mailto:badros@cs.washington.edu">badros@cs.washington.edu</a>,
+<a
+href="mailto:aparmar@infospace.com">aparmar@infospace.com</a></small></p>
+
+<p align="LEFT"><small>*Current affiliation: Google, Inc.,
+2400 Bayshore Pkwy, Mountain View, CA 94043, USA</small></p>
+
+<br />
+ 
+
+<h3>Abstract:</h3>
+
+<div><font size="-1">Unlike most popular web templating languages,
+the Extensible Templating Language does not embed a general-purpose
+programming language. Instead ETL <i>restricts</i> the set of
+language features, hence limiting what can be done by templates and
+ensuring a better separation of presentation from business logic.
+Furthermore, ETL makes source templates easier to analyze by using
+an XML-based representation where markup is intermingled with XML
+elements corresponding to programming constructs. This approach
+helps ensure proper markup and facilitates tool-building. ETL runs
+inside of InfoSpace's ETL Server which serves millions of requests
+per day. (A more thorough discussion of ETL is available
+online.&nbsp;[<a
+href="etl-www2003-poster.html#ETL-full">2</a>])</font></div>
+
+<p></p>
+
+<p>Restricted domain-specific programming language, static
+analysis, web server, templates, XML, XSLT, markup, WML, HTML.</p>
+
+<p></p>
+
+<h1><a id="SECTION00010000000000000000"
+name="SECTION00010000000000000000"></a> <a id="sec-intro"
+name="sec-intro"></a><br />
+1 Introduction</h1>
+
+<p>Server-side markup generation is dominated by expressive and
+flexible general-purpose programming languages such as Java, Perl,
+and PHP. Ironically, the languages are then used in fairly
+restricted ways. For example, consider the PHP template in
+Fig.&nbsp;<a href="etl-www2003-poster.html#fig-php-books">1</a>.
+The only constructs required by the template are a) some means of
+populating a data model from the back-end business logic (line 1);
+b) data-driven iteration (line 4); and c) simple expression
+evaluation to access parts of the data model (lines 6 and 7). The
+extra power provided by typical templating languages not only goes
+unused, but it also complicates analyses of the code such as
+proving that processing terminates.</p>
+
+<p></p>
+
+<div align="CENTER"><a id="fig-php-books"
+name="fig-php-books"></a><a id="185" name="185"></a> 
+
+<table>
+<caption align="BOTTOM"><strong>Figure 1:</strong> Cleanly-written
+PHP templates require only the simplest programming language
+constructs. Because PHP is not markup-aware, it does not catch the
+error on line 11.</caption>
+
+<tr>
+<td><img width="466" height="155" border="0" src="img1.png"
+alt="\begin{figure}\renewcommand {\baselinestretch}{1}\small\listing {1} &lt;? \$books =... ... &lt;/table&gt; &lt;/htm&gt;\renewcommand {\baselinestretch}{2}\endlisting \par\end{figure}" />
+</td>
+</tr>
+</table>
+</div>
+
+<p>Instead of embedding a general-purpose programming language, the
+Extensible Templating Language<a id="tex2html3" name="tex2html3"
+href="#foot186"><sup><img align="BOTTOM" border="1" alt="[*]"
+src="file:/opt/lib/latex2html/icons/footnote.png" /></sup></a> is a
+domain-specific language specifically tailored to the needs of
+generating markup. This approach limits the capabilities of the
+front-end and helps separate front-end presentation from back-end
+application logic. While other languages might use an object-based
+data model to communicate between tiers, ETL instead interacts only
+with web-services and exposes only an XML data model.</p>
+
+<p>Another problem with existing templating technologies is their
+mixing of two separate programming paradigms and syntaxes. JSP, for
+example, is implemented in terms of a pre-processing rewrite into a
+Java servlet. The precise analysis of an arbitrary JSP template
+necessarily requires full knowledge of both the rewrite rules and
+the semantics of Java. Worse, templating languages generally are
+ignorant of the rules of the markup being generated: the mistaken
+close tag on line 11 of Fig.&nbsp;<a
+href="etl-www2003-poster.html#fig-php-books">1</a> goes unnoticed
+by PHP, yet will break under an XHTML browser.</p>
+
+<p>To combat the above problem, ETL directly intermingles literal
+markup elements and XML-based representations of programming
+constructs. By using XML as the surface syntax, standard XML tools
+such as XSLT can be used to perform analyses and
+transformations&nbsp;[<a
+href="etl-www2003-poster.html#Badros-www9">1</a>]. An example ETL
+template appears in Fig.&nbsp;<a
+href="etl-www2003-poster.html#fig-etl-books">2</a> and is analogous
+to the PHP example from Fig.&nbsp;<a
+href="etl-www2003-poster.html#fig-php-books">1</a>.</p>
+
+<p></p>
+
+<div align="CENTER"><a id="fig-etl-books"
+name="fig-etl-books"></a><a id="187" name="187"></a> 
+
+<table>
+<caption align="BOTTOM"><strong>Figure 2:</strong> The ETL template
+corresponding to Fig.&nbsp;<a
+href="etl-www2003-poster.html#fig-php-books">1</a>'s PHP code is
+required to be well-formed XML. Thus, the developer avoids the
+mistake from line 11 of the PHP example.</caption>
+
+<tr>
+<td><img width="490" height="198" border="0" src="img2.png"
+alt="\begin{figure}\renewcommand {\baselinestretch}{1}\small\listing {1} &lt;?xml versio... .../html&gt; &lt;/bl:template&gt;\renewcommand {\baselinestretch}{2}\endlisting \end{figure}" />
+</td>
+</tr>
+</table>
+</div>
+
+<p></p>
+
+<h1><a id="SECTION00020000000000000000"
+name="SECTION00020000000000000000"></a> <a id="sec-etl"
+name="sec-etl"></a><br />
+2 Extensible Templating Language</h1>
+
+<p>An ETL template must be well-formed XML that is valid with
+respect to the language's XML Schema Definitions. This requirement
+catches a large class of programming errors very early in the
+development process without need for the ETL compiler at all. Those
+schemas are also used to support syntax coloring and completion of
+element and attribute names. ETL templates are processed within the
+context of an HTTP request and generate an HTTP response (including
+the markup document and headers).</p>
+
+<p>ETL supports dynamic behaviours by means of <i>primitives</i>
+which are elements in the <font size="-1"><tt>bl:*</tt></font>
+namespace. Primitives either output text to the current destination
+stream (initially the response document) or perform some
+side-effect (or both). For example the <font
+size="-1"><tt>bl:set</tt></font> primitive assigns a variable a
+value without outputting any text, while the <font
+size="-1"><tt>bl:http</tt></font> primitive outputs either <font
+size="-1"><tt>http</tt></font> or <font
+size="-1"><tt>https</tt></font> based on whether the current
+request is secure. The behaviour of a primitive is controlled by
+its attributes. Some primitives (e.g., <font
+size="-1"><tt>http</tt></font>) are always empty while others are
+allowed to be non-empty and control the contained elements. For
+example, in:</p>
+
+<pre>
+&lt;bl:if var="showcopyright"&gt; (C) 2002 &lt;/bl:if&gt;
+</pre>
+
+<p>the contents of the <font size="-1"><tt>bl:if</tt></font> are
+output if and only if the variable's value is non-empty.</p>
+
+<p>Many primitives derive their arguments not from individual
+attributes but from pairs of attributes that are together called a
+<i>slot</i>. For example, the <font size="-1"><tt>bl:cr</tt></font>
+directive outputs a number of linefeeds determined by a slot called
+<font size="-1"><tt>count</tt></font> which is specified by the
+mutually-exclusive attributes <font size="-1"><tt>count</tt></font>
+and <font size="-1"><tt>count-var</tt></font>. The <font
+size="-1"><tt>count</tt></font> attribute has type <font
+size="-1"><tt>xsd:integer</tt></font> and is used to provide a
+literal integer argument to the primitive. In contrast, the <font
+size="-1"><tt>count-var</tt></font> attribute has type <font
+size="-1"><tt>xsd:string</tt></font> and names a variable to
+evaluate at runtime. In both cases, the resulting value is used as
+the number of linefeeds to generate, but for <font
+size="-1"><tt>@count</tt></font> that number is set statically
+while for <font size="-1"><tt>@count-var</tt></font> it is
+determined dynamically. Other primitives include <font
+size="-1"><tt>uri</tt></font>, <font
+size="-1"><tt>redir</tt></font>, and <font
+size="-1"><tt>set-cookie</tt></font>.</p>
+
+<p>As with all imperative programming languages, ETL has the notion
+of variables that store values. Variables are assigned values
+(determined by executing the contained elements) using the <font
+size="-1"><tt>bl:set</tt></font> primitive:</p>
+
+<pre>
+&lt;bl:set var="baseuri"&gt;&lt;bl:http/&gt;://&lt;bl:get
+ var="hostname"/&gt;/&lt;/bl:set&gt;
+</pre>
+
+<p>After assignment, values are retrieved by referencing them by
+name in a slot or by copying them directly to the output stream
+using <font size="-1"><tt>bl:get</tt></font>. There are numerous
+special reserved variables that may have side-effects and expose
+system-level details or request parameters such as <font
+size="-1"><tt>#browsertype</tt></font>. Various other data are
+accessible to ETL templates via <i>buckets</i>. Buckets replace
+field references and accessor methods of distinguished objects in
+languages such as Java. For example, where a JSP developer might
+write <font size="-1"><tt>&lt;%= request.getHeader("User-Agent")
+%&gt;</tt></font> the ETL developer accesses the <font
+size="-1"><tt>#http</tt></font> bucket instead:</p>
+
+<pre>
+&lt;bl:get var="#http/User-Agent"/&gt;
+</pre>
+
+<p>A <i>transformer</i> is a streaming converter from one byte
+sequence to another. For example, the <font
+size="-1"><tt>url-encode</tt></font> transformer converts ``hello
+world'' into ``hello+world''. Transformers can be used whenever a
+variable is being set (via <font size="-1"><tt>bl:set</tt></font>)
+or accessed (via <font size="-1"><tt>bl:get</tt></font>) using the
+<font size="-1"><tt>transform</tt></font> attribute which specifies
+an ordered list of transformers to apply. For example:</p>
+
+<pre>
+&lt;bl:get var="a" transform="trim urlencode"/&gt;
+</pre>
+
+<p>results in writing out the value of the variable <font
+size="-1"><tt>a</tt></font> after first eliminating leading and
+trailing whitespace and then URL-encoding the resulting trimmed
+string.</p>
+
+<p>There are five primary means of control flow in ETL: 1)
+<i>template selection</i> dispatches to the most specific template
+on the basis of the current cobrand; 2) <i>conditionals</i> include
+<font size="-1"><tt>bl:if</tt></font> and <font
+size="-1"><tt>bl:choose</tt></font>/<font
+size="-1"><tt>bl:when</tt></font>; 3) <i>loops</i> are allowed but
+are all data-driven or explicitly bounded; 4) <i>exceptions</i>
+transfer control non-locally; and 5) <i>remote invocations</i>
+allow calling other web services as subroutines.</p>
+
+<p><i>Literal markup elements</i> are copied directly to the
+response stream from the source template. We support the common
+need to conditionally include a tag by using a special <font
+size="-1"><tt>bl:if-var</tt></font> attribute on an arbitrary
+literal result element:</p>
+
+<pre>
+&lt;b bl:if-var="#pro/wantbold"&gt;text&lt;/b&gt;
+</pre>
+
+<p>where the output of <i>both</i> the open and close <font
+size="-1"><tt>b</tt></font> tags is controlled by the test of the
+single variable (and the contents of the <font
+size="-1"><tt>b</tt></font> element are always executed). This
+technique also lets us factor out the guard, thus eliminating the
+possibility of a mismatch between the test used for the start tag
+and the one used for the end tag.</p>
+
+<p>ETL permits fine-grained control over the <i>whitespace</i> that
+is meaningful via two orthogonal special attributes that are
+allowed on every XML element in source ETL documents: <font
+size="-1"><tt>@bl:space-nodes</tt></font> and <font
+size="-1"><tt>@bl:text-nodes</tt></font>. These attributes are
+inherited by child elements and their contents unless
+overridden.</p>
+
+<p><i>Custom tags</i> define new abstractions in terms of built-in
+primitives using an XSLT transformation rule. Those rules are
+applied to subtrees of the source template and rewrite that code to
+contain only the core language. This approach allows a great deal
+of flexibility in new abstractions without compromising our tight
+control over the limited behaviour we permit the presentation
+layer.</p>
+
+<p>A byte-code compiler and runtime for the Extensible Templating
+Language is an integral part of InfoSpace's ETL Server, an ISAPI
+extension to IIS. The server supports configuration via special
+<font size="-1"><tt>admin</tt></font> primitives, has a powerful
+HTTP-based reflection interface, and understands various special
+<font size="-1"><tt>etl-*</tt></font> URL parameters that help with
+debugging (e.g., <font size="-1"><tt>etl-decompile</tt></font>
+dumps a template's byte-codes instead of running it). InfoSpace's
+production web tree contains over sixty thousand ETL templates and
+the clusters of ETL Servers serve millions of requests per day.</p>
+
+<p></p>
+
+<h1><a id="SECTION00030000000000000000"
+name="SECTION00030000000000000000"></a> <a id="sec-related-work"
+name="sec-related-work"></a><br />
+3 Related work &amp; conclusion</h1>
+
+<p>LAML has similar goals to ETL, but takes an opposite approach:
+LAML embeds the simpler markup languages in Scheme, an especially
+powerful and expressive language. <code>&lt;bigwig&gt;</code> is
+another significant research project that has similar goals. That
+work adds a first class markup-fragment type to a conventional
+programming language. That system is more aggressive in its
+verification of the well-formedness of markup values: an iterative
+data-flow analysis bounds the possible values which can then be
+confirmed to be valid.</p>
+
+<p>The Extensible Templating Language leverages a domain-specific
+XML-based programming language intermingled with literal markup. By
+restricting the language, we preserve a better separation of front-
+and back-ends. By using XML, we simplify analyses, transformations,
+and make it easier to build supporting tools. The static checks
+ETLS performs reduce the need for testing and make development
+faster and less error-prone.</p>
+
+<p></p>
+
+<h2><a id="SECTION00040000000000000000"
+name="SECTION00040000000000000000">Bibliography</a></h2>
+
+<dl compact="compact">
+<dt><a id="Badros-www9" name="Badros-www9">1</a></dt>
+
+<dd>G.&nbsp;J. Badros.<br />
+JavaML: A markup language for Java source code.<br />
+In <em>Proc. of the Ninth Intl. Conf. on the World Wide Web</em>,
+Amsterdam, May 2000. Elsevier Science B. V.<br />
+<tt><a id="tex2html5" name="tex2html5"
+href="http://www.cs.washington.edu/homes/gjb/JavaML">http://www.cs.washington.edu/homes/gjb/JavaML</a></tt>.</dd>
+
+<dt><a id="ETL-full" name="ETL-full">2</a></dt>
+
+<dd>G.&nbsp;J. Badros.<br />
+The Extensible Templating Language: An XML-based restricted
+markup-generating language, November 2002.<br />
+<tt><a id="tex2html6" name="tex2html6"
+href="http://www.cs.washington.edu/homes/gjb/papers/etl-full.pdf">http://www.cs.washington.edu/homes/gjb/papers/etl-full.pdf</a></tt>.</dd>
+</dl>
+
+<dl>
+<dt><a id="foot186" name="foot186">... Language</a><a id="foot186"
+name="foot186" href="etl-www2003-poster.html#tex2html3"><sup><img
+align="BOTTOM" border="1" alt="[*]"
+src="file:/opt/lib/latex2html/icons/footnote.png" /></sup></a></dt>
+
+<dd>This research is supported by InfoSpace's advanced server
+development group. ETL and ETLS are trademarks of InfoSpace,
+Inc.</dd>
+</dl>
+
+<br />
+<hr />
+<address>Greg Badros, badros@cs.washington.edu, 17-Feb-2003</address>
+</body>
+</html>
+

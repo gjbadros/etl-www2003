@@ -1,0 +1,275 @@
+This is TeX, Version 3.14159 (Web2C 7.3.1) (format=latex 2000.3.7)  21 MAR 2003 15:02
+**./images.tex
+(./images.tex
+LaTeX2e <1998/12/01> patch level 1
+Babel <v3.6x> and hyphenation patterns for american, french, german, ngerman, i
+talian, nohyphenation, loaded.
+
+(/home/greg/etl-www2003/www2003-submission.cls (/usr/share/texmf/tex/latex/grap
+hics/epsfig.sty
+Package: epsfig 1999/02/16 v1.7a (e)psfig emulation (SPQR)
+(/usr/share/texmf/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+(/usr/share/texmf/tex/latex/graphics/keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks14
+) (/usr/share/texmf/tex/latex/graphics/graphics.sty
+Package: graphics 1999/02/16 v1.0l Standard LaTeX Graphics (DPC,SPQR)
+(/usr/share/texmf/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+) (/usr/share/texmf/tex/latex/config/graphics.cfg)
+Package graphics Info: Driver file: dvips.def on input line 80.
+(/usr/share/texmf/tex/latex/graphics/dvips.def
+File: dvips.def 1999/02/16 v3.0i Driver-dependant file (DPC,SPQR)
+))
+\Gin@req@height=\dimen102
+\Gin@req@width=\dimen103
+)
+\epsfxsize=\dimen104
+\epsfysize=\dimen105
+) (/usr/share/texmf/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 1996/11/03 v2.2b
+(/usr/share/texmf/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 1997/09/17 v2.2e
+\@emptytoks=\toks15
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 133.
+)) (/usr/share/texmf/tex/latex/amslatex/amsmath.sty
+Package: amsmath 1997/03/20 v1.2d AMS math features
+\@mathmargin=\skip41
+(/usr/share/texmf/tex/latex/amslatex/amstext.sty
+Package: amstext 1996/10/28 v1.2b
+(/usr/share/texmf/tex/latex/amslatex/amsgen.sty
+File: amsgen 1996/10/29 v1.2b
+\@emptytoks=\toks16
+\ex@=\dimen106
+)) (/usr/share/texmf/tex/latex/amslatex/amsbsy.sty
+Package: amsbsy 1996/10/28 v1.2b
+\pmbraise@=\dimen107
+) (/usr/share/texmf/tex/latex/amslatex/amsopn.sty
+Package: amsopn 1996/10/28 v1.2b operator names
+)
+LaTeX Info: Redefining \frac on input line 188.
+\uproot@=\count79
+\leftroot@=\count80
+\classnum@=\count81
+\DOTSCASE@=\count82
+LaTeX Info: Redefining \dots on input line 335.
+LaTeX Info: Redefining \ldots on input line 418.
+LaTeX Info: Redefining \cdots on input line 422.
+\Mathstrutbox@=\box26
+\strutbox@=\box27
+\big@size=\dimen108
+LaTeX Font Info:    Redeclaring font encoding OML on input line 500.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 501.
+\skewcharcount@=\count83
+\familycount@=\count84
+\pointcount@=\count85
+\accentdimen@=\dimen109
+\accentmu@=\count86
+\minaw@=\dimen110
+\c@MaxMatrixCols=\count87
+\dotsspace@=\muskip10
+\c@parentequation=\count88
+\dspbrk@lvl=\count89
+\tag@help=\toks17
+\row@=\count90
+\column@=\count91
+\maxfields@=\count92
+\andhelp@=\toks18
+\eqnshift@=\dimen111
+\alignsep@=\dimen112
+\tagshift@=\dimen113
+\tagwidth@=\dimen114
+\totwidth@=\dimen115
+\lineht@=\dimen116
+\@envbody=\toks19
+\multlinegap=\skip42
+\multlinetaggap=\skip43
+)
+Document Class 'www2003-submission' From www-release by Gerry Murray
+Based in part upon document Style `acmconf' <22 May 89>. Hacked 4/91 by
+shivers@cs.cmu.edu, 4/93 by theobald@cs.mcgill.ca
+Excerpts were taken from (Journal Style) 'esub2acm.cls'.
+****** Bugs/comments/suggestions/technicalities to Gerry Murray -- murray@hq.ac
+m.org ******
+Questions on the style, SIGS policies, etc. to Julie Goetz goetz@acm.org or Adr
+ienne Griscti griscti@acm.org
+\footheight=\dimen117
+\@maxsep=\dimen118
+\@dblmaxsep=\dimen119
+\aucount=\count93
+\originalaucount=\count94
+\auwidth=\dimen120
+\auskip=\dimen121
+\auskipcount=\count95
+\auskip=\dimen122
+\allauboxes=\dimen123
+\addauthors=\toks20
+\addauflag=\count96
+\subtitletext=\toks21
+\savesection=\count97
+\sectioncntr=\count98
+\c@figure=\count99
+\c@table=\count100
+\titleboxnotes=\toks22
+\titleboxnoteflag=\count101
+Document Class: www2003-submission 2002/8/29 - V1.0 - based on sig-alt-release.
+cls
+(/usr/share/texmf/tex/latex/base/latexsym.sty
+Package: latexsym 1998/08/17 v2.2e Standard LaTeX package (lasy symbols)
+\symlasy=\mathgroup6
+LaTeX Font Info:    Overwriting symbol font `lasy' in version `bold'
+(Font)                  U/lasy/m/n --> U/lasy/b/n on input line 29.
+)
+\@acmtitlebox=\box28
+\titlenotecount=\count102
+\tntoks=\toks23
+\tntokstwo=\toks24
+\tntoksthree=\toks25
+\tntoksfour=\toks26
+\tntoksfive=\toks27
+\catcount=\count103
+\copyrightnotice=\toks28
+\conf=\toks29
+\confinfo=\toks30
+\c@part=\count104
+\c@section=\count105
+\c@subsection=\count106
+\c@subsubsection=\count107
+\c@paragraph=\count108
+Using 'Abbrev' bibliography style
+\bibindent=\dimen124
+\colcntr=\count109
+\savebox=\box29
+\copyrtyr=\toks31
+\acmcopyr=\toks32
+\boilerplate=\toks33
+\copyrightetc=\toks34
+) (/usr/share/texmf/tex/latex/psnfss/times.sty
+Package: times 1999/03/29 PSNFSS v.7.2 Times font as default roman : S Rahtz
+) (/usr/share/texmf/tex/latex/misc/moreverb.sty
+Package: moreverb 1997/12/07 v2.2d.2 `more' verbatim facilities
+(/usr/share/texmf/tex/latex/tools/verbatim.sty
+Package: verbatim 1997/04/30 v1.5k LaTeX2e package for verbatim enhancements
+\every@verbatim=\toks35
+\verbatim@line=\toks36
+\verbatim@in@stream=\read1
+)
+\verbatim@out=\write3
+\tab@position=\count110
+\tab@size=\count111
+\listing@line=\count112
+) (/usr/share/texmf/tex/latex/misc/floatflt.sty
+Package: floatflt 1997/07/16 v. 1.31
+\c@OptionTest=\count113
+\figbox=\box30
+\tabbox=\box31
+\pagebox=\box32
+\ffigcount=\count114
+\ftabcount=\count115
+\fftest=\count116
+\hangcount=\count117
+\nosuccesstryfig=\count118
+\nosuccesstrytab=\count119
+\figgutter=\dimen125
+\tabgutter=\dimen126
+\htdone=\dimen127
+\pageht=\dimen128
+\startpageht=\dimen129
+\tabbredd=\dimen130
+\floatfltwidth=\dimen131
+\fltitemwidth=\dimen132
+\outputpretest=\toks37
+) (/usr/share/texmf/tex/latex/html/url.sty
+Package: url 1999/03/02  ver 1.4  Verb mode for urls, email addresses, and file
+ names
+) (/usr/share/texmf/tex/latex/graphics/color.sty
+Package: color 1999/02/16 v1.0i Standard LaTeX Color (DPC)
+(/usr/share/texmf/tex/latex/config/color.cfg)
+Package color Info: Driver file: dvips.def on input line 125.
+(/usr/share/texmf/tex/latex/graphics/dvipsnam.def
+File: dvipsnam.def 1999/02/16 v3.0i Driver-dependant file (DPC,SPQR)
+)) (/usr/share/texmf/tex/latex/base/inputenc.sty beta test version
+Package: inputenc 1998/03/05 v0.97 Input encoding file (test version: still lia
+ble to change)
+)
+\sizebox=\box33
+\lthtmlwrite=\write4
+No file images.aux.
+\openout1 = `images.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 131.
+LaTeX Font Info:    ... okay on input line 131.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 131.
+LaTeX Font Info:    ... okay on input line 131.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 131.
+LaTeX Font Info:    ... okay on input line 131.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 131.
+LaTeX Font Info:    ... okay on input line 131.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 131.
+LaTeX Font Info:    ... okay on input line 131.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 131.
+LaTeX Font Info:    ... okay on input line 131.
+LaTeX Font Info:    Try loading font information for OT1+ptm on input line 131.
+
+(/usr/share/texmf/tex/latex/psnfss/ot1ptm.fd
+File: ot1ptm.fd 1998/07/06 Fontinst v1.800 font definitions for OT1/ptm.
+)
+
+latex2htmlLength hsize=162.5pt
+
+latex2htmlLength vsize=677.73001pt
+
+latex2htmlLength hoffset=0.0pt
+
+latex2htmlLength voffset=0.0pt
+
+latex2htmlLength topmargin=0.0pt
+
+latex2htmlLength topskip=0.00003pt
+
+latex2htmlLength headheight=0.0pt
+
+latex2htmlLength headsep=0.0pt
+
+latex2htmlLength parskip=0.0pt plus 1.0pt
+
+latex2htmlLength oddsidemargin=-18.26999pt
+
+latex2htmlLength evensidemargin=-18.26999pt
+
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 156.
+
+(/usr/share/texmf/tex/latex/psnfss/ot1pcr.fd
+File: ot1pcr.fd 1998/07/06 Fontinst v1.800 font definitions for OT1/pcr.
+)
+
+LaTeX Warning: Characters dropped after `\end{figure}' on input line 167.
+
+l2hSize :figure61:104.4559pt::0.0pt::349.0pt.
+[1
+
+
+
+]
+
+LaTeX Warning: Characters dropped after `\end{figure}' on input line 187.
+
+l2hSize :figure75:131.4559pt::0.0pt::349.0pt.
+[2
+
+
+] (images.aux) ) 
+Here is how much of TeX's memory you used:
+ 1917 strings out of 10898
+ 21634 string characters out of 96882
+ 70925 words of memory out of 263001
+ 4856 multiletter control sequences out of 10000+0
+ 15337 words of font info for 34 fonts, out of 400000 for 1000
+ 14 hyphenation exceptions out of 1000
+ 39i,5n,26p,244b,401s stack positions out of 300i,100n,500p,50000b,4000s
+
+Output written on images.dvi (2 pages, 1688 bytes).
