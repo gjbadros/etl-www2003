@@ -18,6 +18,13 @@ are all identical and are each the main text of the paper.  Those XHTML
 documents reference the included *.png files and *.css files.  The CSS
 files are unchanged as from the distribution site.
 
+Also included in the distribution is:
+
+etl-www-2003-poster.pdf
+
+which is the PDF version of the document (more suitable for the print
+proceedings).
+
 For questions, please feel free to contact either of the authors:
 
 Abhishek Parmar, aparmar@infospace.com, 425.201-6100
