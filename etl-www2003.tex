@@ -854,6 +854,21 @@ available in the IDE\@.
 \end{figure}
 
 
+
+%% This was generated using:
+%% ~/tigerprawns/etl-interpreter/tools/templates-for-url.pl -r edges-ftr_fast.htm -A "http://stagingetl2/info/ftr_fast.htm"
+%%  dot -Tgif edges-ftr_fast.htm > ftr_fast-call-graph.gif
+%% and then converting the .GIF into .EPS using XV
+\begin{figure*}[bt]
+\begin{centering}
+\includegraphics[width=\linewidth]{ftr_fast-call-graph.eps}
+\caption{Call-graph of templates possibly used in generating an HTML
+page footer.  The extraction of the call-graph was done using
+server-side XPath expressions and a simple Perl script. \label{fig-call-graph}}
+\end{centering}
+\end{figure*}
+
+
 %%% 
 \section{Implementation \& experience}
 \label{sec-implementation}
