@@ -674,8 +674,6 @@ transformation file.   The events will be used to directly construct a
 DOM tree that is then transformed via the named stylesheet, letting the
 stylesheet generate the formatter's response string.
 
-
-
 \subsection{Control flow}
 \label{ssec-control}
 
@@ -909,20 +907,20 @@ annotations.
 \subsection{Custom tags}
 \label{ssec-custom-tags}
 
-\gjb{write this section!}
+ETL allows custom tags to define new abstractions in terms of only
+built-in primitives.  The mechanism ETL provides is based on abstract
+syntax tree rewriting similar to Scheme's hygienic macros~\cite{R5RS}
+and other syntactic macro systems.~\cite{Aitken97,Brabrand2002}.
+Given that the AST of an ETL template is simply the XML source code
+itself, we simply use XSLT to describe the rewrite rules.  Those rules
+are then applied to the source template before byte-compilation of the
+resulting template that has been reduced to include only the core
+language.  This approach allows a great deal of flexibility in new
+abstractions without impacting the ease of analyzing the reduced
+source code (because it introduces no new expressiveness).
 
-** mention Scheme hygienic macro system; similar to that, except uses
-XSLT for rewrite rules.
-
-** IP ~\cite{Aitken97}
-
-metamorphic syntax macros \cite{Brabrand2002}
-
-** iterate until no more custom tags to expand
-
-** expand before or after WS handling
-
-
+%% GREGB:FIXME:: I could give an example here
+\gjb{An example might be nice}
 
 
 \begin{figure}[tb]
