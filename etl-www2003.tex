@@ -29,7 +29,7 @@
 \newcommand{\B}{\discretionary{}{}{}}
 \newcommand{\smtt}{\small}
 \newcommand{\smtexttt}[1]{{\small\texttt{#1}}}
-\newcommand{\figref}[1]{Figure~\ref{fig-#1}}
+\newcommand{\figref}[1]{Fig.~\ref{fig-#1}}
 \newcommand{\tableref}[1]{Table~\ref{#1}}
 \newcommand{\tm}{{\scriptsize $^{\mbox{tm}}$}}
 
@@ -110,15 +110,15 @@ model (lines 7 and 9). % GREGB:FIXME:: check these line numbers
 <? $books = GetBooks(...); ?>
 <html>
  <table>
-  <tr>
-   <? for ($i = 0; 
+  <? for ($i = 0; 
            $i < count($books); ++$i) { ?>
+   <tr>
      <td><? print($books[$i][author]); ?>
          </td>
      <td><? print($books[$i][title]); ?>
          </td>
-   <? } ?>
-  </tr>
+   </tr>
+  <? } ?>
  </table>
 </htm>
 \end{listing}%$
@@ -274,15 +274,40 @@ Section \ref{sec-} ....
 \section{Extensible Templating Language}
 
 
+\begin{figure}[htbp]
+\begin{listing}{1}
+<?xml version="1.0"?>
+<bl:template xmlns:bl="http://www....">
+ <bl:set var="#xml/books">...</bl:set>
+ <html>
+  <table>
+   <bl:for-each var="#xml/books/book">
+    <tr> 
+     <td><bl:get var="@author"/></td>
+     <td><bl:get var="@title"/></td>
+    </tr>
+   </bl:for-each>
+  </table>
+ </html>
+</bl:template>
+\end{listing}%$
+\caption{The ETL template corresponding to \figref{php-books}'s PHP
+code. Because ETL is required to be well-formed XML, the developer
+avoids the mistake from line 14 of the PHP example.
+\label{fig-etl-books}}
+\end{figure}
 
 
 %%% 
 \section{Benefits of ETL}
 
+ETL has an integrated development environment that was very
+easy to build by leveraging the XSD schema that defines the language
+(\figref{homesite-screenshot}).
+
 \begin{figure}[tb]
 \begin{centering}
 \hspace*{-0.05\linewidth}\includegraphics[width=1.1\linewidth]{homesite-screenshot.eps}
-
 \caption{A screenshot of the integrated development environment based
 on Homesite.  By using custom tag information generated automatically
 from the XSD schema for ETL, the environment supports automatic
@@ -305,6 +330,44 @@ ETL has a debugger (\figref{debugger-screenshot}).
 \caption{A screenshot of the debugger.
 \label{fig-debugger-screenshot}}
 \end{centering}
+\end{figure}
+
+
+\begin{figure}[tb]
+\begin{centering}
+\hspace*{-0.05\linewidth}\includegraphics[width=1.1\linewidth]{etls-admin.eps}
+\caption{The ETL Server's administration pages.
+\label{fig-etls-admin}}
+\end{centering}
+\end{figure}
+
+
+
+\begin{figure}[htbp]
+\begin{verbatim}
+Template `books.html.etl' has 0 errors.
+0 template('books.html.etl') {
+1  set_simple(#xml/books := '...')
+2  #nocmd('<html>','</html>') {
+3   #nocmd('<table>','</table>') {
+4    for-each(#xml/books/book) {
+5     #nocmd('<tr>','</tr>') {
+6      #nocmd('<td>','</td>') {
+7       get(@author)
+       } // #nocmd('<td>','</td>')
+8      #nocmd('<td>','</td>') {
+9       get(@title)
+       } // #nocmd('<td>','</td>')
+      } // #nocmd('<tr>','</tr>')
+     } // for-each(#xml/books 'book')
+    } // #nocmd('<table>','</table>')
+   } // #nocmd('<html>','</html>')
+  } // template('books.html.etl')
+\end{verbatim}%$
+\caption{A server-generated decompilation of the internal representation
+of the ETL template from \figref{etl-books}.  The nesting of elements
+is preserved, but the byte-codes have been linearized for performance.
+\label{fig-etl-decompile}}
 \end{figure}
 
 

@@ -26,12 +26,12 @@ public void doGet(HttpServletRequest req, HttpServletResponse res) ... {
 <? $books = ...; ?>
 <html>
  <table>
-  <tr>
-   <? for ($i = 0; $i < count($books); ++$i) { ?>
+  <? for ($i = 0; $i < count($books); ++$i) { ?>
+   <tr>
      <td><? print($books[$i][author]); ?></td>
      <td><? print($books[$i][title]); ?></td>
-   <? } ?>
-  </tr>
+   </tr>
+  <? } ?>
  </table>
 </html>
 
@@ -70,3 +70,18 @@ public void doGet(HttpServletRequest req, HttpServletResponse res) ... {
   </table>
 </html>
       
+
+<?xml version="1.0"?>
+<bl:template xmlns:bl="...">
+ <bl:set var="#xml/books">...</bl:set>
+ <html>
+  <table>
+   <bl:for-each var="#xml/books/book">
+    <tr> 
+     <td><bl:get var="@author"/></td>
+     <td><bl:get var="@title"/></td>
+    </tr>
+   </bl:for-each>
+  </table>
+ </html>
+</bl:template>
