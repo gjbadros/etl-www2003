@@ -221,7 +221,7 @@ With a carefully-chosen XML representation, valuable semantics of the
 code are immediately available to XPath expressions, thus facilitating
 a broad class of source code tools.  However, for a general-purpose
 programming language, XML is unwieldy for use as the primary
-representation.  Instead, the conventional grammer-based language is
+representation.  Instead, the conventional grammar-based language is
 edited by humans and is only converted into XML for the tools to
 leverage.
 
@@ -248,7 +248,7 @@ ETL leverages the well-formedness and local-validity checks of the
 source template to support those same properties in the generated
 response markup.  By limiting the programming-language constructs to
 include only the features that are appropriate at the front-end of a
-scalable web application architectur, we ease numerous analyses and
+scalable web application architecture, we ease numerous analyses and
 encourage proper separation of the presentation from the content and
 business logic. Finally, because of its use of XML as a
 representation, ETL simplifies ad-hoc software engineering analyses to
@@ -340,7 +340,7 @@ validity checks on literal markup elements to confirm their proper
 nesting and that they use the correct attributes.  A goal of ETL is to
 make approximate analyses easy and precise analyses possible.
 
-An example ETL template appears in \figref{etl-books} and is analagous
+An example ETL template appears in \figref{etl-books} and is analogous
 to the PHP example from \figref{php-books}.  The program is simply an
 XML document with root element \smtexttt{bl:template}\footnote{We use
 namespace prefixes consistently to unambiguously refer to elements in
@@ -410,7 +410,7 @@ but for \smtexttt{@count} that number is set statically while for
 \smtexttt{@count-var} it is determined dynamically (at run-time).
 
 Using a pair of attributes to represent a logical field is a novel
-mechansim to improve the type-safety and ease analysis.  The common
+mechanism to improve the type-safety and ease analysis.  The common
 alternative is using a small domain-specific language inside the value
 of an attribute.  For example, we could have used \smtexttt{count="2"}
 or \smtexttt{count="\$num"} to represent the literal number 2 or the
@@ -418,7 +418,7 @@ desire to use the current value of the variable ``num'',
 respectively.\footnote{XSLT takes a similar approach, using, for example,
 \smtexttt{value-of="'literal'"} or \smtexttt{value-of="var"} where the
 value of the attribute is an XPath expression.}
-Unfortunatetly, when using a single attribute, the type for the
+Unfortunately, when using a single attribute, the type for the
 attribute's value must be broadened and is hence less precise.
 Additionally, developers must learn various ad-hoc syntactic rules to
 ensure full-fidelity of values:  how do you express the literal string
@@ -621,7 +621,7 @@ response document inside of &lt;!--
 \subsection{Controlling whitespace}
 
 Whitespace characters\footnote{Whitespace that is not a part of the
-XML Infoset~\cite{XML-infoset}, such as whitespace between attrbutes inside element
+XML Infoset~\cite{XML-infoset}, such as whitespace between attributes inside element
 tags, is managed via XML processing rules and is not controlled by the
 rules described in this section.} in a source template have mixed uses.  In some
 cases, the developer wishes to improve the readability of the program
@@ -671,7 +671,7 @@ space (0x20)
 
 \end{description}
 
-In addition to the above, \smtexttt{@bl:text-nodes} permits assymetric
+In addition to the above, \smtexttt{@bl:text-nodes} permits asymmetric
 handling of the left and right sides of the text nodes via values
 \smtexttt{compact-(left|right)} and \smtexttt{trim-(left|right)}. 
 Importantly, all of these whitespace rules are statically-scoped:
