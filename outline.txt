@@ -65,6 +65,8 @@ TBD
 *** literal markup (cf XSLT)
 *** primitives (with slots, attributes, values)
 *** variables (string, xml) and buckets
+*** reserved variables
+*** transformers
 *** custom tag rewriting via XSLT
 *** profile variables and user variables
 *** cobranding template resolution
@@ -77,6 +79,7 @@ TBD
 ** pretty-printing 
 ** source->source transformation 
 ** new abstractions 
+** reduce app-level security holes (ref. scott & sharp)
 
 
 * Implementation
@@ -103,6 +106,8 @@ TBD
 
 ** Simonyi's IP
 
+** Scott & Sharp (used a reverse-proxy approach to get some of the same benefits)
+
 
 * Future work
 ** XML infoset and non-infoset artifacts
@@ -114,6 +119,10 @@ TBD
 ** improvements to XSD to enable better validation
 *** e.g., either/or attributes for slots
 *** custom tag element definitions
+** levels of strictness
+** taint tracking of input variables
+** better warning/error reporting in terms of the pre-macro-transformed source template
+
 
 
 * Conclusion
