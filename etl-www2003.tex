@@ -99,19 +99,22 @@ performance by eliminating process creation overhead.
 
 Today, server-side markup generation is dominated by expressive and
 flexible general-purpose programming languages such as
-Java~\cite{Arnold98}, Perl~\cite{Camel3rd}, and PHP~\cite{pro_php}.  Ironically,
-the languages are then used in fairly restricted ways, often being
-tied to a templating syntax (e.g., JSP~\cite{JSP12} for Java or
-HTML::Template~\cite{HTML-Template} or Mason~\cite{Perl-Mason} for Perl).  For example, consider
-the PHP template in \figref{php-books}.  The only constructs required
-by the template are a) some means of populating a data model from the
-back-end business logic (line 1); b) data-driven iteration (line 4-5);
-and c) simple expression evaluation to access parts of the data model
-(lines 7 and 9). % GREGB:FIXME:: check these line numbers The extra
-power provided by typical templating languages not only goes unused,
-but it also complicates certain important analyses of the code.  For
-example, the obviously important property that a template execution
-terminates is undecidable for these general purpose languages.
+Java~\cite{Arnold98}, Perl~\cite{Camel3rd}, and PHP~\cite{pro_php}.
+Ironically, the languages are then mostly used
+in fairly restricted ways, often being tied to a templating syntax
+(e.g., JSP~\cite{JSP12} for Java or
+HTML::Template~\cite{HTML-Template} or Mason~\cite{Perl-Mason} for
+Perl).  For example, consider the PHP template in \figref{php-books}.
+The only constructs required by the template are a) some means of
+populating a data model from the back-end business logic (line 1); b)
+data-driven iteration (line 4-5); and c) simple expression evaluation
+to access parts of the data model (lines 7 and 9). The extra power
+provided by typical templating languages not only goes unused, but it
+also complicates certain important analyses of the code.  For example,
+the obviously important property that a template execution terminates
+is undecidable for these general purpose languages.  
+
+% GREGB:FIXME:: check the above line numbers 
 
 \begin{figure}[tb]
 \begin{listing}{1}
@@ -132,8 +135,8 @@ terminates is undecidable for these general purpose languages.
 \end{listing}%$
 \caption{PHP template illustrating the simplicity of the programming
 language constructs required by typical templates.  Unfortunately,
-because a powerful language is provided, PHP templates often engage in
-far broader interactions than the above ideal example.
+because a powerful language is provided, PHP templates sometimes engage
+in far broader interactions.
 \label{fig-php-books}}
 \end{figure}
 
@@ -165,29 +168,72 @@ evolve the complex systems~\cite{Badros00-spe,ErnstBadrosNotkin02}\cite[p.~424]{
 The precise analysis of an arbitrary JSP template necessarily requires
 full knowledge of both the rewrite rules and the semantics of Java.
 
-\gjb{Stress spaghetti code, separation of front and back end, describe
-how web service adoption changes the picture (reference the figure)}
+\subsection{Restricting the language}
 
-\gjb{Any references for importance of separation of front and back end?}
+All popular markup templating languages integrate with a
+general-purpose programming language.  This approach offers numerous
+advantages.  For example, undoubtedly the language is sufficiently
+powerful and expressive for the needs of markup generation.
+Additionally, numerous language-level tools such as compilers and
+debuggers, are already available for the templating language to
+leverage.  Certainly for platform providers that have a large
+investment already made in a general purpose language, it is natural
+to extend that investment to a templating language.\footnote{XSLT can
+be used in a templating style~\cite[2.3]{XSLT}, but popular use of
+XSLT also leverages scripting extensions to deal with the far too
+severe restrictions of the language.}
 
-\gjb{Question one assumption: do we need a full-blown general purpose
-programming language?}
+Despite the broad assumption that a markup language requires the use
+of a general purpose programming language, an obvious alternative
+exists: use a domain-specific language specifically tailored to the
+needs of generating markup.  Such an approach can mitigate several of
+the problems mentioned previously.  In particular, using a restricted
+programming language at the front-end to generate markup can enforce
+better separation of front-end presentation from back-end application
+logic and may simplify the templates such that they are easier to
+write, read, and evolve.
+
+\begin{figure}[bt]
+\begin{centering}
+\includegraphics[width=1\linewidth]{web-service-ip-shift.eps}
+\caption{Web services enable the front-end templating tier to
+communicate with back-end applications via standard Internet Protocols
+such as XML and SOAP; they no longer need to be aware of distributed
+object protocols such as DCOM or Corba.\label{fig-ws-ip-shift}}
+\end{centering}
+\end{figure}
+
+If we limit the functionality of a markup templating language, one
+capability that remains important is accessing back-end applications.
+The architecture of the classic three-tier application appears at the
+top of \figref{ws-ip-shift}.  Historically, the communication between
+the front-end and back-end servers uses an object-oriented data model
+and involves remote procedure call mechanisms such as DCOM or Corba.
+As the web service architecture depicted in the bottom of
+\figref{ws-ip-shift} increases in popularity, the need for the front
+end templating language to reason about language-level objects is
+reduced.  Instead, the XML data model implied by web services can be
+the primary communication format and the front end need only use
+Internet standards such as HTTP and XML in interacting with other
+applications.  This observation simplifies the requirements
+for front-end markup templating languages and supports the possibility
+that a restricted programming language may suffice.
 
 %% GIVE EXAMPLES OF VALUABLE ANALYSES!!!
 \subsection{Analysis of markup templates}
 
-The various templating languages all have one primary goal: to
-generate markup to be returned to the requesting user agent.  It is
-important that the markup created conforms to appropriate Internet
-standards.  For example, WML markup needs to first be well-formed XML
-and second be valid with respect to the appropriate
-schema or DTD~\cite{WML12}.  Although HTML browsers are more forgiving of
-variations in syntax, best-practices still dictate that the markup returned
-be in compliance with the HTML specification~\cite{HTML4}.
-Popular templating languages including PHP, JSP, ASP, and others
-all process arbitrary text and are ignorant of the rules of the markup
-being generated: the mistaken close tag on line 14 of \figref{php-books}
-goes unnoticed by PHP.
+Templating languages have one primary goal: to generate markup to be
+returned to the requesting user agent.  It is important that the
+markup created conforms to appropriate Internet standards.  For
+example, WML markup needs to first be well-formed XML and second be
+valid with respect to the appropriate schema or DTD~\cite{WML12}.
+Although HTML browsers are more forgiving of variations in syntax,
+best-practices still dictate that the markup returned be in compliance
+with the HTML specification~\cite{HTML4}.  Popular templating
+languages including PHP, JSP, ASP, and others all process arbitrary
+text and are ignorant of the rules of the markup being generated: the
+mistaken close tag on line 14 of \figref{php-books} goes unnoticed by
+PHP.
 
 Tools such as HTMLTidy~\cite{HTMLTidy} are available to check the
 responses from servers for conformance, but often testing involves
@@ -273,17 +319,6 @@ production-quality web server, the Extensible Templating Language
 Server.  ETLS is currently employed by InfoSpace to serve over forty
 million requests per day using over sixty thousand ETL templates.
 
-\begin{figure}[bt]
-\begin{centering}
-\includegraphics[width=1\linewidth]{web-service-ip-shift.eps}
-\caption{Web services enable the front-end templating tier to
-communicate with back-end applications via standard Internet Protocols
-such as XML and SOAP; they no longer need to be aware of distributed
-object protocols such as DCOM or Corba.\label{fig-ws-ip-shift}}
-\end{centering}
-\end{figure}
-
-
 \subsection{Outline of paper}
 
 The rest of this paper is organized as follows. \secref{etl} describes
@@ -329,7 +364,8 @@ goals for ETL were to:
 \item Allow easy analyses of source templates to permit development of
 supporting tools; 
 \item support only the essential programming language constructs
-required by a templating layer; and
+required by a templating layer; 
+\item focus on an imperative (i.e., procedural) programming model; and
 \item utilize an XML data model pervasively to integrate seamlessly
 with Internet and Web standards.
 \end{enumerate}
