@@ -188,19 +188,19 @@ markup.  If static analysis of templates can rule out the possibility
 of certain kinds of errors, testing time and costs can be dramatically
 reduced.
 
-Another important requirement is to support ad-hoc queries of
-the source code templates. For small and simple dynamic web applications,
-the automated analysis of templates is often unnecessary: a web
-developer or two understands all of the code.  Over time, however,
-these simple applications grow in size and complexity such that
-tools analyzing the templates become an essential part of maintaining
-and evolving the system. For example, a site may wish to add an extra
-input field to all of its registration forms.  If a generic form is
-not already factored out into a common location, the first step in
-approaching the task is finding all of the registration forms.  Or
-suppose a new handheld device has a limitation in its handling of cookies:
-we need a means of narrowing the scope of careful review to places
-where that cookie is manipulated.
+Another important requirement for software development systems is to
+support ad-hoc queries of the source code. For small and simple
+dynamic web applications, the automated analysis of templates is often
+unnecessary: a web developer or two understands all of the code.  Over
+time, however, these simple applications grow in size and complexity
+such that tools analyzing the templates become an essential part of
+maintaining and evolving the system. For example, a site may wish to
+add an extra input field to all of its registration forms.  If a
+generic form is not already factored out into a common location, the
+first step in approaching the task is finding all of the registration
+forms.  Or suppose a new handheld device has a limitation in its
+handling of cookies: we need a means of narrowing the scope of careful
+review to places where that cookie is manipulated.
 
 Typically, web developers approach to above scenarios with an arsenal
 of imprecise lexical tools such as \smtexttt{grep}.  While searching
@@ -211,7 +211,8 @@ application. No regular expression will let us identify all
 unreachable templates to satisfy that query.  To analyze more deeply,
 we need to uncover the semantic structure of the templating language.
 Typically, that requires a language-specific parsing approach and much
-greater effort in building a valuable tool.
+greater effort in building a valuable tool or an extensible integrated
+development environment~\cite{Montana,Eclipse}.
 
 \subsection{XML supports analyses and tools}
 
@@ -796,15 +797,17 @@ ETL has an integrated development environment that was very
 easy to build by leveraging the XSD schema that defines the language
 (\figref{homesite-screenshot}).
 
+* two things: reduce expressiveness and use XML representation
+
 ** development environment completion
 ** validation for deep checking before deployment
-** analysis 
 ** pretty-printing 
 ** source->source transformation 
 ** new abstractions 
 ** reduce app-level security holes (ref. scott \& sharp)
-
-
+** call graph extraction
+** provable termination (bounded recursion and only data-driven iteration over finite data structures)
+** simpler: no need to mix programming paradigms, no need to learn a general purpose programming language: XML + web services *IS* your world
 
 \begin{figure}[tb]
 \begin{centering}
@@ -905,9 +908,6 @@ doing markup templating, so it is a natural place to apply the
 benefits of an XML-based program representation.  Cite Zou \&
 Kontogiannis; Power \& Malloy; Maletic, Collard, \& Marcus; Schonger,
 Pulvermiller \& Sarstedt; 
-
-Maybe mention Montana C++ compiler -- recognizes value of tools being
-able to work with the parse tree. (This could be an earlier citation.)
 
 XSLT -- declarative and that confuses folks.  Plus too limited in
 terms of ability to interact with external components -- you end up
