@@ -137,25 +137,27 @@ is undecidable for these general purpose languages.
  </table>
 </htm>
 \end{listing}%$
-\caption{PHP template illustrating the simplicity of the programming
-language constructs required by typical templates.  Unfortunately,
-because a powerful language is provided, PHP templates sometimes engage
-in far broader interactions.
+\caption{PHP templates have minimal programming language construct
+requirements.  Unfortunately, over the evolution of the presentation
+layer, PHP developers sometimes engage in far broader interactions
+because the power of the language allows them to do so.
 \label{fig-php-books}}
 \end{figure}
 
-Unfortunately, for most contemporary web application development
-frameworks, the restrictions desired of the front-end templating layer
-are imposed only by process and convention.  Template authors are
-asked to limit themselves to a subset of the available features of a
-language as a means of facilitating scalable, secure, well-behaved
-systems.  Importantly, however, there is nothing inherent that
-prevents template-based code from, for example, making individual
-database connections (which would impact performance) or maintaining
+For most contemporary web application development frameworks, the
+restrictions desired of the front-end templating layer are imposed
+only by process and convention.  Template authors are asked to limit
+themselves to a subset of the available features of a language as a
+means of facilitating scalable, secure, well-behaved systems.
+Importantly, however, there is nothing inherent that prevents
+template-based code from, for example, making individual database
+connections (which would impact performance) or maintaining
 undesirable server-side state (which would impose additional
 requirements on the load-balancing mechanism and reduce scalability).
-These concerns are intensified because many development organizations
-encourage a strong separation between the web developers and back-end
+Languages such as PHP encourage the undesirable mixing of front-end
+presentation with back-end business logic.~\cite{Crane2002} That
+approach is counter to the goal of many development organizations to
+force a strong separation between the web developers and back-end
 application developers. While web developers have substantial
 expertise in HTML, user-interface design, and client-side scripting,
 their responsibilities often do not include consideration of the
@@ -365,7 +367,7 @@ with XML-based programming language constructs.  Our primary design
 goals for ETL were to:\footnote{A fifth important design goal was to
 enable automatic translation of our legacy templating language into ETL. That
 need occasionally complicated our design. This bulk of this paper
-focusses on the essential language, and
+focuses on the essential language, and
 \secref{implementation} mentions our migration to ETL a bit more.}
 
 \begin{enumerate}
@@ -440,7 +442,7 @@ are all available to the template (see
 \ssecref{buckets}). The primary goal of executing a template is to
 generate an HTTP response including the markup document along with the
 various HTTP headers such as the content-type, cookie settings, and
-other metadata.  Generally, an ETL template is similar to a method in
+other meta-data.  Generally, an ETL template is similar to a method in
 a general purpose object-oriented programming language: it can invoke
 other templates as subroutines and can also perform subsidiary HTTP
 requests to other servers.  In fact, HTTP-bound
@@ -591,7 +593,7 @@ bucket instead:
 \noindent Numerous buckets exist in the XML data model providing ways
 to access URL parameters, HTTP headers, user settings,
 configuration data for applications and brands, and cookies.  Where
-appropriate, the buckets are mutatable as well (e.g., saving user
+appropriate, the buckets are mutable as well (e.g., saving user
 settings to the user database).
 
 One additional bucket, \smtexttt{\#xml} is unique in that the values
@@ -735,7 +737,7 @@ influenced by InfoSpace's business model of building a site once and
 customizing it often for different partners.}  The brand is used for
 two primary purposes.  First, it is used as a means of populating a
 dictionary of configuration variables over which templates may be
-parameterized.  Second, it is used to to select which template is
+parameterized.  Second, it is used to select which template is
 invoked for the initial processing of a request and whenever the
 \smtexttt{bl:call} primitive is used to execute another template as a
 subroutine.
@@ -976,7 +978,7 @@ embeds them in XML.  Mention S-exp and XML similarity.
 BigWig -- similar goals, but take a general purpose programming
 language and extend it with a first class markup fragment type with
 gaps that can be plugged.  They do lattice-theoretic iterative
-data-flow analyses, ETL focusses on practical aspects of limiting
+data-flow analyses, ETL focuses on practical aspects of limiting
 common mistakes:  it'd be interesting to apply the data flow analyses
 to ETL to make it provably generate correct markup, but that wasn't an
 a priori goal.
