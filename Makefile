@@ -21,7 +21,7 @@ PDF := $(ETL).pdf
 
 DVI := $(ETL).dvi
 
-all: $(POSTSCRIPT) $(PDF) $(HTML_FILES) $(DVI)
+all: $(POSTSCRIPT) $(PDF) $(DVI) # $(HTML_FILES)
 
 clean:
 	rm -f $(POSTSCRIPT) $(PDF) $(DVI)
