@@ -2,22 +2,9 @@ $Id$
 
 30 word statement of contribution:
 
-The Extensible Templating Language demonstrates a powerful, expressive
-language that leverages its native XML representation to improve
-analyzability, thus reducing costs and increasing quality by
-eliminating whole classes of errors.
-
-
-The Extensible Templating Language's native XML representation
-maintains sufficient power and expressiveness while facilitating
-analysis of web templates.  ETL reduces costs and increases quality
-by eliminating whole classes of errors.
-
-
-
-The Extensible Templating Language is a web templating language that
-maintains power and expressiveness without relinquishing static
-analyzability, thus reducing costs and increasing quality by
+ETL demonstrates that web templating does not require a full
+programming language. A restricted XML-based language improves
+analyzability, potentially reducing costs and increasing quality by
 eliminating whole classes of errors.
 
 
