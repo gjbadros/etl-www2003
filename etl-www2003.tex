@@ -630,39 +630,37 @@ selection, conditionals and loops, exceptions, and remote invocations.
 \label{ssec-selection}
 
 Requests made of the ETL server always have an associated abstract
-``brand''.  The brand can be explicitly specified as part of the URI
-itself, or can be implicit based on the \smtexttt{Hostname} header of
-the HTTP request (e.g., when multiple hostnames or domains refer to
-the same server).  That brand identifies the customer for whom ETLS is
+``brand''.  The brand can be explicitly specified as part of the URL,
+or can be implicit based on the \smtexttt{Hostname} header of the HTTP
+request (e.g., when multiple hostnames or domains refer to the same
+server).  That brand identifies the customer for whom ETLS is
 generating the page.\footnote{This branding feature is heavily
-influenced by InfoSpace's business model of building a site once and
-customizing it often for different partners.}  The brand is used to
+influenced by InfoSpace's business of building an application
+once and customizing it for different partners.}  The brand is used to
 select which template is invoked for the initial processing of a
 request and whenever the \smtexttt{bl:call} primitive is used to
-execute another template as a subroutine.  
+execute another template as a subroutine.
 
 For example, an \smtexttt{index.htm} page may \smtexttt{bl:call} a
 \smtexttt{header.htm} template to output a banner for the top of a
 page, then do some work to generate the meat of the page, and finally
-invoked \smtexttt{footer.htm} to generate another banner for the
+invoke \smtexttt{footer.htm} to generate another banner for the
 bottom.  The \smtexttt{header.htm} at the top-level of the brand
 hierarchy may provide some basic functionality, while a sub-brand may
-provide an overriding \smtexttt{header.htm} implementation that
-specializes the banner for that customer.  The hierarchical
-relationships are mirrored in the directory structure of the webtree,
-and template selection is analogous to method dispatch in
-object-oriented programming languages.  Importantly, ETL only permits
-bounded recursion, thus avoiding the possibility of infinite
-recursion.
+provide an overriding \smtexttt{header.htm} implementation (as a file
+in a subdirectory) that specializes the banner.  Template selection is
+analogous to method dispatch in object-oriented programming languages.
+Importantly, ETL only permits bounded recursion, thus ensuring
+termination.
 
 \subsubsection{Conditionals and loops}
 
 Both \smtexttt{bl:if} and
-\smtexttt{bl:choose}/\smtexttt{bl:when}/\smtexttt{bl:otherwise}
-constructs are supported by ETL and behave much as they do in XSLT.
-The primary difference is that ETL does not permit the generality of a
-domain specific expression language, and instead uses pairs of
-slots to represent the guard conditions.  For example:
+\smtexttt{bl:choose}/\B{}\smtexttt{bl:when}/\B{}\smtexttt{bl:otherwise}
+constructs are supported and behave much as they do in XSLT\@.  The
+primary difference is that ETL does not permit the generality of a
+domain specific expression language, and instead uses pairs of slots
+to represent the guard conditions.  For example:
 
 \begin{smallverbatim}
 <bl:if var="pagenum" less-than-var="max-page">
@@ -675,8 +673,7 @@ language in a \smtexttt{test} attribute, it does make it easier to use
 XPath to find occurrences of specific operations being used in
 conditional guards.   Additionally, it allows us to specify the
 left-hand-side value of a comparison guard in \smtexttt{bl:choose} to
-specialize that construct into something similar to a
-\smtexttt{switch} statement:
+approximate the convenience of a \smtexttt{switch} statement:
 
 \begin{smallverbatim}
 <bl:choose var="pagenum">
@@ -687,21 +684,24 @@ specialize that construct into something similar to a
 </bl:choose>
 \end{smallverbatim}
 
-\noindent where each of the \smtexttt{bl:when} clauses compares the
-same variable (without needing to redundantly specify its name).
+\noindent where each of the \smtexttt{bl:when} clauses compare the
+same variable (without redundant specification of its name).
 
-With regard to looping, only data-driven loops are supported.  Because
-only finite data structures exist, this ensures that loops terminate.
+For looping, only data-driven loops are supported.  Because only
+finite data structures exist, this ensures that loops terminate.  A
+\smtexttt{bl:for-each} primitive iterates over nodes in a node-set of
+an XML variable or splits strings at a specific delimiter and operates
+on the substrings.
 
-\subsubsection{Exception handling}
+\subsubsection{Exceptions}
 
-Some primitives throw run-time exceptions.  For example, assigning an
-ill-formed string to an XML-typed variable results in a parse
-exception.  To recover from those exceptions, \smtexttt{bl:try} blocks
-that include \smtexttt{bl:catch} and \smtexttt{bl:finally} children
-blocks are supported.  Additionally, templates (especially
-subroutines) can use \smtexttt{bl:throw} to generate their own
-exceptions to be handled by higher stack frames. 
+Some primitives throw run-time exceptions.  For example, assigning a
+string that contains ill-formed XML to an XML-typed variable results
+in a parse exception.  To recover from those exceptions,
+\smtexttt{bl:try} blocks that include \smtexttt{bl:catch} and
+\smtexttt{bl:finally} children blocks are supported.  Additionally,
+templates (especially subroutines) can use \smtexttt{bl:throw} to
+generate their own exceptions to be handled by higher stack frames.
 
 \subsubsection{Remote invocation}
 
@@ -718,11 +718,10 @@ the server.
 \subsection{Literal markup}
 \label{ssec-literal-markup}
 
-The primary responsibility of templating languages is to generate an
-output document for each request.  While typical templating languages
-are text-based, ETL is markup-based.  It is this distinction that
-enables ETL to favor generating well-formed output documents.  For
-example, an ASP template might read:
+While typical templating languages are text-based, ETL is
+markup-based.  It is this distinction that enables ETL to favor
+generating well-formed output documents.  For example, an ASP template
+might read:
 
 \begin{smallverbatim}
 <a href="<%= target %>"><%= link_name %></a>
@@ -737,29 +736,27 @@ this snippet:
 \end{smallverbatim}
 
 \noindent is essentially the same as the preceding code, despite the
-fact that the first example is far more likely to generate proper
-markup.
+fact that the second example contains several errors.
 
-As a markup-based templating language, ETL makes it easier to write
-templates that will generate well-formed and valid markup than it is
-to force the output of improper XML.  For example, to output a literal
-XML fragment such as ``\smtexttt{<b>Good</b>}'', that fragment can be
-written directly in the ETL template.  However, to generate the
-string ``\smtexttt{<a>Bad</b>}'', you must fall back on outputting
-individual characters and write:
+As a markup-based templating language, ETL favors writing templates
+that will generate well-formed and valid markup.  For example, to
+output a literal XML fragment such as ``\smtexttt{<b>Good</b>}'', that
+fragment can be written directly in the ETL template.  However, to
+generate the ill-formed XML fragment ``\smtexttt{<a>Bad</b>}'', you
+must fall back on outputting individual characters and write:
 
 \begin{smallverbatim}
 &lt;a&gt;Bad&lt;/b&gt;
 \end{smallverbatim}
 
-\noindent Note that ETL does not forbid you from outputting ill-formed
+\noindent Note that ETL does not forbid outputting ill-formed
 markup, it only encourages proper markup by making that common case
 far more natural to write.
 
-Of course, often the markup we need to output includes dynamically
-computed attributes and content (as with our initial ASP example).
-To output an attribute with its value derived from the value of a
-variable, you can write:
+Of course, the markup we need to output often includes dynamically
+computed attributes and content (as with our initial ASP example).  To
+output an attribute with its value derived from a variable, you can
+write:
 
 \begin{smallverbatim}
 <a href="?target">...</a>
@@ -768,9 +765,9 @@ variable, you can write:
 \noindent where the \smtexttt{?target} syntax means to use the value
 of variable ``target'' rather than the literal characters
 \smtexttt{?target}\footnote{A leading backslash is ignored and suppresses the special
-meaning of the question mark in case you really do want those seven
-characters to be the value of the attribute.}  Alternatively, one can
-write:
+meaning of the question mark in case you really do want the attribute
+to be set to those seven characters.}
+Alternatively, one can write:
 
 \begin{smallverbatim}
 <a><at:href><bl:get var="target"></at:href>...</a>
@@ -780,15 +777,15 @@ write:
 element is given the value computed by evaluating the elements
 contained by \smtexttt{at:href}.  The special namespace \smtexttt{at}
 is used to make this format more concise than the long-winded
-\smtexttt{xsl:attribute} variant that XSLT uses.  The unqualified name of the
+\smtexttt{xsl:attribute} variant that XSLT uses.  The local name of the
 \smtexttt{at:*} element is used as the name of the attribute, and the
 contents can be arbitrary ETL code (e.g., including conditionals and
 subroutines). No matter which form is used to specify dynamic
-attribute values, the language ensures that the proper quotations and
+attribute values, the language ensures that proper quotations and
 encoding are used.
 
 Another common need is to conditionally include a tag.  For example,
-consider this illegal template fragment:
+consider this ill-formed template fragment:
 
 \begin{smallverbatim}
 <bl:if var="#pro/usebold">
@@ -800,10 +797,10 @@ consider this illegal template fragment:
 </bl:if>
 \end{smallverbatim}
 
-\noindent Although the intent is reasonable, XML's requirement of
-proper nesting disallows this syntax.  Instead, ETL supports that
-behaviour using a special \smtexttt{bl:if-var} attribute on an
-arbitrary literal result element:
+\noindent Although the intent is reasonable, XML requires
+proper nesting of elements and thus disallows this code.  Instead, ETL
+supports that behaviour using a special \smtexttt{bl:if-var} attribute
+on an arbitrary literal result element:
 
 \begin{smallverbatim}
 <b bl:if-var="#pro/wantbold">
@@ -813,7 +810,7 @@ arbitrary literal result element:
 
 \noindent where the output of \emph{both} the open and close
 \smtexttt{b} tags is controlled by the test of the single variable
-(and the contents of the \smtexttt{b} element are always evaluated).
+(and the contents of the \smtexttt{b} element are always executed).
 
 Comments are another subtle aspect of markup templating
 languages. They fall into two categories: 1) traditional comments
@@ -833,20 +830,20 @@ constructed using the \smtexttt{bl:comment} primitive.
 %</bl:comment>
 %\end{smallverbatim}
 
-Finally, to support internationalization of templates, developers can choose to
-use the \smtexttt{bl:tt} (token translation) primitive in all places
-where literal text or markup would appear.  For example, instead of writing
-\smtexttt{Hi <bl:get var="name"/>}, a properly internationalized
-template might read:
+Finally, to support internationalization of templates, developers can
+choose to use the \smtexttt{bl:tt} (token translation) primitive in
+all places where literal text or markup would appear.  For example,
+instead of writing \smtexttt{Hi <bl:get var="name"/>}, a properly
+internationalized template might read:
 
 \noindent \smtexttt{<bl:tt id="greet1">Hi</bl:tt><bl:get var="name"/>}
 
-Each template has a corresponding dictionary of token-translation
+\noindent Each template has a corresponding dictionary of token-translation
 definitions for the various locales that have been defined.  Based on
 the request's locale selection (either from a stylized URL or the
-\smtexttt{Accepts-language} header), the appropriate dictionary is
-used to replace each \smtexttt{bl:tt} element with the XML document
-fragment to which the given identifier maps.
+\smtexttt{Accepts-Language} header), the appropriate dictionary is
+used to replace each \smtexttt{bl:tt} element with the XML fragment to
+which the given identifier maps.
 
 \subsection{Controlling whitespace}
 \label{ssec-whitespace}
@@ -861,13 +858,12 @@ using indentation or blank lines.  In other cases, the whitespace is
 intended to be copied into the output document or a variable's value.
 The \smtexttt{xml:space} attribute provided by the XML
 standard~\cite[2.10]{XML} is not sufficiently expressive to support
-the various needs of the template author.
+the diverse needs of the template author.
 
 \begin{figure}[bt]
 \begin{centering}
 \includegraphics[height=1.5in]{etl-whitespace-rules.eps}
-\caption{The various classes of whitespace nodes in XML are controlled
-by several declarative attributes in ETL. \label{fig-ws-rules}}
+\caption{The various classes of whitespace nodes in XML. \label{fig-ws-rules}}
 \end{centering}
 \end{figure}
 
@@ -877,14 +873,11 @@ every XML element in source ETL documents: \smtexttt{@bl:space-nodes}
 and \smtexttt{@bl:text-nodes}.  These attributes are inherited by
 contained (i.e., children) elements and their contents unless
 overridden.  They control the various classes of whitespace
-illustrated in \figref{ws-rules} as follows.
-
-\begin{itemize}
-\item \smtexttt{@bl:space-nodes} controls whitespace-only (and
-      whitespace-only content) nodes (1, 5, 6, and 7 in the figure).
-\item \smtexttt{@bl:text-nodes} controls leading/internal/trailing whitespace of
-      text nodes (2, 3, and 4 in the figure).
-\end{itemize}
+illustrated in \figref{ws-rules}: \smtexttt{@bl:space-nodes} controls
+whitespace-only (and whitespace-only content) nodes (1, 5, 6, and 7 in
+the figure), while \smtexttt{@bl:text-nodes} controls
+leading/internal/trailing whitespace of text nodes (2, 3, and 4 in the
+figure).
 
 The allowed settings for \smtexttt{@bl:space-nodes} are: a)
 \textbf{\smtexttt{preserve}}, to leave the whitespace unchanged; b)       
@@ -894,33 +887,27 @@ The allowed settings for \smtexttt{@bl:space-nodes} are: a)
 \textbf{\smtexttt{normalize}} to strip whitespace nodes that contain only
 newline (0x0A) characters entirely and replace sequences of 1 or more
 whitespace characters that include a space or a tab with a single
-space (0x20).
-
-In addition to the above, \smtexttt{@bl:text-nodes} permits asymmetric
-handling of the left and right sides of the text nodes via values
-\textbf{\smtexttt{compact-(left|right)}} and \textbf{\smtexttt{trim-(left|right)}}. 
-Importantly, these whitespace rules are statically-scoped: a called
-template is not impacted by a calling template's attribute
-annotations.
+space (0x20). Importantly, these whitespace rules are
+statically-scoped: a called template is not impacted by a calling
+template's attribute annotations.
 
 \subsection{Custom tags}
 \label{ssec-custom-tags}
 
 ETL allows custom tags to define new abstractions in terms of only
 built-in primitives.  The mechanism ETL provides is based on abstract
-syntax tree rewriting similar to Scheme's hygienic macros~\cite{R5RS}
+syntax tree (AST) rewriting similar to Scheme's hygienic macros~\cite{R5RS}
 and other syntactic macro systems.~\cite{Aitken97,Brabrand2002}.
 Given that the AST of an ETL template is simply the XML source code
 itself, we simply use XSLT to describe the rewrite rules (see
 \figref{processing-stages}).  Those rules are then applied to the
-source template before byte-compilation of the resulting template that
-has been reduced to include only the core language.  This approach
-allows a great deal of flexibility in new abstractions without
-impacting the ease of analyzing the reduced source code (because it
-introduces no new expressiveness).
+source template thus reducing that template to contain only the core
+language.  That reduced template is then byte-compiled for
+execution. This approach allows a great deal of flexibility in new
+abstractions without compromising our tight control over the limited
+behaviour we permit the presentation layer.
 
 %% GREGB:FIXME:: I could give an example here
-\gjb{An example might be nice}
 
 \begin{figure}[tb]
 \begin{centering}
@@ -931,8 +918,8 @@ system where the template is parsed and then byte-compiled into the
 runtime artifact, while (b) shows a JSP-like preprocessing system
 where the template is first converted into textual source code which
 then is parsed and compiled.  ETL's use of XML (c) allows the web
-developer to manipulate and analyze the AST thus simplifying the system.
-\label{fig-processing-stages}}
+developer to manipulate and analyze the AST thus simplifying the
+system. \label{fig-processing-stages}}
 \end{centering}
 \end{figure}
 
