@@ -1,5 +1,17 @@
 $Id$
 
+30 word statement of contribution:
+
+The Extensible Templating Language is a web templating language that
+maintains power and expressiveness without relinquishing static
+analyzability, thus reducing costs and increasing quality by
+eliminating whole classes of errors.
+
+
+Abstract:
+
+TBD
+
 * Introduction
 
 ** Importance of dynamic web applications
@@ -18,6 +30,14 @@ $Id$
 
 * Background
 
+** Server-side web applications
+*** dominant form of new applications over the last 6 years
+*** varieties of browsers (i.e., clients) complicates development and testing
+***-> have to deal with their different capabilities, quirks
+      (e.g., browserhawk)
+*** device varieties (as well as markup varieties) is only getting worse
+***-> e.g., wireless devices and markups, other XML dialects
+
 ** Existing templating strategies & their problems
 *** raw programming approach (CGI, servlets) & their problems
 *** templating approach (PHP, mod_perl, JSP) & their problems
@@ -26,7 +46,7 @@ $Id$
 *** restricted templating approach
 **** XML-based (XSLT)
 **** Text-based (ESI)
-*** Embedding markup in language
+*** Embedding markup in language (see also related work section)
 **** Scheme -- LAML (HTML & XML)
 **** Haskell
 **** New domain-specific languages -- Latte
@@ -64,14 +84,16 @@ $Id$
 ** ETLS, its goals, backward-compatibility needs
 
 ** Server principles
-
-** perf numbers
+*** be an appliance box: everything via HTTP
+*** support MS management interfaces (mmc, win* service)
 
 ** screenshot of admin pages
 
+** perf numbers (? omit this ?)
 
 
-* Related work
+
+* Related work (mentioned briefly in background)
 
 ** LAML
 
