@@ -29,7 +29,10 @@
 \newcommand{\B}{\discretionary{}{}{}}
 \newcommand{\smtt}{\small}
 \newcommand{\smtexttt}[1]{{\small\texttt{#1}}}
+\newcommand{\ns}[1]{{\small\texttt{#1:*}}}
 \newcommand{\figref}[1]{Fig.~\ref{fig-#1}}
+\newcommand{\secref}[1]{Section~\ref{sec-#1}}
+\newcommand{\ssecref}[1]{Section~\ref{ssec-#1}}
 \newcommand{\tableref}[1]{Table~\ref{#1}}
 \newcommand{\tm}{{\scriptsize $^{\mbox{tm}}$}}
 
@@ -68,6 +71,7 @@ ETL....
 \keywords{Static analysis, web server, templates, XML, XSLT, markup, WML, HTML.}
 
 \section{Introduction}
+\label{sec-intro}
 
 The loosely-coupled client/\B{}server model implied by the current
 breed of applications deployed via the World Wide Web presents
@@ -105,7 +109,7 @@ but it also complicates certain important analyses of the code.  For
 example, the obviously important property that a template execution
 terminates is undecidable for these general purpose languages.
 
-\begin{figure}[htbp]
+\begin{figure}[tb]
 \begin{listing}{1}
 <? $books = GetBooks(...); ?>
 <html>
@@ -207,7 +211,7 @@ we need to uncover the semantic structure of the templating language.
 Typically, that requires a language-specific parsing approach and much
 greater effort in building a valuable tool.
 
-\subsection{XML supports analyses}
+\subsection{XML supports analyses and tools}
 
 An increasingly popular approach to performing structured queries of
 programming language source code is to use standard XML tools such as
@@ -225,10 +229,12 @@ This research applies the benefits of an XML representation of source
 code to the domain of restricted markup templating languages.
 Importantly, web developers working with templating languages are
 already writing markup directly, thus making it natural for them to
-express the limited logic of their dynamic templates directly in markup as
-well.  This observation eliminates the dual representation problem
-that restricts the value of XML when applied to general purpose
-programming language.
+express the limited logic of their dynamic templates directly in
+markup as well.  This observation eliminates the dual representation
+problem that restricts the value of XML when applied to general
+purpose programming language.  The approach also enables the use of
+schema-aware XML editors to provide a rich development environment
+with very little ETL-specific effort (see \secref{benefits}).
 
 In this paper, I introduce the Extensible Templating Language.  From
 one perspective, ETL is a 100\% XML-based templating language that
@@ -254,10 +260,18 @@ million requests per day using over sixty thousand ETL templates.
 
 \subsection{Outline of paper}
 
-Section \ref{sec-} ....
+The rest of this paper is organized as follows. \secref{etl} describes
+the Extensible Templating Language itself. \secref{benefits} gives
+several practical examples of the benefits of using a pure XML
+approach with a restricted programming language. 
+\secref{implementation} details our implementation and
+describes our experiences in using ETL in production systems over the
+last year.  Finally, \secref{related-work} describes and contrasts
+related work and \secref{conclusion} concludes.
 
 %%% 
 %\section{Background}
+%\label{sec-background}
 
 %% JSP/XML
 %% XSLT
@@ -276,19 +290,23 @@ Section \ref{sec-} ....
 
 
 %%% 
-\section{Extensible Templating Language}
+%% GREGB:FIXME:: avoid too obvious of an overfull hbox below
+\section{\hspace*{-.1in}Extensible Templating Language}
+\label{sec-etl}
 
-*** equally conscise
+The Extensible Templating Language is an imperative markup templating
+language that allows web developers to intermingle literal XML markup
+with XML-based programming language constructs.  An ETL template must
+be well-formed XML that is valid with respect to several XML Schema
+Definitions.  The set of programming constructs available in ETL is
+intentionally restricted to limit the amount of logic performed in the
+front tier of a multi-tier web-delivered application and better
+enforce proper separation of presentation from content and business
+logic.  ETL is used by dozens of production applications serving over
+forty million requests per day, thus providing constructive evidence
+that the set of available constructs is sufficient for real-world use.
 
-*** increase the probability that a program that checks does the right thing
-
-*** reduce development cycle time, greatly reduce testing costs
-
-*** approximate analyses should be easy, precise analyses should be possible
-    (e.g., finding all the variables used by a template)
-
-
-\begin{figure}[htbp]
+\begin{figure}[tb]
 \begin{listing}{1}
 <?xml version="1.0"?>
 <bl:template xmlns:bl="http://www....">
@@ -311,11 +329,41 @@ avoids the mistake from line 14 of the PHP example.
 \label{fig-etl-books}}
 \end{figure}
 
-\subsection{Primitives}
+Because ETL is 100\% XML and because the language is not a full-blown
+general purpose programming language, analyzing ETL templates for
+various properties or searching for certain constructs is very well
+supported.  In particular, because of the way literal markup is mixed
+with programming constructs, the well-formedness requirement on the
+source template greatly reduces the probability of common mistakes
+including mismatching tags.  Additionally, we can also perform local
+validity checks on literal markup elements to confirm their proper
+nesting and that they use the correct attributes.  A goal of ETL is to
+make approximate analyses easy and precise analyses possible.
 
-Primitives are in the bl: namespace\footnote{Not gonna use URI, but that's what matters.}
+An example ETL template appears in \figref{etl-books} and is analagous
+to the PHP example from \figref{php-books}.  The file is an XML
+document with root element \smtexttt{bl:template}\footnote{We use
+namespace prefixes consistently to unambiguously refer to elements in
+the distinguished namespace URIs recognized by the ETL server.}  The
+template contains other elements in the \ns{bl} namespace which we
+call ETL \emph{primitives} (see \ssecref{primitives}).  Additionally,
+the template can contain markup from arbitrary other namespaces which
+we call \emph{literal result markup} (see \ssecref{literal-markup}).
+The remainder of this section informally describes the structure and
+semantics of the Extensible Templating Language.
 
-\subsection{Attributes \& slots}
+
+\subsection{Primitives, attributes, and slots}
+\label{ssec-primitives}
+
+An ETL primitive is an element in the \ns{bl} namespace that has a
+specific well-defined behaviour inside of an ETL template.  Primitives
+either output text to the current destination stream or perform some
+side-effect (or both). For example the \smtexttt{bl:set} primitive
+assigns a variable a value without outputting any text, while the
+\smtexttt{bl:http} primitive outputs either \smtexttt{http} or
+\smtexttt{https} based on whether the current request arrived over an
+ordinary or secure socket connection.
 
 The behaviour of a primitive is parameterized by the various
 attributes allowed on that element.  Some primitives are always
@@ -422,7 +470,7 @@ and the nodes in the resulting node set are serialized in turn to
 generate the resulting single string.
 
 
-\subsection{Template selection}
+\subsection{Template overriding \& dynamic dispatch}
 
 \subsection{Cobrand profiles \& localization}
 
@@ -541,6 +589,7 @@ a called template does not inherit the attributes from the calling
 templates attribute annotations.
 
 \subsection{Literal markup}
+\label{ssec-literal-markup}
 
 % conditional tags
 % at:*
@@ -548,6 +597,7 @@ templates attribute annotations.
 % building URIs
 
 \subsection{Control constructs}
+\label{ssec-control}
 
 \subsection{Custom tags}
 
@@ -561,6 +611,7 @@ templates attribute annotations.
 
 %%% 
 \section{Benefits of ETL}
+\label{sec-benefits}
 
 ETL has an integrated development environment that was very
 easy to build by leveraging the XSD schema that defines the language
@@ -573,6 +624,22 @@ easy to build by leveraging the XSD schema that defines the language
 ** source->source transformation 
 ** new abstractions 
 ** reduce app-level security holes (ref. scott \& sharp)
+
+
+\begin{figure}[tb]
+\begin{centering}
+\includegraphics[width=1\linewidth]{processing-stages-simple.eps}
+\caption{Overview of various templating languages pre-execution
+processing.  The pipeline (a) illustrates a mod\_perl-like system where
+the template is parsed and then byte-compiled into the runtime
+artifact, while (b) shows a JSP-like preprocessing system where the
+template is first converted into textual source code which then is
+parsed and compiled.  ETL's use of XML (c) allows the web developer to
+manipulate and analyze the AST thus simplifying the system.
+\label{fig-processing-stages}}
+\end{centering}
+\end{figure}
+
 
 
 \begin{figure}[tb]
@@ -591,6 +658,7 @@ available in the IDE\@.
 
 %%% 
 \section{Implementation \& experience}
+\label{sec-implementation}
 
 A byte-code compiler and runtime for the Extensible Templating Language is
 an integral part of InfoSpace's ETL Server.  ETLS is architected as an
@@ -617,7 +685,7 @@ problem of needing to have stderr output for web development.
 %%% MAYBE MOVE THIS TO THE BENEFITS SECTION??
 \begin{figure}[tb]
 \begin{centering}
-\hspace*{-0.07\linewidth}\includegraphics[width=1.15\linewidth]{debugger-screenshot.eps}
+\hspace*{-0.03\linewidth}\includegraphics[width=1.1\linewidth]{debugger-screenshot.eps}
 \caption{A screenshot of the debugger.
 \label{fig-debugger-screenshot}}
 \end{centering}
@@ -664,6 +732,7 @@ is preserved, but the byte-codes have been linearized for performance.
 
 %%% 
 \section{Related work}
+\label{sec-related-work}
 
 LAML -- the dual of ETL -- took markup and embedded it in Scheme,
 whereas ETL takes only the most critical programming constructs and
@@ -680,6 +749,7 @@ a priori goal.
 
 %%% 
 \section{Conclusions \& future work}
+\label{sec-conclusion}
 
 * Restate contribution, stress in actual use
 
@@ -700,6 +770,7 @@ a priori goal.
 
 
 \section{Acknowledgments}
+\label{sec-ack}
 This research is supported by InfoSpace and its advanced server
 development group.  I thank Russ Arun and Steve Newman for their early
 recognition of the value of this approach and their support.  ETL
