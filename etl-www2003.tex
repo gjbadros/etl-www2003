@@ -408,7 +408,7 @@ is sufficient for real-world use.
 </bl:template>
 \end{listing}%$
 \caption{The ETL template corresponding to \figref{php-books}'s PHP
-code. Because ETL is required to be well-formed XML, the developer
+code is required to be well-formed XML.  Thus, the developer
 avoids the mistake from line 14 of the PHP example.
 \label{fig-etl-books}}
 \end{figure}
@@ -765,7 +765,8 @@ the various needs of the template author.
 \begin{figure}[bt]
 \begin{centering}
 \includegraphics[height=1.5in]{etl-whitespace-rules.eps}
-\caption{The various classes of whitespace nodes in XML. \label{fig-ws-rules}}
+\caption{The various classes of whitespace nodes in XML are controlled
+by several declarative attributes in ETL. \label{fig-ws-rules}}
 \end{centering}
 \end{figure}
 
@@ -823,13 +824,13 @@ metamorphic syntax macros \cite{Brabrand2002}
 \begin{figure}[tb]
 \begin{centering}
 \includegraphics[width=.9\linewidth]{processing-stages-simple.eps}
-\caption{Overview of various templating languages pre-execution
-processing.  The pipeline (a) illustrates a mod\_perl-like system where
-the template is parsed and then byte-compiled into the runtime
-artifact, while (b) shows a JSP-like preprocessing system where the
-template is first converted into textual source code which then is
-parsed and compiled.  ETL's use of XML (c) allows the web developer to
-manipulate and analyze the AST thus simplifying the system.
+\caption{The pre-execution processing of various templating languages
+can be fairly involved. The pipeline (a) illustrates a mod\_perl-like
+system where the template is parsed and then byte-compiled into the
+runtime artifact, while (b) shows a JSP-like preprocessing system
+where the template is first converted into textual source code which
+then is parsed and compiled.  ETL's use of XML (c) allows the web
+developer to manipulate and analyze the AST thus simplifying the system.
 \label{fig-processing-stages}}
 \end{centering}
 \end{figure}
@@ -857,11 +858,11 @@ easy to build by leveraging the XSD schema that defines the language
 \begin{figure}[tb]
 \begin{centering}
 \hspace*{-0.05\linewidth}\includegraphics[width=1.1\linewidth]{homesite-screenshot.eps}
-\caption{A screenshot of the integrated development environment based
-on Homesite.  By using custom tag information generated automatically
-from the XSD schema for ETL, the environment supports automatic
-completion of names of elements and their valid attributes.  Help
-information extracted from the server codebase is also readily
+\caption{This integrated development environment based
+on Homesite was easy to build using custom tag information generated
+automatically from the XSD schema for ETL.  The environment supports
+automatic completion of names of elements and their valid attributes.
+Help information extracted from the server codebase is also readily
 available in the IDE\@.
 \label{fig-homesite-screenshot}}
 \end{centering}
@@ -875,9 +876,9 @@ available in the IDE\@.
 \begin{figure*}[bt]
 \begin{centering}
 \hspace*{-.03\linewidth}\includegraphics[width=1.06\linewidth]{ftr_fast-call-graph.eps}
-\caption{Call-graph of templates possibly used in generating an HTML
-page footer.  The extraction of the call-graph was done using
-server-side XPath expressions and a simple Perl script. \label{fig-call-graph}}
+\caption{This call-graph of templates possibly used in generating an HTML
+page footer was extracted using server-side XPath expressions and a
+simple Perl script. \label{fig-call-graph}}
 \end{centering}
 \end{figure*}
 
@@ -912,7 +913,9 @@ problem of needing to have stderr output for web development.
 \begin{figure}[tb]
 \begin{centering}
 \hspace*{-0.03\linewidth}\includegraphics[width=1.1\linewidth]{debugger-screenshot.eps}
-\caption{A screenshot of the debugger.
+\caption{The ETL debugger is an important part of making the
+ETL development experience comparable to templates built on top of a
+general-purpose programming language.
 \label{fig-debugger-screenshot}}
 \end{centering}
 \end{figure}
@@ -921,7 +924,8 @@ problem of needing to have stderr output for web development.
 \begin{figure}[tb]
 \begin{centering}
 \hspace*{-0.05\linewidth}\includegraphics[width=1.1\linewidth]{etls-admin-screenshot.eps}
-\caption{The ETL Server's administration pages.
+\caption{The ETL Server has a web-based administration interface to
+support configuration and management.
 \label{fig-etls-admin}}
 \end{centering}
 \end{figure}
@@ -949,8 +953,9 @@ Template `books.html.etl' has 0 errors.
    } // #nocmd('<html>','</html>')
   } // template('books.html.etl')
 \end{smallverbatim}
-\caption{A server-generated decompilation of the internal representation
-of the ETL template from \figref{etl-books}.  The nesting of elements
+\caption{To support debugging, the ETL server permits decompilation of
+the internal representation of the ETL template from
+\figref{etl-books}.  The nesting of elements 
 is preserved, but the byte-codes have been linearized for performance.
 \label{fig-etl-decompile}}
 \end{figure}
