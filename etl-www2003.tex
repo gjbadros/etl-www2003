@@ -1104,38 +1104,53 @@ positive.
 \section{Related work}
 \label{sec-related-work}
 
-\gjb{write these up nicely}
+Earlier work, including JavaML, argues that XML proves very useful as
+a complementary representation for source
+code.~\cite{Badros-www9,Power2002,Schonger2002,Gondow2002} ETL takes
+the next step and uses XML as the primary representation for a markup
+templating language---an approach that proves valuable because
+template developers are already writing markup directly.
 
-JavaML -- key observation is that folks are already writing XML when
-doing markup templating, so it is a natural place to apply the
-benefits of an XML-based program representation.  Cite Zou \&
-Kontogiannis; Power \& Malloy; Maletic, Collard, \& Marcus; Schonger,
-Pulvermiller \& Sarstedt; 
+XSLT~\cite{XSLT} is the only popular templating language that uses a
+restricted language.  Unfortunately, it suffers from three fatal
+weaknesses for common usage: 1) its declarative model confuses
+developers used to procedural programming; 2) it is a bit too limited,
+often causing the need to use it in conjunction with a server-side
+scripting language such as JavaScript or Visual Basic (in particular,
+XSLT does not support building its data model by doing web service or
+other HTTP requests); and 3) it lacks a streaming output mechanism,
+thus limiting its applicability to large incrementally-processable
+documents or situations where the desired user experience makes it
+important to send some HTML over the wire while the remainder of
+processing occurs.  XExpr~\cite{XEpr} and XInclude~\cite{XInclude} are
+two other languages that use an XML representation but focus on
+domains even more restricted than the markup-generating template
+problem that ETL solves.
 
-XSLT -- declarative and that confuses folks.  Plus too limited in
-terms of ability to interact with external components -- you end up
-having to use a mix of XSLT and a scripting language with all the
-problems that entails.  Also, no streaming mechanism -- a DOM is built-up
-internally then serialized.~\cite{XSLT}
+LAML~\cite{Laml,Laml-WWW2002} has similar goals to ETL, but takes the
+opposite approach: LAML takes the simpler markup languages and embeds
+them in Scheme, an especially powerful and expressive language.  Each
+markup element has a corresponding mirror procedure that outputs the
+appropriate tags, does validity checking, and otherwise reflects the
+semantics of the markup language.  Thus, LAML gets many of the same
+benefits of ETL with respect to increasing the probability of
+generating well-formed markup.  However, it uses the syntax of
+Scheme's S-expressions rather than XML markup, thus forgoing the
+ability to leverage XML-based tools for analysis.  Additionally, the
+extra power of Scheme is in direct contradiction of our approach of
+reducing the expressiveness of the language.  A similar approach has
+been applied by embedding markup in Haskell and Curry, two other
+functional languages.~\cite{Thiemann2002,Meijer2000,Hanus2001}
 
-LAML -- the dual of ETL -- took markup and embedded it in Scheme,
-whereas ETL takes only the most critical programming constructs and
-embeds them in XML.  Mention S-exp and XML similarity.~\cite{Laml,Laml-WWW2002}
-
-Modeling HTML in Haskell \& Typed representation for HTML \& XML in
-Haskell, WASH. Web Scripting in
-Curry.~\cite{Thiemann2002,Meijer2000,Hanus2001}
-
-BigWig -- similar goals, but take a general purpose programming
-language and extend it with a first class markup fragment type with
-gaps that can be plugged.  They do lattice-theoretic iterative
-data-flow analyses, ETL focuses on practical aspects of limiting
-common mistakes:  it'd be interesting to apply the data flow analyses
-to ETL to make it provably generate correct markup, but that wasn't an
-a priori goal.~\cite{BigWig,Brabrand2001,Brabrand2002}
-
-XExpr~\cite{XExpr}
-
+\verb|<bigwig>| is another significant research project~\cite{BigWig} that has
+similar goals.  That work adds a first class markup-fragment type to a
+general purpose programming language.  That system is more aggressive
+in its verification of the well-formedness of markup values: an
+iterative data-flow analysis bounds the possible values which can then
+be confirmed to be valid.~\cite{Brabrand2001} As with the other
+approaches that use a general-purpose language, the benefits ETL
+provides in separating the presentation details from back-end
+applications are lost.
 
 %%% 
 \section{Conclusions \& future work}
