@@ -36,7 +36,7 @@
 \begin{document}
 %
 \title{The Extensible Templating Language: \\
-       Improving Static Analysis of Markup Generation}
+       Improving Analysis of Markup Generating Code}
 
 \numberofauthors{1}
 
@@ -323,6 +323,64 @@ avoids the mistake from line 14 of the PHP example.
 
 \subsection{Controlling whitespace}
 
+Whitespace characters\footnote{Whitespace that is not a part of the
+XML Infoset~\cite{XML-infoset}, such as whitespace between attrbutes inside element
+tags, is managed via XML processing rules and is not controlled by the
+rules described in this section.} in a source template have mixed uses.  In some
+cases, the developer wishes to improve the readability of the program
+by using indentation or blank lines.  In other cases, the whitespace
+is intended to be copied into the output document or a variable's
+value.  The \smtexttt{xml:space} attribute provided by the XML
+standard~\cite[2.10]{XML} is not sufficiently expressive to support
+the various needs of the template author.
+
+\begin{figure}[bt]
+\begin{centering}
+\includegraphics[height=1.5in]{etl-whitespace-rules.eps}
+\caption{The various classes of whitespace nodes in XML. \label{fig-ws-rules}}
+\end{centering}
+\end{figure}
+
+ETL permits fine-grained control over the whitespace that will be
+generated via two orthogonal special attributes that are allowed on
+every XML element in source ETL documents: \smtexttt{@bl:space-nodes}
+and \smtexttt{@bl:text-nodes}.  These attributes are inherited by
+contained (i.e., children) elements and their contents unless
+overridden.  They control the various classes of whitespace
+illustrated in \figref{ws-rules} as follows.
+
+\begin{itemize}
+\item \smtexttt{@bl:space-nodes} controls whitespace-only (and
+      whitespace-only content) nodes (1, 5, 6, and 7 in the figure).
+\item \smtexttt{@bl:text-nodes} controls leading/internal/trailing whitespace of
+      text nodes (2, 3, and 4 in the figure).
+\end{itemize}
+
+The allowed settings for \smtexttt{@bl:space-nodes} are:
+
+\begin{description}
+  
+\item[\smtexttt{preserve}] Leave the whitespace unchanged
+      
+\item[\smtexttt{compact}] Replace sequences of 1 or more
+      whitespace characters with a single space (0x20)
+      
+\item[\smtexttt{strip}] Eliminate the whitespace entirely
+
+\item[\smtexttt{normalize}] Strip whitespace nodes that contain only
+newline (0x0A) characters entirely; replace sequences of 1 or more
+whitespace characters that include a space or a tab with a single
+space (0x20)
+
+\end{description}
+
+In addition to the above, \smtexttt{@bl:text-nodes} permits assymetric
+handling of the left and right sides of the text nodes via values
+\smtexttt{compact-(left|right)} and \smtexttt{trim-(left|right)}. 
+Importantly, all of these whitespace rules are statically-scoped:
+a called template does not inherit the attributes from the calling
+templates attribute annotations.
+
 \subsection{Literal markup}
 
 % conditional tags
@@ -350,7 +408,7 @@ easy to build by leveraging the XSD schema that defines the language
 ** pretty-printing 
 ** source->source transformation 
 ** new abstractions 
-** reduce app-level security holes (ref. scott & sharp)
+** reduce app-level security holes (ref. scott \& sharp)
 
 
 \begin{figure}[tb]
