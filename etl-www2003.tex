@@ -280,15 +280,15 @@ handling of cookies: we need a means of narrowing the scope for careful
 review to only places where that cookie is manipulated.
 
 Typically, web developers approach to above scenarios with an arsenal
-of imprecise lexical tools based on regular expressions.  While these
-tools may satisfy some simple queries, when the desired query has
-additional structure, lexical approaches fall short.  Suppose we wish
-to find dead code to simplify our application. No regular expression
-will let us identify all unreachable templates to satisfy that query.
-To analyze more deeply, we need to uncover the semantic structure of
-the templating language.  Typically, that requires a language-specific
-parser and much greater effort in building a valuable tool
-or an extensible integrated development environment~\cite{Soroker97,Eclipse}.
+of imprecise lexical tools.  While these tools may satisfy some simple
+queries, when the desired query has additional structure, lexical
+approaches fall short.  Suppose we wish to find dead code to simplify
+our application. No regular expression will let us identify all
+unreachable templates to satisfy that query.  To analyze more deeply,
+we need to uncover the semantic structure of the templating language.
+Typically, that requires a language-specific parser and much greater
+effort in building a valuable tool or an extensible integrated
+development environment~\cite{Soroker97,Eclipse}.
 
 \subsection{XML supports analyses and tools}
 
