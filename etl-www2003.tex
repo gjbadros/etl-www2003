@@ -677,22 +677,8 @@ stylesheet generate the formatter's response string.
 \subsection{Control flow}
 \label{ssec-control}
 
-\gjb{write this section!}
-
-** bl:if, with lots of slots to avoid a domain specific language
-(ignore the fact that we have gotos and labels)
-
-** bl:choose/bl:when/bl:otherwise
-
-\subsubsection{Exception handling}
-
-** bl:try/bl:catch/bl:finally and bl:throw
-
-\subsubsection{Remote invocation}
-
-** HTTP GET/POST
-
-** ws-call
+There are four primary means of control flow in ETL: template
+selection, conditionals, exceptions, and remote invocations.  
 
 \subsubsection{Template selection}
 
@@ -703,19 +689,81 @@ the HTTP request (e.g., when multiple hostnames or domains refer to
 the same server).  That brand identifies the customer for whom ETLS is
 generating the page.\footnote{This branding feature is heavily
 influenced by InfoSpace's business model of building a site once and
-customizing it often for different partners.}  The brand is used for
-two primary purposes.  First, it is used as a means of populating a
-dictionary of configuration variables over which templates may be
-parameterized.  Second, it is used to select which template is
-invoked for the initial processing of a request and whenever the
-\smtexttt{bl:call} primitive is used to execute another template as a
-subroutine.
+customizing it often for different partners.}  The brand is used to
+select which template is invoked for the initial processing of a
+request and whenever the \smtexttt{bl:call} primitive is used to
+execute another template as a subroutine.  
 
-\gjb{explain building of brand profile dictionary and
-bl:call, template resolution order.  Probably need a figure of a
-directory tree to support this and the next section.  Give analogy to
-OO programming languages as the brand being an implicit receiver
-object.}
+For example, an \smtexttt{index.htm} page may \smtexttt{bl:call} a
+\smtexttt{header.htm} template to output a banner for the top of a
+page, then do some work to generate the meat of the page, and finally
+invoked \smtexttt{footer.htm} to generate another banner for the
+bottom.  The \smtexttt{header.htm} at the top-level of the brand
+hierarchy may provide some basic functionality, while a sub-brand may
+provide an overriding \smtexttt{header.htm} implementation that
+specializes the banner for that customer.  The hierarchical
+relationships are mirrored in the directory structure of the webtree,
+and template selection is analagous to method dispatch in
+object-oriented programming languages.  Importantly, ETL only permits
+bounded recursion, thus avoiding the possibility of infinite
+recursion.
+
+\subsubsection{Conditionals}
+
+Both \smtexttt{bl:if} and
+\smtexttt{bl:choose}/\smtexttt{bl:when}/\smtexttt{bl:otherwise}
+constructs are supported by ETL and behave much as they do in XSLT.
+The primary difference is that ETL does not permit the generality of a
+domain specific expression language, and instead uses pairs of
+slots to represent the guard conditions.  For example:
+
+\begin{smallverbatim}
+<bl:if var="pagenum" less-than-var="max-page">
+   <a href="...">Next</a>
+</bl:if>
+\end{smallverbatim}
+
+\noindent Although this is more verbose than a domain-specific
+language in a \smtexttt{test} attribute, it does make it easier to use
+XPath to find occurrences of specific operations being used in
+conditional guards.   Additionally, it allows us to specify the
+left-hand-side value of a comparison guard in \smtexttt{bl:choose} to
+specialize that construct into something similar to a
+\smtexttt{switch} statement:
+
+\begin{smallverbatim}
+<bl:choose var="pagenum">
+  <bl:when less-than="1">...</bl:when>
+  <bl:when equals="1">...</bl:when>
+  <bl:when greater-than-var="max-page">...</bl:when>
+  <bl:otherwise>...</bl:otherwise>
+</bl:choose>
+\end{smallverbatim}
+
+\noindent where each of the \smtexttt{bl:when} clauses compares the
+same variable (without needing to redundantly specify its name) .
+
+\subsubsection{Exception handling}
+
+Some primitives throw run-time exceptions.  For example, assigning an
+ill-formed string to an XML-typed variable results in a parse
+exception.  To recover from those exceptions, \smtexttt{bl:try} blocks
+that include \smtexttt{bl:catch} and \smtexttt{bl:finally} children
+blocks are supported.  Additionally, templates (especially
+subroutines) can use \smtexttt{bl:throw} to generate their own
+exceptions to be handled by higher stack frames. 
+
+\subsubsection{Remote invocation}
+
+Two mechanisms are provided to allow templates to interact with
+back-end applications and other hosts.  Simple HTTP requests, both
+GETs and POSTs, are supported using a \smtexttt{bl:http-include}
+primitive that specifies the URL along with POST data, as required.
+Alternatively, a \smtexttt{bl:ws-call} primitive invokes a web service
+given its end-point and the arguments to the web service.\footnote{Web
+service invocation is a part of an upcoming version of ETLS.} In
+both cases, the output of the primitive is the document returned by
+the server.
 
 \subsection{Literal markup}
 \label{ssec-literal-markup}
