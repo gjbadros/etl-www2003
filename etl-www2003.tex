@@ -213,7 +213,7 @@ better separation of front-end presentation from back-end application
 logic and may simplify the templates such that they are easier to
 write, read, and evolve.
 
-\begin{figure}[bt]
+\begin{figure}[tb]
 \begin{centering}
 \includegraphics[width=.7\linewidth]{web-service-ip-shift.eps}
 \vspace*{-.1in}\caption{Web services enable the front-end templating tier to
@@ -312,7 +312,7 @@ them to express the limited logic of their dynamic templates directly
 in markup as well.  Importantly, this lets us use a single
 representation for both developers and tools. For example, we can use
 schema-aware XML editors to easily provide syntax colorization and
-completion capabilities (see \secref{benefits}).
+completion capabilities.
 
 In this paper, I introduce the Extensible Templating Language.  From
 one perspective, ETL is a 100\% XML-based templating language that
@@ -338,14 +338,12 @@ millions of requests per day using over sixty thousand ETL templates.
 
 \subsection{Outline of paper}
 
-The rest of this paper is organized as follows. \secref{etl} describes
-the Extensible Templating Language and explains some of its
-benefits. \secref{benefits} illustrates several practical examples
-that leverage the pure XML approach with a restricted programming
-language. \secref{implementation} details our implementation and
-describes our experiences in using ETL in production systems over the
-last year.  Finally, \secref{related-work} describes and contrasts
-related work and \secref{conclusion} concludes.
+The rest of this paper is organized as follows. \secref{etl} explains
+the Extensible Templating Language and its benefits.
+\secref{implementation} details our implementation and describes our
+experiences in using ETL in production systems over the last year.
+Finally, \secref{related-work} describes and contrasts related work
+and \secref{conclusion} concludes.
 
 
 %%% 
@@ -372,14 +370,47 @@ required by a templating layer;
 with Internet and Web standards.
 \end{enumerate}
 
+\begin{figure}[tb]
+\begin{centering}
+\hspace*{-0.05\linewidth}\includegraphics[width=1.1\linewidth]{homesite-screenshot.eps}
+\caption{This integrated development environment based
+on Homesite was easy to build using custom tag information generated
+automatically from the XSD schema for ETL.  The environment supports
+automatic completion of names of elements and their valid attributes.
+Help information extracted from the server codebase is also readily
+available in the IDE\@.
+\label{fig-homesite-screenshot}}
+\end{centering}
+\end{figure}
+
 An ETL template must be well-formed XML that is valid with respect to
-XML Schemas~\cite{XMLSchema1,XMLSchema2}.  The set of programming
-constructs exposed is intentionally restricted to limit the amount of
-logic performed in the front-end of a multi-tier web-delivered
-application.  As a result, we achieve better separation of
-presentation and application.  ETL is used by dozens of production
-applications, thus providing constructive evidence that the set of
-available constructs is sufficient for real-world use.
+XML Schemas~\cite{XMLSchema1,XMLSchema2}.  Those schemata are used by
+our development environment (see \figref{homesite-screenshot}) to support syntax
+colorization and completion of element and attribute names.
+Additionally, because of how easy it is to analyze XML trees, it is
+easy to build numerous software engineering tools.  For example, it
+was a very simple matter to build a call-graph extractor (see
+\figref{call-graph}).
+
+%% This was generated using:
+%% ~/tigerprawns/etl-interpreter/tools/templates-for-url.pl -r edges-ftr_fast.htm -A "http://stagingetl2/info/ftr_fast.htm"
+%%  dot -Tpostscript edges-ftr_fast.htm > ftr_fast-call-graph.eps
+\begin{figure*}[bt]
+\begin{centering}
+\hspace*{-.03\linewidth}\includegraphics[width=1.06\linewidth]{ftr_fast-call-graph.eps}
+\caption{This call-graph of templates possibly used in generating an HTML
+page footer was extracted using server-side XPath expressions and a
+simple Perl script. \label{fig-call-graph}}
+\end{centering}
+\end{figure*}
+
+ETL intentionally restricts the set of programming constructs i to
+limit the amount of logic performed in the front-end of a multi-tier
+web-delivered application.  As a result, we achieve better separation
+of presentation and application, thus permitting their independent
+evolution. ETL is already used by dozens of production applications,
+thus providing constructive evidence that the set of available
+constructs is sufficient for real-world use.
 
 \begin{figure}[tb]
 \begin{smalllisting}{1}
@@ -855,7 +886,7 @@ The \smtexttt{xml:space} attribute provided by the XML
 standard~\cite[2.10]{XML} is not sufficiently expressive to support
 the diverse needs of the template author.
 
-\begin{figure}[bt]
+\begin{figure}[tb]
 \begin{centering}
 \includegraphics[height=1.5in]{etl-whitespace-rules.eps}
 \caption{The various classes of whitespace nodes in XML. \label{fig-ws-rules}}
@@ -906,7 +937,7 @@ behaviour we permit the presentation layer.
 
 \begin{figure}[tb]
 \begin{centering}
-\includegraphics[width=.9\linewidth]{processing-stages-simple.eps}
+\includegraphics[width=.85\linewidth]{processing-stages-simple.eps}
 \caption{The pre-execution processing of various templating languages
 can be fairly involved. The pipeline (a) illustrates a mod\_perl-like
 system where the template is parsed and then byte-compiled into the
@@ -919,55 +950,6 @@ system. \label{fig-processing-stages}}
 \end{figure}
 
 
-%%% 
-\section{More benefits of ETL}
-\label{sec-benefits}
-
-ETL has an integrated development environment that was very
-easy to build by leveraging the XSD schema that defines the language
-(\figref{homesite-screenshot}).
-
-* two things: reduce expressiveness and use XML representation
-
-** development environment completion
-** validation for deep checking before deployment
-** pretty-printing 
-** source->source transformation 
-** new abstractions 
-** reduce app-level security holes (ref. scott \& sharp)
-** call graph extraction
-** provable termination (bounded recursion and only data-driven iteration over finite data structures)
-** simpler: no need to mix programming paradigms, no need to learn a general purpose programming language: XML + web services *IS* your world
-
-\begin{figure}[tb]
-\begin{centering}
-\hspace*{-0.05\linewidth}\includegraphics[width=1.1\linewidth]{homesite-screenshot.eps}
-\caption{This integrated development environment based
-on Homesite was easy to build using custom tag information generated
-automatically from the XSD schema for ETL.  The environment supports
-automatic completion of names of elements and their valid attributes.
-Help information extracted from the server codebase is also readily
-available in the IDE\@.
-\label{fig-homesite-screenshot}}
-\end{centering}
-\end{figure}
-
-
-
-%% This was generated using:
-%% ~/tigerprawns/etl-interpreter/tools/templates-for-url.pl -r edges-ftr_fast.htm -A "http://stagingetl2/info/ftr_fast.htm"
-%%  dot -Tpostscript edges-ftr_fast.htm > ftr_fast-call-graph.eps
-\begin{figure*}[bt]
-\begin{centering}
-\hspace*{-.03\linewidth}\includegraphics[width=1.06\linewidth]{ftr_fast-call-graph.eps}
-\caption{This call-graph of templates possibly used in generating an HTML
-page footer was extracted using server-side XPath expressions and a
-simple Perl script. \label{fig-call-graph}}
-\end{centering}
-\end{figure*}
-
-
-%%% 
 \section{Implementation \& experience}
 \label{sec-implementation}
 
@@ -998,22 +980,20 @@ support configuration and management.
 \end{centering}
 \end{figure}
 
-To meet the needs for administrative management of the server, we
-implemented special primitives in the \smtexttt{admin} namespace that
-expose reflection and configuration capabilities.  For example,
-\smtexttt{admin:show-urlcache} generates an XML dump of the state of
-the cached URL to template mapping and \smtexttt{admin:reset-urlcache}
-resets that cache.  These special primitives are only available when
-the request being served is properly authenticated and authorized
-(e.g., by originating on distinguished port that is blocked at the
-networking level from access by the Internet at large).  To facilitate
-easy management of the server, we implemented a web application (in
-ETL, of course) that organizes and exposes these underlying primitives
-and integrates the documentation for the server (see
-\figref{etls-admin}).  All server parameters are settable via
-\smtexttt{admin:*} primitives, and the server is bootstrapped and
-configured by executing a distinguished \smtexttt{etl-server-conf.etl}
-template prior to handling HTTP requests.
+To support administrative management of the server, we implemented
+special primitives in a separate \smtexttt{admin} namespace that
+expose reflection and configuration capabilities.  For example, with
+these primitives you can retrieve an XML dump of the state of the
+cached URL-to-template mapping or resets that cache.  These special
+capabilities are only available when the request is properly
+authenticated and authorized.  To facilitate easy management of the
+server, we implemented a web application (in ETL, of course) that
+organizes and exposes these underlying primitives and integrates the
+documentation for the server (see \figref{etls-admin}).  All server
+parameters are settable via \smtexttt{admin:*} primitives, and the
+server is configured by executing a distinguished
+\smtexttt{etl-server-conf.etl} template prior to handling HTTP
+requests.
 
 To facilitate debugging, ETLS supports numerous special URL
 parameters, each prefixed with \smtexttt{etl-}, that enable special
@@ -1026,12 +1006,11 @@ Another parameter, \smtexttt{?etl-decompile} can be added to a URL to
 request that the server dump the internal byte-compiled representation
 as the response (see \figref{etl-decompile}).  Other parameters, such
 as \smtexttt{?etl-no-random} and
-\smtexttt{?etl-dummy-ads}, simplify testing by making eliminating some
+\smtexttt{?etl-dummy-ads}, simplify testing by eliminating some
 major points of non-determinism in template execution.  These
-capabilities enormously simplify confirming that web applications
-behave the same as templates or the server itself are changed.
+capabilities enormously simplify regression testing.
 
-\begin{figure}[htbp]
+\begin{figure}[tb]
 \begin{smallverbatim}
 Template `books.html.etl' has 0 errors.
 0 template('books.html.etl') {
@@ -1083,14 +1062,14 @@ general-purpose programming language.
 
 InfoSpace's production web tree contains over sixty thousand ETL
 templates and the clusters of ETL Servers serve tens of millions of
-requests per day.  The templates were generated by a complex
-multi-step automatic migration process from a lower level proprietary
-templating language that pre-dates ETL.  The automatic migration was
-made possible by the fact that the preceding language, too, was very
-restrictive on the language level constructs it afforded.  However,
-that language, like ASP and JSP, was text-based, not markup-based, and
-used a proprietary and obscure syntax that made writing tools and
-analyzing the source code especially troublesome.  
+requests per day.  Many of the current templates were generated by a
+complex multi-step automatic migration process from a lower level
+proprietary templating language that pre-dates ETL\@.  The automatic
+migration was made possible by the fact that the preceding language,
+too, was very restrictive on the language level constructs it
+afforded.  However, that language, like ASP and JSP, was text-based,
+not markup-based, and used a proprietary and obscure syntax that made
+writing tools and analyzing the source code especially troublesome.
 
 As part of migrating from our legacy language to ETL, we wrote a
 lint-style checker to uncover ambiguities in the original source
