@@ -35,6 +35,7 @@
 \newcommand{\ssecref}[1]{Section~\ref{ssec-#1}}
 \newcommand{\tableref}[1]{Table~\ref{#1}}
 \newcommand{\tm}{{\scriptsize $^{\mbox{tm}}$}}
+\newcommand{\gjb}[1]{{\sc gjb:}\textbf{#1}}
 
 \begin{document}
 %
@@ -57,7 +58,8 @@
 \date{2 November 2002}
 \maketitle
 \begin{abstract}
-ETL.... GREGB:FIXME:Write this!:
+ETL.... \gjb{Write this!}
+
 \end{abstract}
 
 % A category with only the three required fields
@@ -388,8 +390,11 @@ attributes allowed on that element.  Some primitives, such as
 allowed to contain child elements. 
 Other primitives are allowed to be non-empty, using the markup generated
 by their contained elements as an extra implicit argument.  For example,
-in \smtexttt{<bl:if var="showcopyright">(C) 2002, InfoSpace,
-  Inc.</bl:if>} the contents of the \smtexttt{bl:if} are output if and
+in:
+
+\smtexttt{<bl:if var="showcopyright"> (C) 2002 </bl:if>}
+
+\noindent the contents of the \smtexttt{bl:if} are output if and
 only if the variable is non-empty.
 
 Many primitives derive their arguments not from individual attributes
@@ -454,11 +459,12 @@ value to be assigned is either given using \smtexttt{@value},
 \smtexttt{bl:set} element.  For example:
 
 \begin{verbatim}
-<bl:set var="baseuri"><bl:http/>://<bl:get var="hostname"/>/</bl:set>
+<bl:set var="baseuri"><bl:http/>://<bl:get
+ var="hostname"/>/</bl:set>
 \end{verbatim}
 
 \noindent might set the variable named ``baseuri'' to the value
-``http://www.infospace.com'' (assuming the request comes as an
+``http://www.\B{}infospace.\B{}com'' (assuming the request comes as an
 ordinary insecure HTTP request and the variable ``hostname'' contains
 the value ``www.infospace.com''.  While executing its contained
 elements, \smtexttt{bl:set} redirects the default output stream to be
@@ -536,13 +542,48 @@ and the nodes in the resulting node set are serialized in turn to
 generate the resulting single string.
 
 
-\subsection{Template overriding \& dynamic dispatch}
+\subsection{Template overriding \& brand profiles}
 \label{ssec-template-dispatch}
 
-% bl:call, argument passing
+Requests made of the ETL server always have an associated abstract
+``brand''.  The brand can be explicitly specified as part of the URI
+itself, or can be implicit based on the \smtexttt{Hostname} header of
+the HTTP request (e.g., when multiple hostnames or domains refer to
+the same server).  That brand identifies the customer for whom ETLS is
+generating the page.\footnote{This branding feature is heavily
+influenced by InfoSpace's business model of building a site once and
+customizing it often for different partners.}  The brand is used for
+two primary purposes.  First, it is used as a means of populating a
+dictionary of configuration variables over which templates may be
+parameterized.  Second, it is used to to select which template is
+invoked for the initial processing of a request and whenever the
+\smtexttt{bl:call} primitive is used to execute another template as a
+subroutine.
 
-\subsection{Cobrand profiles \& localization}
-\label{ssec-cobrand-profiles}
+\gjb{explain building of brand profile dictionary and
+bl:call, template resolution order.  Probably need a figure of a
+directory tree to support this and the next section.  Give analogy to
+OO programming languages as the brand being an implicit receiver
+object.}
+
+\subsection{I18N \& Localization}
+\label{ssec-localization}
+
+To support internationalization of templates, developers can choose to
+use the \smtexttt{bl:tt} (token translation) primitive in all places
+where literal text would appear.  For example, instead of writing
+\smtexttt{Hello <bl:get var="name"/>}, a properly internationalized
+template might read \smtexttt{<bl:tt id="greeting1">Hello</bl:tt>
+<bl:get var="name"/>}. Each template has a corresponding dictionary of
+token-translation definitions for the various locales that have been
+defined.  Based on the request's locale selection (either from a
+stylized URL or the \smtexttt{Accepts-language} header), the
+appropriate dictionary is used to replace each \smtexttt{bl:tt} use
+with the XML document fragment to which the given identifier maps.
+
+\gjb{clarify ordering.  Footnote that this is not yet
+implemented this way?  I need to find the right place to give that
+caveat more globally.}
 
 \subsection{Transformers \& formatters}
 \label{ssec-transformers}
@@ -550,10 +591,11 @@ generate the resulting single string.
 HTTP and XML standards have various different encoding formats to
 support arbitrary data over channels that allow limited
 representations.  For example, when passing a GET parameter to an HTTP
-request, the value is inserted into the URL using an URL-encoding format
-that involves (among other things) converting each \smtexttt{SPACE}
-character to a \smtexttt{+} character.  To support such encoding formats
-in a general way, ETL has defined a set of ``transformers.''  
+request, the value is inserted into the URL using an URL-encoding
+format that involves (among other things) converting each
+\smtexttt{SPACE} character to a \smtexttt{+} character.  To support
+such encoding formats in a general way, ETL has defined a set of
+``transformers.''
 
 A \emph{transformer} is a streaming converter from one byte sequence to
 another byte sequence.  For example, the \smtexttt{url-encode}
@@ -620,6 +662,8 @@ response document inside of &lt;!--
 
 \subsection{Controlling whitespace}
 
+\gjb{probably reformat this a bit to be a bit tighter}
+
 Whitespace characters\footnote{Whitespace that is not a part of the
 XML Infoset~\cite{XML-infoset}, such as whitespace between attributes inside element
 tags, is managed via XML processing rules and is not controlled by the
@@ -681,15 +725,37 @@ templates attribute annotations.
 \subsection{Literal markup}
 \label{ssec-literal-markup}
 
-% conditional tags
-% at:*
-% ?foo syntax
-% building URIs
+\gjb{write this section!}
+
+** conditional tags
+
+** at:*
+
+** ?foo syntax, explain the tradeoff here
+
+** building URIs
 
 \subsection{Control constructs}
 \label{ssec-control}
 
+\gjb{write this section!}
+
+** bl:if, with lots of slots to avoid a domain specific language
+(ignore the fact that we have gotos and labels)
+
+** bl:choose/bl:when/bl:otherwise
+
+** bl:try/bl:catch/bl:finally
+
 \subsection{Custom tags}
+\label{ssec-custom-tags}
+
+\gjb{write this section!}
+
+** mention Scheme hygienic macro system; similar to that, except uses
+XSLT for rewrite rules.
+
+** Cite Simonyi, et al.'s ``Transformation in Intentional Programming''
 
 ** iterate until no more custom tags to expand
 
@@ -713,6 +779,13 @@ manipulate and analyze the AST thus simplifying the system.
 
 
 \subsection{Invoking applications}
+
+** HTTP GET/POST
+
+** ws-call
+
+** accessing abstract data model keyed off of content source name
+(this is kevxml -- maybe call it kxmlinclude?)
 
 
 %%% 
@@ -825,6 +898,22 @@ is preserved, but the byte-codes have been linearized for performance.
 \section{Related work}
 \label{sec-related-work}
 
+\gjb{write these up nicely}
+
+JavaML -- key observation is that folks are already writing XML when
+doing markup templating, so it is a natural place to apply the
+benefits of an XML-based program representation.  Cite Zou \&
+Kontogiannis; Power \& Malloy; Maletic, Collard, \& Marcus; Schonger,
+Pulvermiller \& Sarstedt; 
+
+Maybe mention Montana C++ compiler -- recognizes value of tools being
+able to work with the parse tree. (This could be an earlier citation.)
+
+XSLT -- declarative and that confuses folks.  Plus too limited in
+terms of ability to interact with external components -- you end up
+having to use a mix of XSLT and a scripting language with all the
+problems that entails.  Also, no streaming mechanism.
+
 LAML -- the dual of ETL -- took markup and embedded it in Scheme,
 whereas ETL takes only the most critical programming constructs and
 embeds them in XML.  Mention S-exp and XML similarity.
@@ -836,6 +925,8 @@ data-flow analyses, ETL focusses on practical aspects of limiting
 common mistakes:  it'd be interesting to apply the data flow analyses
 to ETL to make it provably generate correct markup, but that wasn't an
 a priori goal.
+
+Modeling HTML in Haskell \& Typed representation for HTML \& XML in Haskell
 
 
 %%% 
@@ -859,6 +950,7 @@ a priori goal.
 ** taint tracking of input variables
 ** better warning/error reporting in terms of the pre-macro-transformed source template
 
+** Considering domain specific languages for bl:calc/@expr and bl:if/@test
 
 \section{Acknowledgments}
 \label{sec-ack}
