@@ -24,6 +24,7 @@
 \usepackage{times}
 \usepackage{moreverb}
 \usepackage{floatflt}
+\usepackage{url}
 
 \newcommand{\B}{\discretionary{}{}{}}
 \newcommand{\smtt}{\small}
@@ -52,7 +53,7 @@
        \affaddr{Bellevue, WA ~ USA}\\
        \email{greg.badros@infospace.com}
 }
-\date{10 October 2002}
+\date{2 November 2002}
 \maketitle
 \begin{abstract}
 ETL....
@@ -224,17 +225,33 @@ of their dynamic templates directly in markup as well.  This
 observation eliminates the dual representation problem that limits the
 value of XML when applied to general purpose programming language.
 
-In this paper, I introduce the Extensible Templating Language. ...
+In this paper, I introduce the Extensible Templating Language.  From
+one perspective, ETL is a 100\% XML-based templating language that
+embeds programming language constructs directly in the XML
+representation, intermingled with literal target-language markup.
+Alternatively, we can view ETL as an imperative domain-specific
+programming language that uses XML as its surface syntax and
+simplifies the writing of programs that generate markup languages.
 
+ETL leverages the well-formedness and local-validity checks of the
+source template to support the correctness of the generated response
+markup.  Additionally, because of its use of XML as a representation,
+it simplifies ad-hoc software engineering analyses to better support
+evolution and maintenance of large dynamic web applications.  We have
+built an ETL runtime inside of a production-quality web server, the
+Extensible Templating Language Server.  ETLS is currently employed by
+InfoSpace to serve over forty million requests per day using over
+sixty thousand ETL templates.
 
 \subsection{Outline of paper}
 
-Section 
+Section \ref{sec-} ....
 
 %%% 
 \section{Background}
 
-\subsection{Server-side web applications}
+%% JSP/XML
+%% XSLT
 
 \subsection{Current templating strategies}
 
@@ -261,6 +278,9 @@ Section
 
 %%% 
 \section{Related work}
+
+%% LAML
+%% BigWig
 
 
 %%% 
