@@ -1,0 +1,56 @@
+# $Id$
+# GNU Makefile for tigerprawns design document
+# Author: Greg J. Badros, gregb@go2net.com
+
+# -pdf_link is an option that I (gregb) added to latex2html; it probably
+# has not yet been incorporated into the standard distribution -- it just
+# generates a link to ../FOO.pdf at the very top of the generated HTML file.
+# You can remove that option and only that feature will go away.
+
+LATEX2HTML_OPTIONS := -split 0 -no_navigation -pdf_link -show_section_numbers
+
+ETL=etl-www2003-poster
+
+# no trailing "/" or rsync will not copy the directory
+HTML := $(ETL) 
+HTML_FILES := $(ETL)/$(ETL).html 
+
+POSTSCRIPT := $(ETL).ps 
+
+PDF := $(ETL).pdf
+
+DVI := $(ETL).dvi
+
+all: $(POSTSCRIPT) $(PDF) $(DVI) # $(HTML_FILES)
+
+clean:
+	rm -f $(POSTSCRIPT) $(PDF) $(DVI)
+	rm -fr $(HTML)
+
+install: $(HTML) $(POSTSCRIPT) $(PDF)
+	rsync -avz $^ $(HTML_PATH)
+
+$(ETL)/$(ETL).html: $(ETL).tex
+	latex2html $(LATEX2HTML_OPTIONS) $<
+
+images/%.eps: images/%.dia
+	dia -e $@ $<
+
+HTML: $(HTML_FILES)
+
+PS: $(POSTSCRIPT)
+
+PDF: $(PDF)
+
+%.ps: %.dvi
+	dvips $< -o - > $@ # | ps-add-text-footer -d > $@
+
+%.pdf: %.ps
+	ps2pdf $<
+
+# GREGB:FIXME:: This is a bit lame-- understand dependencies better
+%.dvi: %.tex
+	latex $< && bibtex `basename $< .tex` && latex $< && latex $<
+
+# N.B. using these targets ignores dependencies
+.PHONY: HTML PS PDF DVI all clean install install-design install-staging
