@@ -1,0 +1,72 @@
+$Id$
+
+
+// Straight Java Servlet
+public void doGet(HttpServletRequest req, HttpServletResponse res) ... {
+   Books[] books = ... ;
+   PrintWriter out = res.getWriter();
+   out.println("<html>");
+   out.println(" <table>");
+   out.println("  <tr>");
+   for (int i = 0; i < books.length; ++i) {
+      out.print("     <td>");
+      out.print(books[i].getAuthor());
+      out.print("</td><td>");
+      out.print(books[i].getTitle());
+      out.println("</td>");
+   }
+   out.println("  </tr>");
+   out.println(" </table>");
+   out.println("</html>");
+}
+
+
+
+// php template
+<? $books = ...; ?>
+<html>
+ <table>
+  <tr>
+   <? for ($i = 0; $i < count($books); ++$i) { ?>
+     <td><? print($books[$i][author]); ?></td>
+     <td><? print($books[$i][title]); ?></td>
+   <? } ?>
+  </tr>
+ </table>
+</html>
+
+
+
+<?xml version="1.0" ?>
+<!-- JSP template using XML syntax -->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="1.2">
+<jsp:text><![CDATA[
+<html>
+ <table>
+  <tr>]]></jsp:text>
+   <jsp:scriptlet><![CDATA[
+     for (int i = 0; i < books.length; ++i) {
+   ]]></jsp:scriptlet>
+   <jsp:text><![CDATA[<td>]]></jsp:text>
+   <jsp:expression>books[i].getAuthor()</jsp:expression>
+   <jsp:text><![CDATA[</td><td>]]></jsp:text>
+   <jsp:expression>books[i].getTitle()</jsp:expression>
+   <jsp:text><![CDATA[</td>
+  </tr>
+ </table>
+</html>
+]]></jsp:text>
+</jsp:root>
+
+
+
+<%@ Register TagPrefix="book" Namespace="Books" Assembly="BooksModel" %>
+<script langauge="C#" runat=server>
+   Books[] books = ...;
+</script>
+<html>
+  <table>
+        <book:table-rows runat=server>
+  </table>
+</html>
+      

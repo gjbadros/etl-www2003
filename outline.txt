@@ -1,0 +1,62 @@
+$Id$
+
+* Introduction
+** 
+** Outline of paper
+
+
+* Background
+
+** Existing templating strategies & their problems
+*** servlets, php, jsp-xml, aspx custom controls
+
+** Approaches available with XSLT
+*** controller is separate w/ literal-result stylesheet, using document(/...)
+
+
+* A better approach: ETL
+
+** desiderata
+
+** design guidelines
+
+** language features: slots, types, custom tags via XSLT, XML-typed variables
+
+** benefits
+
+** analysis examples
+
+
+* Implementation
+
+** ETLS, its goals, backward-compatibility needs
+
+** Server principles
+
+** perf numbers
+
+** screenshot of admin pages
+
+
+* Related work
+
+** LAML
+
+** Haskell
+
+** JavaML
+
+** IP
+
+
+* Conclusion
+
+** benefits
+
+** contribution
+
+
+* Acks
+
+
+* References
