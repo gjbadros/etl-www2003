@@ -358,7 +358,11 @@ related work and \secref{conclusion} concludes.
 The Extensible Templating Language is an imperative markup templating
 language that allows web developers to intermingle literal XML markup
 with XML-based programming language constructs.  Our primary design
-goals for ETL were to:
+goals for ETL were to:\footnote{A fifth important design goal was to
+enable automatic translation of our legacy templating language into ETL. That
+need occasionally complicated our design. This bulk of this paper
+focusses on the essential language, and
+\secref{implementation} mentions our migration to ETL a bit more.}
 
 \begin{enumerate}
 \item Allow easy analyses of source templates to permit development of
@@ -519,24 +523,28 @@ some analyses and optimizations.
 \subsection{Variables and values}
 \label{ssec-variables}
 
-Variable values are set using \smtexttt{bl:set}.  Variables
-declared in the header of a template are statically scoped to just
-that template.   Undeclared variables are dynamically scoped until the
-end of processing the current request.  A \smtexttt{bl:set} primitive
-specifies the target variable as the \smtexttt{@var} attribute. The
-value to be assigned is either given using \smtexttt{@value},
-\smtexttt{@value-var}, or by executing the children of the
-\smtexttt{bl:set} element.  For example:
+As with all imperative programming languages, ETL has the notion of
+variables that can be assigned to and can later have that value
+recovered. Variables can be declared inside a single 
+\smtexttt{bl:header} element (which is required to be the first element
+in a template) and are assigned values using the
+\smtexttt{bl:set} primitive. Undeclared variables have dynamic scope and
+are live until the end of processing the current request, while
+declared variables have static scope and may only be reference in
+the same template.  The target variable is named via the
+\smtexttt{@var} attribute and the value is given by
+\smtexttt{@value}, \smtexttt{@value-var}, or by executing the
+children of the \smtexttt{bl:set} element.  For example:
 
 \begin{verbatim}
 <bl:set var="baseuri"><bl:http/>://<bl:get
  var="hostname"/>/</bl:set>
 \end{verbatim}
 
-\noindent might set the variable named ``baseuri'' to the value
-``http://www.\B{}infospace.\B{}com'' (assuming the request comes as an
+\noindent will set the variable named ``baseuri'' to the value
+``http://www.\B{}infospace.\B{}com'' when the request comes as an
 ordinary insecure HTTP request and the variable ``hostname'' contains
-the value ``www.infospace.com''.  While executing its contained
+the value ``www.\B{}infospace.\B{}com''.  While executing its contained
 elements, \smtexttt{bl:set} redirects the default output stream to be
 used to construct a value to assign to the variable; the output stream
 is restored after the child elements are processed (e.g., allowing
@@ -544,7 +552,9 @@ nesting of \smtexttt{bl:set} primitives).\footnote{Several other
 primitives follow this same pattern.  For example
 \smtexttt{bl:set-mime-type} evaluates its contained elements to
 generate a value to be used for the MIME content-type of the
-response.}
+response.}  Values are later retrieved by referencing them by name
+in a slot, and they can be copied directly to the output stream using
+\smtexttt{bl:get}.
 
 ETL has the notion of special reserved variables that may have
 side-effects and are used internally for conveying request parameters or
@@ -552,56 +562,39 @@ other system-level details.  These reserved variables always start with
 the octothorpe (``\smtexttt{\#}'') character and may be read-only (e.g.,
 \smtexttt{\#browsertype}) or may alter the behaviour of primitives based
 on the value they are assigned (e.g., \smtexttt{\#currencysign}).  
-
 Unlike ordinary variables, there is no guarantee that the value
 retrieved from a variable is identical to the value last stored in that
-variable.  Indeed, subsequent accesses of the same reserved
-variable may evaluate to completely different strings and may have
-subtle side-effects elsewhere in the system.  The documentation for each
-reserved variable details their behaviour.
+variable.
 
-\subsection{Buckets}
-\label{ssec-buckets}
+Various other data is accessible to ETL templates via 
+\emph{buckets}. Buckets can be thought of as top-level elements in a virtual
+(lazily-evaluated) XML data model that is implicitly available to ETL
+templates.  They replace field references and accessor methods of
+distinguished objects in languages such as Java.  For example, where a
+JSP developer might write:
 
-As with all imperative programming languages, ETL has the notion of
-variables that can be assigned to and can later have that value
-recovered.  The \smtexttt{bl:set} primitive is used to perform
-assignment, and various primitives evaluate variables. In particular,
-\smtexttt{bl:get}'s primary purpose is to evaluate a variable, but
-every primitive that accepts a slot permits the use of variables.  Most
-variables are ordinary in the sense that there is no special behaviour
-associated with them: the variable just holds a value to be retrieved and
-there are no further side-effects.  (Those variables that do have special
-side-effects are called ``reserved'' and are discussed in the next
-section.)
+\begin{verbatim}
+<%= request.getHeader("User-Agent") %>
+\end{verbatim}
 
-There are several \emph{buckets} into which variables are grouped.  The
-different buckets are used to hold variables that have values derived
-from different places.  The buckets are:
+\noindent the ETL developer accesses the \smtexttt{\#http}
+bucket instead:
 
-\begin{description}
-\item[url] URL and input form parameters
-\item[http] HTTP headers
-\item[cki] Variables from a special single cookie's encoded value
-\item[usr] Variables associated with the current user's profile
-\item[pro] Variables associated with the current cobrand's settings
-\item[local] Local/global variables with string values, set by \smtexttt{bl:set}
-\item[xml] Local/global variables with DOM-typed values, set by \smtexttt{bl:set}
-\item[ss] (experimental) Variables associated with the current server-side session
-      state
-\end{description}
+\begin{verbatim}
+<bl:get var="#http/User-Agent"/>
+\end{verbatim}
 
-\noindent Variables from a specific bucket can be explicitly referenced
-by using the bucket name preceded by a ``\#'' (octothorpe) as a prefix.
-For example, the syntax \smtexttt{\#pro/wantcolor} explicitly refers to
-the ``wantcolor'' profile variable. Unadorned references to a variable
-refer to a pseudo-bucket named ``top'' that looks for a variable's
-value first in \smtexttt{\#local} and then in \smtexttt{\#url}.
+\noindent Numerous buckets exist in the XML data model providing ways
+to access URL parameters, HTTP headers, user settings,
+configuration data for applications and brands, and cookies.  Where
+appropriate, the buckets are mutatable as well (e.g., saving user
+settings to the user database).
 
-The ``xml'' bucket is unique in that the values its variables are bound
-to are XML DOM trees, not ordinary strings.  When the variable is
-evaluated in a context that requires a string, the DOM is serialized to
-a string as a node is serialized by XSLT when using
+One additional bucket, \smtexttt{\#xml} is unique in that the values
+its variables are bound to are XML DOM trees, not just strings.
+When the variable is evaluated in a context that requires a string,
+the DOM is serialized to a string as a node is serialized by XSLT when
+using
 \smtexttt{xsl:value-of}.  Additionally, a trailing XPath expression is
 allowed after the variable name when referencing the \smtexttt{\#xml}
 bucket.  That XPath expression, when applied to the root element of the
@@ -730,16 +723,15 @@ response document inside of &lt;!--
 
 \subsection{Controlling whitespace}
 
-\gjb{probably reformat this a bit to be a bit tighter}
-
-Whitespace characters\footnote{Whitespace that is not a part of the
-XML Infoset~\cite{XML-infoset}, such as whitespace between attributes inside element
-tags, is managed via XML processing rules and is not controlled by the
-rules described in this section.} in a source template have mixed uses.  In some
-cases, the developer wishes to improve the readability of the program
-by using indentation or blank lines.  In other cases, the whitespace
-is intended to be copied into the output document or a variable's
-value.  The \smtexttt{xml:space} attribute provided by the XML
+Whitespace characters in a source template have mixed
+uses.\footnote{Whitespace that is not a part of the XML
+Infoset~\cite{XML-infoset}, such as whitespace between attributes
+inside element tags, is discarded by the XML processor and is not
+controlled by the rules described in this section.}  In some cases,
+the developer wishes to improve the readability of the program by
+using indentation or blank lines.  In other cases, the whitespace is
+intended to be copied into the output document or a variable's value.
+The \smtexttt{xml:space} attribute provided by the XML
 standard~\cite[2.10]{XML} is not sufficiently expressive to support
 the various needs of the template author.
 
@@ -765,30 +757,22 @@ illustrated in \figref{ws-rules} as follows.
       text nodes (2, 3, and 4 in the figure).
 \end{itemize}
 
-The allowed settings for \smtexttt{@bl:space-nodes} are:
-
-\begin{description}
-  
-\item[\smtexttt{preserve}] Leave the whitespace unchanged
-      
-\item[\smtexttt{compact}] Replace sequences of 1 or more
-      whitespace characters with a single space (0x20)
-      
-\item[\smtexttt{strip}] Eliminate the whitespace entirely
-
-\item[\smtexttt{normalize}] Strip whitespace nodes that contain only
-newline (0x0A) characters entirely; replace sequences of 1 or more
+The allowed settings for \smtexttt{@bl:space-nodes} are: a)
+\textbf{\smtexttt{preserve}}, to leave the whitespace unchanged; b)       
+\textbf{\smtexttt{compact}}, to replace sequences of 1 or more
+      whitespace characters with a single space (0x20); c)      
+\textbf{\smtexttt{strip}}, to eliminate the whitespace entirely; or d)
+\textbf{\smtexttt{normalize}} to strip whitespace nodes that contain only
+newline (0x0A) characters entirely and replace sequences of 1 or more
 whitespace characters that include a space or a tab with a single
-space (0x20)
-
-\end{description}
+space (0x20).
 
 In addition to the above, \smtexttt{@bl:text-nodes} permits asymmetric
 handling of the left and right sides of the text nodes via values
-\smtexttt{compact-(left|right)} and \smtexttt{trim-(left|right)}. 
-Importantly, all of these whitespace rules are statically-scoped:
-a called template does not inherit the attributes from the calling
-templates attribute annotations.
+\textbf{\smtexttt{compact-(left|right)}} and \textbf{\smtexttt{trim-(left|right)}}. 
+Importantly, these whitespace rules are statically-scoped: a called
+template is not impacted by a calling template's attribute
+annotations.
 
 \subsection{Literal markup}
 \label{ssec-literal-markup}
@@ -833,7 +817,7 @@ XSLT for rewrite rules.
 
 \begin{figure}[tb]
 \begin{centering}
-\includegraphics[width=1\linewidth]{processing-stages-simple.eps}
+\includegraphics[width=.9\linewidth]{processing-stages-simple.eps}
 \caption{Overview of various templating languages pre-execution
 processing.  The pipeline (a) illustrates a mod\_perl-like system where
 the template is parsed and then byte-compiled into the runtime
