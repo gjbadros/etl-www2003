@@ -690,6 +690,19 @@ constructed using the \smtexttt{bl:comment} primitive.
 %</bl:comment>
 %\end{smallverbatim}
 
+To support internationalization of templates, developers can choose to
+use the \smtexttt{bl:tt} (token translation) primitive in all places
+where literal text would appear.  For example, instead of writing
+\smtexttt{Hello <bl:get var="name"/>}, a properly internationalized
+template might read \smtexttt{<bl:tt id="greeting1">Hello</bl:tt>
+<bl:get var="name"/>}. Each template has a corresponding dictionary of
+token-translation definitions for the various locales that have been
+defined.  Based on the request's locale selection (either from a
+stylized URL or the \smtexttt{Accepts-language} header), the
+appropriate dictionary is used to replace each \smtexttt{bl:tt} use
+with the XML document fragment to which the given identifier maps.
+
+
 \subsection{Control flow}
 \label{ssec-control}
 
@@ -732,25 +745,6 @@ bl:call, template resolution order.  Probably need a figure of a
 directory tree to support this and the next section.  Give analogy to
 OO programming languages as the brand being an implicit receiver
 object.}
-
-\subsection{I18N \& Localization}
-\label{ssec-localization}
-
-To support internationalization of templates, developers can choose to
-use the \smtexttt{bl:tt} (token translation) primitive in all places
-where literal text would appear.  For example, instead of writing
-\smtexttt{Hello <bl:get var="name"/>}, a properly internationalized
-template might read \smtexttt{<bl:tt id="greeting1">Hello</bl:tt>
-<bl:get var="name"/>}. Each template has a corresponding dictionary of
-token-translation definitions for the various locales that have been
-defined.  Based on the request's locale selection (either from a
-stylized URL or the \smtexttt{Accepts-language} header), the
-appropriate dictionary is used to replace each \smtexttt{bl:tt} use
-with the XML document fragment to which the given identifier maps.
-
-\gjb{clarify ordering.  Footnote that this is not yet
-implemented this way?  I need to find the right place to give that
-caveat more globally.}
 
 \subsection{Controlling whitespace}
 
