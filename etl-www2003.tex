@@ -41,6 +41,10 @@
 {\renewcommand{\baselinestretch}{1}\small\verbatim}%
 {\renewcommand{\baselinestretch}{2}\endverbatim}
 
+\newenvironment{smalllisting}%
+{\renewcommand{\baselinestretch}{1}\small\listing}%
+{\renewcommand{\baselinestretch}{2}\endlisting}
+
 \begin{document}
 %
 \title{The Extensible Templating Language: \\
@@ -59,22 +63,23 @@
        \affaddr{InfoSpace, Inc., 601 108th Ave. NE, Suite 1200, Bellevue, WA 98004, USA}\\
        \email{greg.badros@infospace.com}
 }
-\date{12 November 2002}
+\date{14 November 2002}
 \maketitle
 \begin{abstract}
 Popular web templating languages typically embed general-purpose
 programming languages.  The Extensible Templating Language was born
-out of questioning the fundamental assumption that front-end
+out of questioning the fundamental assumption that the front-end
 markup-generating engine of a multi-tier web application requires all
-of the power and expressiveness implied by that design.  ETL restricts
+the power and expressiveness implied by that design.  ETL restricts
 the set of language features to a useful subset that provide the
 necessary functionality without compromising the simplicity and
-understandability of templates.  Furthermore, ETL improves the
+understandability of templates.  By forcibly limiting what can be
+done by templates, we ensure a better separation of presentation
+details from business logic. Furthermore, ETL improves the
 analyzability of the source templates by using an XML-based
 representation where markup is intermingled with XML elements
 corresponding to programming constructs. This approach reduces the
-possibility of generating improper markup, improves the separation
-between presentation and business logic, and facilitates tool-building
+possibility of generating improper markup and facilitates tool-building
 including semantically-aware editors and debuggers. ETL runs inside of
 the Extensible Templating Language Server which is currently employed
 by InfoSpace to serve over forty million requests per day using over
@@ -102,7 +107,7 @@ breed of applications deployed via the World Wide Web presents
 substantial new complexities for application developers. A variety of
 new programming languages and paradigms attempt to address these novel
 problems.  One important characteristic of this new world of software
-development is the need to generate HTML, WML, or other markup
+development is the need to generate HTML, WML, and other markup
 languages to describe client-side presentation and behaviour.
 
 The original server-side dynamic markup-generation capabilities of the
@@ -119,40 +124,37 @@ performance by eliminating process creation overhead.
 
 Today, server-side markup generation is dominated by expressive and
 flexible general-purpose programming languages such as
-Java~\cite{Arnold98}, Perl~\cite{Camel3rd}, and PHP~\cite{pro_php}.
-Ironically, the languages are then mostly used
-in fairly restricted ways, often being tied to a templating syntax
-(e.g., JSP~\cite{JSP12} for Java or
-HTML::Template~\cite{HTML-Template} or Mason~\cite{Perl-Mason} for
-Perl).  For example, consider the PHP template in \figref{php-books}.
-The only constructs required by the template are a) some means of
-populating a data model from the back-end business logic (line 1); b)
-data-driven iteration (line 4-5); and c) simple expression evaluation
-to access parts of the data model (lines 7 and 9). The extra power
-provided by typical templating languages not only goes unused, but it
-also complicates certain important analyses of the code.  For example,
-the obviously important property that a template execution terminates
-is undecidable for these general purpose languages.  
+Java~\cite{Arnold98}, Perl~\cite{Camel3rd}, Visual Basic~\cite{VB},
+and PHP~\cite{pro_php}.  Ironically, the languages are then mostly
+used in fairly restricted ways, often being tied to a templating
+syntax (e.g., JSP~\cite{JSP12} for Java or
+HTML::Template~\cite{HTML-Template} for Perl).  For example, consider
+the PHP template in \figref{php-books}.  The only constructs required
+by the template are a) some means of populating a data model from the
+back-end business logic (line 1); b) data-driven iteration (line 4);
+and c) simple expression evaluation to access parts of the data model
+(lines 6 and 7). The extra power provided by typical templating
+languages not only goes unused, but it also complicates certain
+important analyses of the code.  For example, the obviously important
+property that a template execution terminates is undecidable for these
+general purpose languages.
 
 % GREGB:FIXME:: check the above line numbers 
 
 \begin{figure}[tb]
-\begin{listing}{1}
+\begin{smalllisting}{1}
 <? $books = GetBooks(...); ?>
 <html>
  <table>
-  <? for ($i = 0; 
-           $i < count($books); ++$i) { ?>
+  <? for ($i=0; $i < count($books); ++$i) { ?>
    <tr>
-     <td><? print($books[$i][author]); ?>
-         </td>
-     <td><? print($books[$i][title]); ?>
-         </td>
+    <td><? print($books[$i][author]); ?> </td>
+    <td><? print($books[$i][title]); ?> </td>
    </tr>
   <? } ?>
  </table>
 </htm>
-\end{listing}%$
+\end{smalllisting}%$
 \caption{Cleanly-written PHP templates require only the simplest
 programming language constructs.  Unfortunately, over the evolution of
 the presentation layer, PHP developers sometimes engage in far broader
@@ -160,24 +162,20 @@ interactions because the power of the language allows them to do so.
 \label{fig-php-books}}
 \end{figure}
 
-For most contemporary web application development frameworks, the
-restrictions desired of the front-end templating layer are imposed
-only by process and convention.  Template authors are asked to limit
-themselves to a subset of the available features of a language as a
-means of facilitating scalable, secure, well-behaved systems.
-Importantly, however, there is nothing inherent that prevents
-template-based code from, for example, making individual database
-connections (which would impact performance) or maintaining
-undesirable server-side state (which would impose additional
-requirements on the load-balancing mechanism and reduce scalability).
-Languages such as PHP encourage the undesirable mixing of front-end
-presentation with back-end business logic.~\cite{Crane2002} That
-approach is counter to the goal of many development organizations to
-force a strong separation between the web developers and back-end
-application developers. While web developers have substantial
-expertise in HTML, user-interface design, and client-side scripting,
-their responsibilities often do not include consideration of the
-larger architecture.
+For most web application development frameworks, the restrictions
+desired of the front-end templating layer are imposed only by process
+and convention.  Template authors are asked to limit themselves to a
+subset of the available features of a language as a means of
+facilitating scalable, secure, well-behaved systems.  Importantly,
+however, there is nothing inherent that prevents presentation code
+from, for example, making individual database connections (which would
+impact performance) or maintaining undesirable server-side state
+(which would impose additional requirements on the load-balancing
+mechanism and reduce scalability).  Languages such as actually PHP
+encourage this undesirable mixing of front-end presentation with
+back-end business logic~\cite{Crane2002}.  That fact further blurs the
+common organizational line between front-end presentation developers
+and back-end application engineers.
 
 Another substantial problem with existing templating technologies is
 that they often involve the lexical mixing of two separate programming
@@ -185,7 +183,7 @@ paradigms.  JSP, for example, is implemented in terms of a
 pre-processing rewrite of the template into a Java servlet.~\cite{JavaServlet23}
 Pre-processing approaches are convenient for programmer expressiveness
 but have a huge hidden cost in complicating software engineering
-analyses and tools that would otherwise help understand, maintain, and
+analyses and tools that could otherwise help understand, maintain, and
 evolve the complex systems~\cite{Badros00-spe,ErnstBadrosNotkin02}\cite[p.~424]{Stroustrup94}.
 The precise analysis of an arbitrary JSP template necessarily requires
 full knowledge of both the rewrite rules and the semantics of Java.
@@ -193,12 +191,12 @@ full knowledge of both the rewrite rules and the semantics of Java.
 \subsection{Restricting the language}
 
 All popular markup templating languages integrate with a
-general-purpose programming language.  This approach offers numerous
+general-purpose programming language.  This approach offers some
 advantages.  For example, undoubtedly the language is sufficiently
 powerful and expressive for the needs of markup generation.
 Additionally, numerous language-level tools such as compilers and
 debuggers, are already available for the templating language to
-leverage.  Certainly for platform providers that have a large
+leverage.  For platform providers that have a large
 investment already made in a general purpose language, it is natural
 to extend that investment to a templating language.\footnote{XSLT can
 be used in a templating style~\cite[2.3]{XSLT}, but popular use of
@@ -229,7 +227,7 @@ If we limit the functionality of a markup templating language, one
 capability that remains important is accessing back-end applications.
 The architecture of the classic three-tier application appears at the
 top of \figref{ws-ip-shift}.  Historically, the communication between
-the front-end and back-end servers uses an object-oriented data model
+the front-end and back-end servers uses an object-based data model
 and involves remote procedure call mechanisms such as DCOM or Corba.
 As the web service architecture depicted in the bottom of
 \figref{ws-ip-shift} increases in popularity, the need for the front
@@ -237,32 +235,31 @@ end templating language to reason about language-level objects is
 reduced.  Instead, the XML data model implied by web services can be
 the primary communication format and the front end need only use
 Internet standards such as HTTP and XML in interacting with other
-applications.  This observation simplifies the requirements
-for front-end markup templating languages and supports the possibility
-that a restricted programming language may suffice.
+applications.  This observation suggests that markup languages need
+only concern themselves with a single data model and can thus be made
+simpler to learn and use.
 
 %% GIVE EXAMPLES OF VALUABLE ANALYSES!!!
 \subsection{Analysis of markup templates}
 
-Templating languages have one primary goal: to generate markup to be
-returned to the requesting user agent.  It is important that the
-markup created conforms to appropriate Internet standards.  For
-example, WML markup needs to first be well-formed XML and second be
-valid with respect to the appropriate schema or DTD~\cite{WML12}.
-Although HTML browsers are more forgiving of variations in syntax,
-best-practices still dictate that the markup returned be in compliance
-with the HTML specification~\cite{HTML4}.  Popular templating
-languages including PHP, JSP, ASP, and others all process arbitrary
-text and are ignorant of the rules of the markup being generated: the
-mistaken close tag on line 14 of \figref{php-books} goes unnoticed by
-PHP.
+Given the wide variety of browsers, crawlers, and other user agents,
+it is important that the markup created by the presentation layer
+conforms to appropriate Internet standards.  For example, WML markup
+needs to first be well-formed XML and second be valid with respect to
+the appropriate schema or DTD~\cite{WML12}\@.  Although HTML browsers
+are more forgiving of variations in syntax, best-practices still
+dictate that the markup returned comply with the HTML
+specification~\cite{HTML4}.  Popular templating languages including
+PHP, JSP, ASP, and many others process arbitrary text and are ignorant
+of the rules of the markup being generated: the mistaken close tag on
+line 11 of \figref{php-books} goes unnoticed by PHP.
 
 Tools such as HTMLTidy~\cite{HTMLTidy} are available to check the
 responses from servers for conformance, but often testing involves
 simply using various browsers to exercise the application while
 looking for bugs.  Both of these approaches require exhaustively
-visiting every page of interest--often a very large search space.
-Ideally, we would prefer a way to statically analyze the source templates
+visiting every page of interest.  For quality assurance to scale,
+we require a way to statically analyze the source templates
 themselves to gain confidence that they will, in fact, generate proper
 markup.  If static analysis of templates can rule out the possibility
 of certain kinds of errors, testing time and costs can be dramatically
@@ -277,22 +274,21 @@ such that tools analyzing the templates become an essential part of
 maintaining and evolving the system. For example, a site may wish to
 add an extra input field to all of its registration forms.  If a
 generic form is not already factored out into a common location, the
-first step in approaching the task is finding all of the registration
-forms.  Or suppose a new handheld device has a limitation in its
-handling of cookies: we need a means of narrowing the scope of careful
-review to places where that cookie is manipulated.
+first step in approaching the task is finding all the forms. 
+Or suppose a new handheld device has a limitation in its
+handling of cookies: we need a means of narrowing the scope for careful
+review to only places where that cookie is manipulated.
 
 Typically, web developers approach to above scenarios with an arsenal
-of imprecise lexical tools such as \smtexttt{grep}.  While searching
-for a substring or regular expression may satisfy some simple queries,
-when the desired query has additional structure, lexical approaches
-fall short.  Suppose we wish to find dead code to simplify our
-application. No regular expression will let us identify all
-unreachable templates to satisfy that query.  To analyze more deeply,
-we need to uncover the semantic structure of the templating language.
-Typically, that requires a language-specific parsing approach and much
-greater effort in building a valuable tool or an extensible integrated
-development environment~\cite{Soroker97,Eclipse}.
+of imprecise lexical tools based on regular expressions.  While these
+tools may satisfy some simple queries, when the desired query has
+additional structure, lexical approaches fall short.  Suppose we wish
+to find dead code to simplify our application. No regular expression
+will let us identify all unreachable templates to satisfy that query.
+To analyze more deeply, we need to uncover the semantic structure of
+the templating language.  Typically, that requires a language-specific
+parser and much greater effort in building a valuable tool
+or an extensible integrated development environment~\cite{Soroker97,Eclipse}.
 
 \subsection{XML supports analyses and tools}
 
@@ -301,23 +297,21 @@ programming language source code is to use standard XML tools such as
 XSLT~\cite{XSLT} and XQuery~\cite{XQuery} to operate over a
 complementary XML-based representation~\cite{Badros-www9,Schonger2002,Gondow2002,Power2002}.
 With a carefully-chosen XML representation, valuable semantics of the
-code are immediately available to XPath expressions, thus facilitating
+code are immediately available to XPath expressions, thus enabling
 a broad class of source code tools.  However, for a general-purpose
 programming language, XML is unwieldy for use as the primary
 representation.  Instead, the conventional grammar-based language is
 edited by humans and is only converted into XML for the tools to
-leverage.
+use.
 
 This research applies the benefits of an XML representation of source
-code to the domain of restricted markup templating languages.
-Importantly, web developers working with templating languages are
-already writing markup directly, thus making it natural for them to
-express the limited logic of their dynamic templates directly in
-markup as well.  This observation eliminates the dual representation
-problem that restricts the value of XML when applied to general
-purpose programming language.  The approach also enables the use of
-schema-aware XML editors to provide a rich development environment
-with very little ETL-specific effort (see \secref{benefits}).
+code to the domain of restricted markup templating languages.  Because
+web developers are already writing markup directly, it is natural for
+them to express the limited logic of their dynamic templates directly
+in markup as well.  Importantly, this lets us use a single
+representation for both developers and tools. For example, we can use
+schema-aware XML editors to easily provide syntax colorization and
+completion capabilities (see \secref{benefits}).
 
 In this paper, I introduce the Extensible Templating Language.  From
 one perspective, ETL is a 100\% XML-based templating language that
@@ -332,8 +326,8 @@ source template to support those same properties in the generated
 response markup.  By limiting the programming-language constructs to
 include only the features that are appropriate at the front-end of a
 scalable web application architecture, we ease numerous analyses and
-encourage proper separation of the presentation from the content and
-business logic. Finally, because of its use of XML as a
+encourage proper separation of the presentation details from the
+backend application. Finally, because of its use of XML as a
 representation, ETL simplifies ad-hoc software engineering analyses to
 better support evolution and maintenance of large dynamic web
 applications.  We have built an ETL runtime inside of a
@@ -344,32 +338,13 @@ million requests per day using over sixty thousand ETL templates.
 \subsection{Outline of paper}
 
 The rest of this paper is organized as follows. \secref{etl} describes
-the Extensible Templating Language itself. \secref{benefits} gives
-several practical examples of the benefits of using a pure XML
-approach with a restricted programming language.
-\secref{implementation} details our implementation and
+the Extensible Templating Language and explains some of its
+benefits. \secref{benefits} illustrates several practical examples
+that leverage the pure XML approach with a restricted programming
+language. \secref{implementation} details our implementation and
 describes our experiences in using ETL in production systems over the
 last year.  Finally, \secref{related-work} describes and contrasts
 related work and \secref{conclusion} concludes.
-
-%%% 
-%\section{Background}
-%\label{sec-background}
-
-%% JSP/XML
-%% XSLT
-
-%\subsection{Current templating strategies}
-
-%\subsection{Comparison of approaches}
-
-%\begin{table}
-%\centering
-%\caption{Summary of existing templating approaches.}
-%\begin{tabular}{|c|c|l|} \hline
-%\\ \hline
-%\hline\end{tabular}
-%\end{table}
 
 
 %%% 
@@ -407,7 +382,7 @@ providing constructive evidence that the set of available constructs
 is sufficient for real-world use.
 
 \begin{figure}[tb]
-\begin{listing}{1}
+\begin{smalllisting}{1}
 <?xml version="1.0"?>
 <bl:template xmlns:bl="http://www....">
  <bl:set var="#xml/books">...</bl:set>
@@ -422,10 +397,10 @@ is sufficient for real-world use.
   </table>
  </html>
 </bl:template>
-\end{listing}%$
+\end{smalllisting}%$
 \caption{The ETL template corresponding to \figref{php-books}'s PHP
 code is required to be well-formed XML.  Thus, the developer
-avoids the mistake from line 14 of the PHP example.
+avoids the mistake from line 11 of the PHP example.
 \label{fig-etl-books}}
 \end{figure}
 
