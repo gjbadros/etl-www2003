@@ -436,7 +436,7 @@ to improve our ability to support static analyses.  For example,
 \smtexttt{bl:get} writes out the value of a variable and has a
 \smtexttt{@transform} attribute that supports various encodings or
 decodings of the value (e.g., \smtexttt{url-encode} or
-\smtexttt{xml-decode}---see \ssec{transformations}).  We disallow the
+\smtexttt{xml-decode}---see \ssecref{transformations}).  We disallow the
 use of \smtexttt{@transform-var} because we want to always know from
 static inspection what transformations may occur, thus facilitating
 some analyses and optimizations.
@@ -522,7 +522,7 @@ by using the bucket name preceded by a ``\#'' (octothorpe) as a prefix.
 For example, the syntax \smtexttt{\#pro/wantcolor} explicitly refers to
 the ``wantcolor'' profile variable. Unadorned references to a variable
 refer to a pseudo-bucket named ``top'' that looks for a variable's
-value first in \smtexttt{\#local} and then in \smtexttt{#url}.
+value first in \smtexttt{\#local} and then in \smtexttt{\#url}.
 
 The ``xml'' bucket is unique in that the values its variables are bound
 to are XML DOM trees, not ordinary strings.  When the variable is
