@@ -100,7 +100,7 @@ tied to a templating language (e.g., JSP~\cite{JSP} for Java or
 HTML::Template~\cite{HTML-Template} for Perl).  For example, consider
 the PHP template in \figref{php-books}.  The only constructs required
 by the template are a) some means of populating a data model from the
-``back-end'' business logic (line 1); b) data-driven iteration (line
+back-end business logic (line 1); b) data-driven iteration (line
 5-6); and c) simple expression evaluation to access parts of the data
 model (lines 7 and 9). % GREGB:FIXME:: check these line numbers
 
@@ -126,9 +126,36 @@ language constructs required by typical templates.
 \label{fig-php-template}}
 \end{figure}
 
+Unfortunately, for most contemporary web application development
+frameworks, the restrictions desired of the front-end templating layer
+are imposed only by process and convention.  Template authors are
+asked to limit themselves to a subset of the available features of a
+language as a means of facilitating scalable, secure, well-behaved
+systems.  Importantly, however, there is nothing inherent that
+prevents template executions from, for example, making individual
+database connections (which would impact performance) or maintaining
+undesirable server-side state (which would impose additional
+requirements on the load-balancing mechanism and reduce scalability).
+These concerns are intensified because many development organizations
+encourage a strong separation between the web developers and back-end
+application developers. While web developers have substantial
+expertise in HTML, user-interface design, and client-side scripting,
+their responsibilities often do not include consideration of the
+larger architecture.
 
+Another substantial problem with existing templating technologies is
+that they often involve the lexical mixing of two separate programming
+paradigms.  JSP, for example, is implemented in terms of a
+pre-processing rewrite of the template into an equivalent servlet.
+Pre-processing approaches are convenient for programmer expressiveness
+but have a huge hidden cost in complicating software engineering
+analyses and tools that would otherwise help understand, maintain, and
+evolve the complex systems~\cite{PCP3,EvilMacros,StroustropDnEChapterAboutCpp}.
+The precise analysis of an arbitrary JSP template necessarily requires
+full knowledge of the semantics of Java.
 
-\subsection{Long-term maintainability}
+%% GIVE EXAMPLES OF VALUABLE ANALYSES!!!
+\subsection{Analysis for web applicatons}
 
 \subsection{Flexibility vs.\ analyzability}
 
