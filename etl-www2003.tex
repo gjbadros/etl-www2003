@@ -154,7 +154,7 @@ undecidable for these general purpose languages.
  </table>
 </htm>
 \end{smalllisting}
-
+%$
 \caption{Cleanly-written PHP templates require only the simplest
 programming language constructs.  Unfortunately, over the evolution of
 the presentation layer, PHP developers sometimes engage in far broader
@@ -627,29 +627,25 @@ selection, conditionals and loops, exceptions, and remote invocations.
 \subsubsection{Template selection}
 \label{ssec-selection}
 
-Requests made of the ETL server always have an associated abstract
-``brand''.  The brand can be explicitly specified as part of the URL,
+Requests made of the ETL server are always have an associated abstract
+\emph{site} that can be explicitly specified as part of the URL,
 or can be implicit based on the \smtexttt{Hostname} header of the HTTP
-request (e.g., when multiple hostnames or domains refer to the same
-server).  That brand identifies the customer for whom ETLS is
-generating the page.\footnote{This branding feature is heavily
-influenced by InfoSpace's business of building an application
-once and customizing it for different partners.}  The brand is used to
-select which template is invoked for the initial processing of a
-request and whenever the \smtexttt{bl:call} primitive is used to
-execute another template as a subroutine.
+request (e.g., when multiple hostnames refer to the same server).
+That site name is used to select which template is invoked for the
+initial processing of a request and whenever the
+\smtexttt{bl:call} primitive is used to execute another template as a
+subroutine. Template selection is analogous to method dispatch in
+object-oriented programming languages.  Importantly, ETL only permits
+bounded recursion, thus ensuring termination.
 
 For example, an \smtexttt{index.htm} page may \smtexttt{bl:call} a
 \smtexttt{header.htm} template to output a banner for the top of a
 page, then do some work to generate the meat of the page, and finally
 invoke \smtexttt{footer.htm} to generate another banner for the
-bottom.  The \smtexttt{header.htm} at the top-level of the brand
-hierarchy may provide some basic functionality, while a sub-brand may
-provide an overriding \smtexttt{header.htm} implementation (as a file
-in a subdirectory) that specializes the banner.  Template selection is
-analogous to method dispatch in object-oriented programming languages.
-Importantly, ETL only permits bounded recursion, thus ensuring
-termination.
+bottom.  The default \smtexttt{header.htm} at the top-level of the
+brand hierarchy may provide some basic functionality, while a
+sub-brand may provide an overriding \smtexttt{header.htm}
+implementation that specializes the banner.
 
 \subsubsection{Conditionals and loops}
 
