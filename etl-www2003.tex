@@ -57,7 +57,7 @@
 \date{2 November 2002}
 \maketitle
 \begin{abstract}
-ETL....
+ETL.... GREGB:FIXME:Write this!:
 \end{abstract}
 
 % A category with only the three required fields
@@ -290,7 +290,7 @@ related work and \secref{conclusion} concludes.
 
 
 %%% 
-%% GREGB:FIXME:: avoid too obvious of an overfull hbox below
+%% GREGB:VISUAL:: avoid too obvious of an overfull hbox below
 \section{\hspace*{-.1in}Extensible Templating Language}
 \label{sec-etl}
 
@@ -341,14 +341,30 @@ nesting and that they use the correct attributes.  A goal of ETL is to
 make approximate analyses easy and precise analyses possible.
 
 An example ETL template appears in \figref{etl-books} and is analagous
-to the PHP example from \figref{php-books}.  The file is an XML
-document with root element \smtexttt{bl:template}\footnote{We use
+to the PHP example from \figref{php-books}.  The program is simply an
+XML document with root element \smtexttt{bl:template}\footnote{We use
 namespace prefixes consistently to unambiguously refer to elements in
 the distinguished namespace URIs recognized by the ETL server.}  The
 template contains other elements in the \ns{bl} namespace which we
 call ETL \emph{primitives} (see \ssecref{primitives}).  Additionally,
 the template can contain markup from arbitrary other namespaces which
 we call \emph{literal result markup} (see \ssecref{literal-markup}).
+
+ETL templates are processed within the context of an HTTP request.
+The path specified in the URL of the request is used to choose a
+template from which processing begins (see
+\ssecref{template-dispatch}).  URL and POST parameters, cookies, etc.,
+are all available to the template (see
+\ssecref{buckets}). The primary goal of executing a template is to
+generate an HTTP response including the markup document along with the
+various HTTP headers such as the content-type, cookie settings, and
+other metadata.  Generally, an ETL template is similar to a method in
+a general purpose object-oriented programming language: it can invoke
+other templates as subroutines and can also perform subsidiary HTTP
+requests to other servers.  In fact, HTTP-bound
+web-service~\cite{WebServices} calls are the primary means of using
+back-end application logic.
+
 The remainder of this section informally describes the structure and
 semantics of the Extensible Templating Language.
 
@@ -358,18 +374,18 @@ semantics of the Extensible Templating Language.
 
 An ETL primitive is an element in the \ns{bl} namespace that has a
 specific well-defined behaviour inside of an ETL template.  Primitives
-either output text to the current destination stream or perform some
-side-effect (or both). For example the \smtexttt{bl:set} primitive
-assigns a variable a value without outputting any text, while the
+either output text to the current destination stream (initially the
+response document) or perform some side-effect (or both).  For example
+the \smtexttt{bl:set} primitive assigns a variable a value without
+outputting any text, while the
 \smtexttt{bl:http} primitive outputs either \smtexttt{http} or
 \smtexttt{https} based on whether the current request arrived over an
 ordinary or secure socket connection.
 
 The behaviour of a primitive is parameterized by the various
-attributes allowed on that element.  Some primitives are always
-empty---they never are allowed to contain child elements.  For example,
-\smtexttt{<bl:http/>} just outputs either ``http'' or ``https''
-depending on the protocol being used to serve the current request.
+attributes allowed on that element.  Some primitives, such as
+\smtexttt{http} mentioned above, are always empty---they never are
+allowed to contain child elements. 
 Other primitives are allowed to be non-empty, using the markup generated
 by their contained elements as an extra implicit argument.  For example,
 in \smtexttt{<bl:if var="showcopyright">(C) 2002, InfoSpace,
@@ -393,14 +409,66 @@ value of the argument is used as the number of linefeeds to generate,
 but for \smtexttt{@count} that number is set statically while for
 \smtexttt{@count-var} it is determined dynamically (at run-time).
 
-Primitives can, of course, have numerous arguments, some of which are
-controlled by slots (pairs of attributes) and others by individual
-attributes.  When an argument is set only via an attribute instead of a
-slot, that parameter of the directive cannot be influenced at
-runtime---often this restriction is imposed to permit optimizations or
-to improve our ability to support static analyses.
+Using a pair of attributes to represent a logical field is a novel
+mechansim to improve the type-safety and ease analysis.  The common
+alternative is using a small domain-specific language inside the value
+of an attribute.  For example, we could have used \smtexttt{count="2"}
+or \smtexttt{count="\$num"} to represent the literal number 2 or the
+desire to use the current value of the variable ``num'',
+respectively.\footnote{XSLT takes a similar approach, using, for example,
+\smtexttt{value-of="'literal'"} or \smtexttt{value-of="var"} where the
+value of the attribute is an XPath expression.}
+Unfortunatetly, when using a single attribute, the type for the
+attribute's value must be broadened and is hence less precise.
+Additionally, developers must learn various ad-hoc syntactic rules to
+ensure full-fidelity of values:  how do you express the literal string
+``\$num'' when that sequence of characters means a reference to the
+variable ``num''?  All analysis tools the become burdened with the
+need to handle the case of, say, a backslashed ``\$'' character and
+the rest of the quirks of the syntax.
 
-\subsection{Reserved variables}
+Primitives can, of course, have numerous arguments, some of which are
+controlled by slots and others by individual attributes.  When an
+argument is allowed to be set only via an attribute instead of a slot,
+that parameter of the directive cannot be influenced at
+runtime---often this restriction is imposed to permit optimizations or
+to improve our ability to support static analyses.  For example,
+\smtexttt{bl:get} writes out the value of a variable and has a
+\smtexttt{@transform} attribute that supports various encodings or
+decodings of the value (e.g., \smtexttt{url-encode} or
+\smtexttt{xml-decode}---see \ssec{transformations}).  We disallow the
+use of \smtexttt{@transform-var} because we want to always know from
+static inspection what transformations may occur, thus facilitating
+some analyses and optimizations.
+
+\subsection{Variables and values}
+\label{ssec-variables}
+
+Variable values are set using \smtexttt{bl:set}.  Variables
+declared in the header of a template are statically scoped to just
+that template.   Undeclared variables are dynamically scoped until the
+end of processing the current request.  A \smtexttt{bl:set} primitive
+specifies the target variable as the \smtexttt{@var} attribute. The
+value to be assigned is either given using \smtexttt{@value},
+\smtexttt{@value-var}, or by executing the children of the
+\smtexttt{bl:set} element.  For example:
+
+\begin{verbatim}
+<bl:set var="baseuri"><bl:http/>://<bl:get var="hostname"/>/</bl:set>
+\end{verbatim}
+
+\noindent might set the variable named ``baseuri'' to the value
+``http://www.infospace.com'' (assuming the request comes as an
+ordinary insecure HTTP request and the variable ``hostname'' contains
+the value ``www.infospace.com''.  While executing its contained
+elements, \smtexttt{bl:set} redirects the default output stream to be
+used to construct a value to assign to the variable; the output stream
+is restored after the child elements are processed (e.g., allowing
+nesting of \smtexttt{bl:set} primitives).\footnote{Several other
+primitives follow this same pattern.  For example
+\smtexttt{bl:set-mime-type} evaluates its contained elements to
+generate a value to be used for the MIME content-type of the
+response.}
 
 ETL has the notion of special reserved variables that may have
 side-effects and are used internally for conveying request parameters or
@@ -419,6 +487,8 @@ subtle side-effects elsewhere in the system.  The documentation for each
 reserved variable details their behaviour.
 
 \subsection{Buckets}
+\label{ssec-buckets}
+
 As with all imperative programming languages, ETL has the notion of
 variables that can be assigned to and can later have that value
 recovered.  The \smtexttt{bl:set} primitive is used to perform
@@ -437,15 +507,12 @@ from different places.  The buckets are:
 
 \begin{description}
 \item[url] URL and input form parameters
-\item[cki] Variables from a special single cookie's encoded value
 \item[http] HTTP headers
+\item[cki] Variables from a special single cookie's encoded value
 \item[usr] Variables associated with the current user's profile
 \item[pro] Variables associated with the current cobrand's settings
-\item[local] Local variables with string values, set by \smtexttt{bl:set}
-\item[xml] Local variables with DOM-typed values, set by \smtexttt{bl:set}
-\item[table] Variables from the current enclosing \smtexttt{bl:table}
-\item[cgi] Variables from the top-level CGI query
-\item[querycgi] Variables from the current enclosing \smtexttt{bl:query}
+\item[local] Local/global variables with string values, set by \smtexttt{bl:set}
+\item[xml] Local/global variables with DOM-typed values, set by \smtexttt{bl:set}
 \item[ss] (experimental) Variables associated with the current server-side session
       state
 \end{description}
@@ -454,9 +521,8 @@ from different places.  The buckets are:
 by using the bucket name preceded by a ``\#'' (octothorpe) as a prefix.
 For example, the syntax \smtexttt{\#pro/wantcolor} explicitly refers to
 the ``wantcolor'' profile variable. Unadorned references to a variable
-refer to a pseudo-bucket named ``top'' that searches several buckets in
-this order: 1) \textbf{querycgi}; 2) \textbf{local}; and finally 3)
-\textbf{url}.
+refer to a pseudo-bucket named ``top'' that looks for a variable's
+value first in \smtexttt{\#local} and then in \smtexttt{#url}.
 
 The ``xml'' bucket is unique in that the values its variables are bound
 to are XML DOM trees, not ordinary strings.  When the variable is
@@ -471,12 +537,15 @@ generate the resulting single string.
 
 
 \subsection{Template overriding \& dynamic dispatch}
-
-\subsection{Cobrand profiles \& localization}
+\label{ssec-template-dispatch}
 
 % bl:call, argument passing
 
+\subsection{Cobrand profiles \& localization}
+\label{ssec-cobrand-profiles}
+
 \subsection{Transformers \& formatters}
+\label{ssec-transformers}
 
 HTTP and XML standards have various different encoding formats to
 support arbitrary data over channels that allow limited
@@ -527,6 +596,27 @@ DOM tree that is then transformed via the named stylesheet, letting the
 stylesheet generate the formatter's response string.
 
 \subsection{Comments}
+
+For templating languages that generate markup, there are two very
+different classes of comments we must consider: 1) traditional
+comments intended for the developers never to be part of the generated
+output; and 2) target-language markup comments that are intended to be
+sent over the wire as part of the response document.  The first
+category of comments are created as simple XML comments using the
+\smtexttt{<!-- .... -->} syntax, while the comments intended for the
+response are constructed using the \smtexttt{bl:comment} primitive.
+For example:
+
+\begin{verbatim}
+<!-- This comment is never seen
+     by the end user -->
+<bl:comment>
+  This text gets copied into the
+response document inside of &lt;!--
+.. --&gt; delimiters.
+</bl:comment>
+\end{verbatim}
+
 
 \subsection{Controlling whitespace}
 
@@ -606,6 +696,22 @@ templates attribute annotations.
 ** expand before or after WS handling
 
 
+
+\begin{figure}[tb]
+\begin{centering}
+\includegraphics[width=1\linewidth]{processing-stages-simple.eps}
+\caption{Overview of various templating languages pre-execution
+processing.  The pipeline (a) illustrates a mod\_perl-like system where
+the template is parsed and then byte-compiled into the runtime
+artifact, while (b) shows a JSP-like preprocessing system where the
+template is first converted into textual source code which then is
+parsed and compiled.  ETL's use of XML (c) allows the web developer to
+manipulate and analyze the AST thus simplifying the system.
+\label{fig-processing-stages}}
+\end{centering}
+\end{figure}
+
+
 \subsection{Invoking applications}
 
 
@@ -624,21 +730,6 @@ easy to build by leveraging the XSD schema that defines the language
 ** source->source transformation 
 ** new abstractions 
 ** reduce app-level security holes (ref. scott \& sharp)
-
-
-\begin{figure}[tb]
-\begin{centering}
-\includegraphics[width=1\linewidth]{processing-stages-simple.eps}
-\caption{Overview of various templating languages pre-execution
-processing.  The pipeline (a) illustrates a mod\_perl-like system where
-the template is parsed and then byte-compiled into the runtime
-artifact, while (b) shows a JSP-like preprocessing system where the
-template is first converted into textual source code which then is
-parsed and compiled.  ETL's use of XML (c) allows the web developer to
-manipulate and analyze the AST thus simplifying the system.
-\label{fig-processing-stages}}
-\end{centering}
-\end{figure}
 
 
 
