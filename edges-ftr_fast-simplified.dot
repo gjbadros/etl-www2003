@@ -1,7 +1,7 @@
 digraph G {
   node [
     shape=box, width=0.2, height=0.2,
-    fontname="helvetica", fontsize=24,
+    fontname="Helvetica", fontsize=24,
   ];
 "http://stagingetl/info/ftr_fast.htm" -> "ftr_fast_600.htm"
 "http://stagingetl/info/ftr_fast.htm" -> "indexslice.htm"

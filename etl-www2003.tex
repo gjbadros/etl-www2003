@@ -86,7 +86,7 @@ development is the need to generate HTML, WML, or other markup
 languages to describe client-side presentation and behaviour.
 
 The original server-side dynamic markup-generation capabilities of the
-Web were defined by the Common Gateway Interface.\cite{CGI11} For each
+Web were defined by the Common Gateway Interface.~\cite{CGI11} For each
 request of a CGI, the web server maps HTTP request details into environment
 variables, command-line arguments, and the standard file descriptors.
 In particular, the standard output written by that process was sent by
@@ -491,14 +491,12 @@ mechanism to improve the type-safety and ease analysis.  The common
 alternative is using a small domain-specific language inside the value
 of an attribute.  For example, we could have used \smtexttt{count="2"}
 or \smtexttt{count="\$num"} to represent the literal number 2 or the
-desire to use the current value of the variable ``num'',
-respectively.\footnote{XSLT takes a similar approach, using, for example,
-\smtexttt{value-of="'literal'"} or \smtexttt{value-of="var"} where the
-value of the attribute is an XPath expression.}
+desire to use the current value of the variable ``num'', respectively.
+(XSLT's \smtexttt{value-of} element uses this basic approach.)
 Unfortunately, when using a single attribute, the type for the
 attribute's value must be broadened and is hence less precise.
 Additionally, developers must learn various ad-hoc syntactic rules to
-ensure full-fidelity of values:  how do you express the literal string
+ensure full-fidelity of values: how do you express the literal string
 ``\$num'' when that sequence of characters means a reference to the
 variable ``num''?  All analysis tools the become burdened with the
 need to handle the case of, say, a backslashed ``\$'' character and
@@ -895,8 +893,7 @@ available in the IDE\@.
 
 %% This was generated using:
 %% ~/tigerprawns/etl-interpreter/tools/templates-for-url.pl -r edges-ftr_fast.htm -A "http://stagingetl2/info/ftr_fast.htm"
-%%  dot -Tgif edges-ftr_fast.htm > ftr_fast-call-graph.gif
-%% and then converting the .GIF into .EPS using XV
+%%  dot -Tpostscript edges-ftr_fast.htm > ftr_fast-call-graph.eps
 \begin{figure*}[bt]
 \begin{centering}
 \hspace*{-.03\linewidth}\includegraphics[width=1.06\linewidth]{ftr_fast-call-graph.eps}

@@ -1,0 +1,614 @@
+%!PS-Adobe-2.0
+%%Creator: dot version gviz 1.7.3b (Tue Feb 27 16:13:05 EST 2001)
+%%For: (gregb) Greg Badros
+%%Title: G
+%%Pages: (atend)
+%%BoundingBox: 36 36 1595 369
+%%EndComments
+%%BeginProlog
+save
+/DotDict 200 dict def
+DotDict begin
+
+%%BeginResource: procset
+/coord-font-family /Times-Roman def
+/default-font-family /Times-Roman def
+/coordfont coord-font-family findfont 8 scalefont def
+
+/InvScaleFactor 1.0 def
+/set_scale {
+	dup 1 exch div /InvScaleFactor exch def
+	dup scale
+} bind def
+
+% styles
+/solid { } bind def
+/dashed { [9 InvScaleFactor mul dup ] 0 setdash } bind def
+/dotted { [1 InvScaleFactor mul 6 InvScaleFactor mul] 0 setdash } bind def
+/invis {/fill {newpath} def /stroke {newpath} def /show {pop newpath} def} bind def
+/bold { 2 setlinewidth } bind def
+/filled { } bind def
+/unfilled { } bind def
+/rounded { } bind def
+/diagonals { } bind def
+
+% hooks for setting color 
+/nodecolor { sethsbcolor } bind def
+/edgecolor { sethsbcolor } bind def
+/graphcolor { sethsbcolor } bind def
+/nopcolor {pop pop pop} bind def
+
+/beginpage {	% i j npages
+	/npages exch def
+	/j exch def
+	/i exch def
+	/str 10 string def
+	npages 1 gt {
+		gsave
+			coordfont setfont
+			0 0 moveto
+			(\() show i str cvs show (,) show j str cvs show (\)) show
+		grestore
+	} if
+} bind def
+
+/set_font {
+	findfont exch
+	scalefont setfont
+} def
+
+% draw aligned label in bounding box aligned to current point
+% alignfactor tells what fraction to place on the left.
+% -.5 is centered.
+/alignedtext {			% text labelwidth fontsz alignfactor
+	/alignfactor exch def
+	/fontsz exch def
+	/width exch def
+	/text exch def
+	gsave
+		% even if node or edge is dashed, don't paint text with dashes
+		[] 0 setdash
+		currentpoint newpath moveto
+		text stringwidth pop
+		alignfactor mul fontsz -.3 mul rmoveto
+		text show
+	grestore
+} def
+
+/boxprim {				% xcorner ycorner xsize ysize
+		4 2 roll
+		moveto
+		2 copy
+		exch 0 rlineto
+		0 exch rlineto
+		pop neg 0 rlineto
+		closepath
+} bind def
+
+/ellipse_path {
+	/ry exch def
+	/rx exch def
+	/y exch def
+	/x exch def
+	matrix currentmatrix
+	newpath
+	x y translate
+	rx ry scale
+	0 0 1 0 360 arc
+	setmatrix
+} bind def
+
+/endpage { showpage } bind def
+
+/layercolorseq
+	[	% layer color sequence - darkest to lightest
+		[0 0 0]
+		[.2 .8 .8]
+		[.4 .8 .8]
+		[.6 .8 .8]
+		[.8 .8 .8]
+	]
+def
+
+/setlayer {/maxlayer exch def /curlayer exch def
+	layercolorseq curlayer get
+	aload pop sethsbcolor
+	/nodecolor {nopcolor} def
+	/edgecolor {nopcolor} def
+	/graphcolor {nopcolor} def
+} bind def
+
+/onlayer { curlayer ne {invis} if } def
+
+/onlayers {
+	/myupper exch def
+	/mylower exch def
+	curlayer mylower lt
+	curlayer myupper gt
+	or
+	{invis} if
+} def
+
+/curlayer 0 def
+
+%%EndProlog
+%%BeginSetup
+14 default-font-family set_font
+1 setmiterlimit
+% /arrowlength 10 def
+% /arrowwidth 5 def
+
+% make sure pdfmark is harmless for PS-interpreters other than Distiller
+/pdfmark where {pop} {userdict /pdfmark /cleartomark load put} ifelse
+% make '<<' and '>>' safe on PS Level 1 devices
+/languagelevel where {pop languagelevel}{1} ifelse
+2 lt {
+    userdict (<<) cvn ([) cvn load put
+    userdict (>>) cvn ([) cvn load put
+} if
+
+%%EndResource
+%%EndSetup
+%%Page: 1 1
+%%PageBoundingBox: 36 36 1595 369
+%%PageOrientation: Portrait
+gsave
+35 35 1560 334 boxprim clip newpath
+36 36 translate
+0 0 1 beginpage
+0 0 translate 0 rotate
+[ /CropBox [36 36 1595 369] /PAGES pdfmark
+0.000 0.000 0.000 graphcolor
+24.00 /Helvetica set_font
+
+%	http://stagingetl/info/ftr_fast.htm
+gsave 10 dict begin
+newpath 1024 324 moveto
+684 324 lineto
+684 298 lineto
+1024 298 lineto
+closepath
+stroke
+gsave 10 dict begin
+854 312 moveto (http://stagingetl/info/ftr_fast.htm) 315 24.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	ftr_fast_600.htm
+gsave 10 dict begin
+newpath 763 262 moveto
+579 262 lineto
+579 236 lineto
+763 236 lineto
+closepath
+stroke
+gsave 10 dict begin
+671 250 moveto (ftr_fast_600.htm) 160 24.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	http://stagingetl/info/ftr_fast.htm -> ftr_fast_600.htm
+newpath 815 298 moveto
+786 289 746 275 715 264 curveto
+stroke
+newpath 718 268 moveto
+709 262 lineto
+719 263 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	indexslice.htm
+gsave 10 dict begin
+newpath 1225 262 moveto
+1061 262 lineto
+1061 236 lineto
+1225 236 lineto
+closepath
+stroke
+gsave 10 dict begin
+1143 250 moveto (indexslice.htm) 140 24.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	http://stagingetl/info/ftr_fast.htm -> indexslice.htm
+newpath 915 298 moveto
+962 288 1028 274 1076 263 curveto
+stroke
+newpath 1073 261 moveto
+1083 262 lineto
+1073 266 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	ftr_include.htm
+gsave 10 dict begin
+newpath 940 174 moveto
+768 174 lineto
+768 148 lineto
+940 148 lineto
+closepath
+stroke
+gsave 10 dict begin
+854 162 moveto (ftr_include.htm) 148 24.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	http://stagingetl/info/ftr_fast.htm -> ftr_include.htm
+newpath 854 298 moveto
+854 272 854 215 854 183 curveto
+stroke
+newpath 852 184 moveto
+854 174 lineto
+857 184 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	ftr_fast_600.htm -> ftr_include.htm
+newpath 698 236 moveto
+731 220 784 195 820 178 curveto
+stroke
+newpath 817 177 moveto
+827 174 lineto
+820 181 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	ftr_fast.htm
+gsave 10 dict begin
+newpath 366 174 moveto
+230 174 lineto
+230 148 lineto
+366 148 lineto
+closepath
+stroke
+gsave 10 dict begin
+298 162 moveto (ftr_fast.htm) 112 24.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	ftr_fast_600.htm -> ftr_fast.htm
+newpath 579 236 moveto
+513 226 427 213 372 200 curveto
+358 196 339 187 323 177 curveto
+stroke
+newpath 325 181 moveto
+318 174 lineto
+328 177 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	common/\nstyles/\ninc_pdcolors.htm
+gsave 10 dict begin
+newpath 574 200 moveto
+384 200 lineto
+384 122 lineto
+574 122 lineto
+closepath
+stroke
+gsave 10 dict begin
+479 188 moveto (common/) 90 24.00 -0.50 alignedtext
+479 162 moveto (styles/) 61 24.00 -0.50 alignedtext
+479 136 moveto (inc_pdcolors.htm) 167 24.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	ftr_fast_600.htm -> common/\nstyles/\ninc_pdcolors.htm
+newpath 642 236 moveto
+624 227 597 215 571 203 curveto
+stroke
+newpath 573 207 moveto
+565 200 lineto
+575 202 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	lotto/\ninc_more.htm
+gsave 10 dict begin
+newpath 750 187 moveto
+592 187 lineto
+592 135 lineto
+750 135 lineto
+closepath
+stroke
+gsave 10 dict begin
+671 175 moveto (lotto/) 50 24.00 -0.50 alignedtext
+671 149 moveto (inc_more.htm) 133 24.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	ftr_fast_600.htm -> lotto/\ninc_more.htm
+newpath 671 236 moveto
+671 226 671 211 671 197 curveto
+stroke
+newpath 669 197 moveto
+671 187 lineto
+674 197 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	common/\nforms/\ninc_yellow.htm
+gsave 10 dict begin
+newpath 1132 200 moveto
+958 200 lineto
+958 122 lineto
+1132 122 lineto
+closepath
+stroke
+gsave 10 dict begin
+1045 188 moveto (common/) 90 24.00 -0.50 alignedtext
+1045 162 moveto (forms/) 62 24.00 -0.50 alignedtext
+1045 136 moveto (inc_yellow.htm) 150 24.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	indexslice.htm -> common/\nforms/\ninc_yellow.htm
+newpath 1128 236 moveto
+1120 228 1108 218 1097 207 curveto
+stroke
+newpath 1095 208 moveto
+1089 200 lineto
+1098 205 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	common/\nforms/\ninc_people3.htm
+gsave 10 dict begin
+newpath 1334 200 moveto
+1150 200 lineto
+1150 122 lineto
+1334 122 lineto
+closepath
+stroke
+gsave 10 dict begin
+1242 188 moveto (common/) 90 24.00 -0.50 alignedtext
+1242 162 moveto (forms/) 62 24.00 -0.50 alignedtext
+1242 136 moveto (inc_people3.htm) 160 24.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	indexslice.htm -> common/\nforms/\ninc_people3.htm
+newpath 1158 236 moveto
+1168 227 1180 216 1193 205 curveto
+stroke
+newpath 1189 205 moveto
+1198 200 lineto
+1193 209 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	common/\nforms/\ninc_email.htm
+gsave 10 dict begin
+newpath 1514 200 moveto
+1352 200 lineto
+1352 122 lineto
+1514 122 lineto
+closepath
+stroke
+gsave 10 dict begin
+1433 188 moveto (common/) 90 24.00 -0.50 alignedtext
+1433 162 moveto (forms/) 62 24.00 -0.50 alignedtext
+1433 136 moveto (inc_email.htm) 138 24.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	indexslice.htm -> common/\nforms/\ninc_email.htm
+newpath 1202 236 moveto
+1246 226 1306 212 1344 201 curveto
+stroke
+newpath 1342 199 moveto
+1352 198 lineto
+1344 204 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	buttons/\nhdrftr/\nprotxtoswebftr.htm
+gsave 10 dict begin
+newpath 208 86 moveto
+0 86 lineto
+0 8 lineto
+208 8 lineto
+closepath
+stroke
+gsave 10 dict begin
+104 74 moveto (buttons/) 77 24.00 -0.50 alignedtext
+104 48 moveto (hdrftr/) 61 24.00 -0.50 alignedtext
+104 22 moveto (protxtoswebftr.htm) 184 24.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	ftr_include.htm -> buttons/\nhdrftr/\nprotxtoswebftr.htm
+newpath 819 148 moveto
+801 137 783 124 762 122 curveto
+582 100 397 106 216 86 curveto
+stroke
+newpath 218 89 moveto
+208 85 lineto
+218 84 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	buttons/\nhdrftr/\nprotxtosypftr.htm
+gsave 10 dict begin
+newpath 418 86 moveto
+226 86 lineto
+226 8 lineto
+418 8 lineto
+closepath
+stroke
+gsave 10 dict begin
+322 74 moveto (buttons/) 77 24.00 -0.50 alignedtext
+322 48 moveto (hdrftr/) 61 24.00 -0.50 alignedtext
+322 22 moveto (protxtosypftr.htm) 168 24.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	ftr_include.htm -> buttons/\nhdrftr/\nprotxtosypftr.htm
+newpath 823 148 moveto
+796 137 762 122 762 122 curveto
+652 102 538 105 427 86 curveto
+stroke
+newpath 428 89 moveto
+418 85 lineto
+428 84 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	buttons/\nhmp/\nprohmptxtos3.htm
+gsave 10 dict begin
+newpath 636 86 moveto
+436 86 lineto
+436 8 lineto
+636 8 lineto
+closepath
+stroke
+gsave 10 dict begin
+536 74 moveto (buttons/) 77 24.00 -0.50 alignedtext
+536 48 moveto (hmp/) 49 24.00 -0.50 alignedtext
+536 22 moveto (prohmptxtos3.htm) 176 24.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	ftr_include.htm -> buttons/\nhmp/\nprohmptxtos3.htm
+newpath 825 148 moveto
+805 139 779 128 762 122 curveto
+724 108 684 99 644 87 curveto
+stroke
+newpath 644 90 moveto
+636 84 lineto
+646 85 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	banners/\nprobotbanner.htm
+gsave 10 dict begin
+newpath 848 73 moveto
+654 73 lineto
+654 21 lineto
+848 21 lineto
+closepath
+stroke
+gsave 10 dict begin
+751 61 moveto (banners/) 81 24.00 -0.50 alignedtext
+751 35 moveto (probotbanner.htm) 171 24.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	ftr_include.htm -> banners/\nprobotbanner.htm
+newpath 842 148 moveto
+828 132 802 103 782 80 curveto
+stroke
+newpath 780 82 moveto
+775 73 lineto
+784 78 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	buttons/\nftr/\nprobutftrbot.htm
+gsave 10 dict begin
+newpath 1048 86 moveto
+866 86 lineto
+866 8 lineto
+1048 8 lineto
+closepath
+stroke
+gsave 10 dict begin
+957 74 moveto (buttons/) 77 24.00 -0.50 alignedtext
+957 48 moveto (ftr/) 29 24.00 -0.50 alignedtext
+957 22 moveto (probutftrbot.htm) 159 24.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	ftr_include.htm -> buttons/\nftr/\nprobutftrbot.htm
+newpath 866 148 moveto
+879 134 899 112 917 91 curveto
+stroke
+newpath 913 91 moveto
+922 86 lineto
+917 95 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	inc/\nhomepage/\nbottomtbllink.htm
+gsave 10 dict begin
+newpath 1264 86 moveto
+1066 86 lineto
+1066 8 lineto
+1264 8 lineto
+closepath
+stroke
+gsave 10 dict begin
+1165 74 moveto (inc/) 36 24.00 -0.50 alignedtext
+1165 48 moveto (homepage/) 105 24.00 -0.50 alignedtext
+1165 22 moveto (bottomtbllink.htm) 174 24.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	ftr_include.htm -> inc/\nhomepage/\nbottomtbllink.htm
+newpath 883 148 moveto
+903 139 929 128 946 122 curveto
+982 108 1020 98 1058 87 curveto
+stroke
+newpath 1056 85 moveto
+1066 84 lineto
+1058 90 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	localtime.htm
+gsave 10 dict begin
+newpath 1438 60 moveto
+1282 60 lineto
+1282 34 lineto
+1438 34 lineto
+closepath
+stroke
+gsave 10 dict begin
+1360 48 moveto (localtime.htm) 132 24.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	ftr_include.htm -> localtime.htm
+newpath 885 148 moveto
+912 137 946 122 946 122 curveto
+1054 102 1167 105 1276 86 curveto
+1290 83 1311 74 1328 65 curveto
+stroke
+newpath 1327 63 moveto
+1337 60 lineto
+1329 67 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	pad.htm
+gsave 10 dict begin
+newpath 1558 60 moveto
+1456 60 lineto
+1456 34 lineto
+1558 34 lineto
+closepath
+stroke
+gsave 10 dict begin
+1507 48 moveto (pad.htm) 78 24.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	ftr_include.htm -> pad.htm
+newpath 890 148 moveto
+908 137 925 124 946 122 curveto
+1113 100 1283 108 1450 86 curveto
+1460 84 1473 76 1484 67 curveto
+stroke
+newpath 1483 65 moveto
+1492 60 lineto
+1486 68 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+endpage
+grestore
+%%PageTrailer
+%%EndPage: 1
+%%Trailer
+%%Pages: 1
+end
+restore
+%%EOF
