@@ -43,6 +43,10 @@
 \newcommand{\tableref}[1]{Table~\ref{#1}}
 \newcommand{\tm}{{\scriptsize $^{\mbox{tm}}$}}
 \newcommand{\gjb}[1]{{\sc gjb:}\textbf{#1}}
+%\newcommand{\etl}{\textsf{ETL}}
+%\newcommand{\etls}{\textsf{ETLS}}
+\newcommand{\etl}{ETL}
+\newcommand{\etls}{ETLS}
 
 \newenvironment{smallverbatim}%
 {\renewcommand{\baselinestretch}{1}\small\verbatim}%
@@ -73,38 +77,38 @@
 \date{14 November 2002}
 \maketitle
 \begin{abstract}
-Popular web templating languages typically embed general-purpose
+Popular web templating languages embed general-purpose
 programming languages.  The Extensible Templating Language was born
 out of questioning the fundamental assumption that the front-end
 markup-generating engine of a multi-tier web application requires all
-the power and expressiveness implied by that design.  ETL restricts
+the power and expressiveness implied by that design.  \etl{} restricts
 the set of language features to a useful subset that provide the
 necessary functionality without compromising the simplicity and
 understandability of templates.  By forcibly limiting what can be
 done by templates, we ensure a better separation of presentation
-details from business logic. Furthermore, ETL improves the
-analyzability of the source templates by using an XML-based
+details from business logic. Furthermore, \etl{} improves the
+analyzability of source templates by using an XML-based
 representation where markup is intermingled with XML elements
 corresponding to programming constructs. This approach reduces the
 possibility of generating improper markup and facilitates tool-building
-including semantically-aware editors and debuggers. ETL runs inside of
+including semantically-aware editors and debuggers. \etl{} runs inside of
 the Extensible Templating Language Server which is currently employed
 by InfoSpace to serve millions of requests per day using over
-sixty thousand ETL templates.
+sixty thousand \etl{} templates.
 
 \end{abstract}
 
 % A category with only the three required fields
-%% GREGB:FIXME::
 %% See http://www.acm.org/class/1998/overview.html
 \category{D.2}{Software}{Software Engineering}
 \category{D.3}{Software}{Programming Languages}
+\category{C.2}{Computer Systems Organization}{Computer-communication networks}
 
 % GREGB:FIXME:: any terms?
 %\terms{}
 
 \keywords{Restricted domain-specific programming language, static analysis,
-web server, templates, XML, XSLT, markup, WML, HTML.}
+web server, templates, XML, XSLT, markup, WML, HTML\@.}
 
 \section{Introduction}
 \label{sec-intro}
@@ -118,7 +122,7 @@ development is the need to generate HTML, WML, and other markup
 languages to describe client-side presentation and behaviour.
 
 The original server-side dynamic markup-generation capabilities of the
-Web were defined by the Common Gateway Interface.~\cite{CGI11} For each
+Web were defined by the Common Gateway Interface~\cite{CGI11}. For each
 request of a CGI, the web server maps HTTP request details into environment
 variables, command-line arguments, and the standard file descriptors.
 In particular, the standard output written by that process was sent by
@@ -142,7 +146,7 @@ iteration (line 4); and c) simple expression evaluation to access
 parts of the data model (lines 6 and 7). The extra power provided by
 typical templating languages not only goes unused, but it also
 complicates certain important analyses of the code.  For example, the
-obviously important property that a template execution terminates is
+obviously critical property that a template's execution terminates is
 undecidable for these general purpose languages.
 
 % GREGB:FIXME:: check the above line numbers 
@@ -178,7 +182,7 @@ however, there is nothing inherent that prevents presentation code
 from, for example, making individual database connections (which would
 impact performance) or maintaining undesirable server-side state
 (which would impose additional requirements on the load-balancing
-mechanism and reduce scalability).  Languages such as actually PHP
+mechanism and reduce scalability).  Languages such as PHP actually
 encourage this undesirable mixing of front-end presentation with
 back-end business logic~\cite{Crane2002}.  That fact further blurs the
 common organizational line between front-end presentation developers
@@ -187,7 +191,7 @@ and back-end application engineers.
 Another substantial problem with existing templating technologies is
 that they often involve the lexical mixing of two separate programming
 paradigms.  JSP, for example, is implemented in terms of a
-pre-processing rewrite of the template into a Java servlet.~\cite{JavaServlet23}
+pre-processing rewrite of the template into a Java servlet~\cite{JavaServlet23}.
 Pre-processing approaches are convenient for programmer expressiveness
 but have a huge hidden cost in complicating software engineering
 analyses and tools that could otherwise help understand, maintain, and
@@ -204,14 +208,14 @@ powerful and expressive for the needs of markup generation.
 Additionally, numerous language-level tools such as compilers and
 debuggers, are already available for the templating language to
 leverage.  For platform providers that have a large
-investment already made in a general purpose language, it is natural
+investment already made in a general-purpose language, it is natural
 to extend that investment to a templating language.\footnote{XSLT can
 be used in a templating style~\cite[2.3]{XSLT}, but popular use of
 XSLT also leverages scripting extensions to deal with the far too
 severe restrictions of the language.}
 
 Despite the broad assumption that a markup language requires the use
-of a general purpose programming language, an obvious alternative
+of a general-purpose programming language, an obvious alternative
 exists: use a domain-specific language specifically tailored to the
 needs of generating markup.  Such an approach can mitigate several of
 the problems mentioned previously.  In particular, using a restricted
@@ -287,7 +291,7 @@ Or suppose a new handheld device has a limitation in its
 handling of cookies: we need a means of narrowing the scope for careful
 review to only places where that cookie is manipulated.
 
-Typically, web developers approach to above scenarios with an arsenal
+Typically, web developers approach to the above scenarios with an arsenal
 of imprecise lexical tools.  While these tools may satisfy some simple
 queries, when the desired query has additional structure, lexical
 approaches fall short.  Suppose we wish to find dead code to simplify
@@ -322,34 +326,34 @@ schema-aware XML editors to easily provide syntax coloring and
 completion capabilities.
 
 In this paper, I introduce the Extensible Templating Language.  From
-one perspective, ETL is a 100\% XML-based templating language that
+one perspective, \etl{} is a 100\% XML-based templating language that
 embeds programming language constructs directly in the XML
 representation, intermingled with literal target-language markup.
-Alternatively, we can view ETL as an imperative domain-specific
+Alternatively, we can view \etl{} as an imperative domain-specific
 programming language that uses XML as its surface syntax and
 simplifies the writing of programs that generate markup languages.
 
-ETL leverages the well-formedness and local-validity checks of the
+\etl{} leverages well-formedness and local-validity checks of the
 source template to support those same properties in the generated
 response markup.  By limiting the programming-language constructs to
 include only the features that are appropriate at the front-end of a
 scalable web application architecture, we ease numerous analyses and
 encourage proper separation of the presentation details from the
 backend application. Finally, because of its use of XML as a
-representation, ETL simplifies ad-hoc software engineering analyses to
+representation, \etl{} simplifies ad-hoc software engineering analyses to
 better support evolution and maintenance of large dynamic web
-applications.  We have built an ETL runtime inside of a
+applications.  We have built an \etl{} runtime inside of a
 production-quality web server, the Extensible Templating Language
-Server.  ETLS is currently employed by InfoSpace to serve tens of
-millions of requests per day using over sixty thousand ETL templates.
+Server.  \etls{} is currently employed by InfoSpace to serve 
+millions of requests per day using over sixty thousand \etl{} templates.
 
 \subsection{Outline of paper}
 
 The rest of this paper is organized as follows. \secref{etl} explains
 the Extensible Templating Language and its benefits.
 \secref{implementation} details our implementation and describes our
-experiences in using ETL in production systems over the last year.
-Finally, \secref{related-work} describes and contrasts related work
+experiences in using \etl{} in production systems over the last year.
+\secref{related-work} describes and contrasts related work
 and \secref{conclusion} concludes.
 
 
@@ -361,11 +365,11 @@ and \secref{conclusion} concludes.
 The Extensible Templating Language is an imperative markup templating
 language that allows web developers to intermingle literal XML markup
 with XML-based programming language constructs.  Our primary design
-goals for ETL were to:\footnote{A fifth important design goal was to
+goals for \etl{} were to:\footnote{A fifth important design goal was to
 enable automatic translation of our legacy templating language into
-ETL\@. That need occasionally complicated our design. This paper
+\etl{}\@. That need occasionally complicated our design. This paper
 focuses on the essential language, and
-\secref{implementation} mentions our migration to ETL a bit more.}
+\secref{implementation} mentions our migration to \etl{} a bit more.}
 
 \begin{enumerate}
 \item Allow easy analyses of source templates to permit development of
@@ -382,7 +386,7 @@ with Internet and Web standards.
 \hspace*{-0.05\linewidth}\includegraphics[width=1.1\linewidth]{homesite-screenshot.eps}
 \caption{This integrated development environment based
 on Homesite was easy to build using custom tag information generated
-automatically from the XSD schema for ETL.  The environment supports
+automatically from the XSD schema for \etl{}\@.  The environment supports
 automatic completion of names of elements and their valid attributes.
 Help information extracted from the server codebase is also readily
 available in the IDE\@.
@@ -390,14 +394,17 @@ available in the IDE\@.
 \end{centering}
 \end{figure}
 
-An ETL template must be well-formed XML that is valid with respect to
-XML Schemas~\cite{XMLSchema1,XMLSchema2}.  Those schemata are used by
-our development environment (see \figref{homesite-screenshot}) to support syntax
-coloring and completion of element and attribute names.
-Additionally, because of how easy it is to analyze XML trees, it is
-easy to build numerous software engineering tools.  For example, it
-was trivial to build a call-graph extractor (see
-\figref{call-graph}).
+An \etl{} template must be well-formed XML that is valid with respect
+to the language's XML Schema Definitions~\cite{XMLSchema1,XMLSchema2}.
+By enforcing those requirements, we catch a large class of syntactic
+and semantic programming errors very early in the development process
+without need for the \etl{} compiler at all.  Those schemas are also
+used by our development environment (see \figref{homesite-screenshot})
+to support syntax coloring and completion of element and attribute
+names.  Additionally, because of how easy it is to analyze XML trees,
+it is straightforward to build numerous ad-hoc software engineering
+tools that are language-aware.  For example, it was trivial to build a
+call-graph extractor (see \figref{call-graph}).
 
 %% This was generated using:
 %% ~/tigerprawns/etl-interpreter/tools/templates-for-url.pl -r edges-ftr_fast.htm -A "http://stagingetl2/info/ftr_fast.htm"
@@ -411,13 +418,13 @@ simple Perl script. \label{fig-call-graph}}
 \end{centering}
 \end{figure*}
 
-ETL intentionally restricts the set of programming constructs i to
+\etl{} intentionally restricts the set of programming constructs to
 limit the amount of logic performed in the front-end of a multi-tier
 web-delivered application.  As a result, we achieve better separation
 of presentation and application, thus permitting their independent
-evolution. ETL is already used by dozens of production applications,
-thus providing constructive evidence that the set of available
-constructs is sufficient for real-world use.
+evolution. \etl{} is already used by dozens of production
+applications, demonstrating that the set of available constructs is
+sufficient for real-world use.
 
 \begin{figure}[tb]
 \begin{smalllisting}{1}
@@ -436,28 +443,29 @@ constructs is sufficient for real-world use.
  </html>
 </bl:template>
 \end{smalllisting}
-\caption{The ETL template corresponding to \figref{php-books}'s PHP
+\caption{The \etl{} template corresponding to \figref{php-books}'s PHP
 code is required to be well-formed XML\@.  Thus, the developer
 avoids the mistake from line 11 of the PHP example.
 \label{fig-etl-books}}
 \end{figure}
 
-An example ETL template appears in \figref{etl-books} and is analogous
+An example \etl{} template appears in \figref{etl-books} and is analogous
 to the PHP example from \figref{php-books}.  The source code is simply
-an XML document with root element \smtexttt{bl:template}\footnote{For
-brevity, we use namespace prefixes consistently to refer to elements
-in distinguished namespace URIs.} The template contains other elements
-in the \ns{bl} namespace which we refer to as ETL \emph{primitives} (see
+an XML document with root element \smtexttt{bl:template}\footnote{The
+``bl'' stands for ``base language.'' For brevity, we use namespace
+prefixes consistently to refer to elements in distinguished namespace URIs.}
+The template contains other elements
+in the \ns{bl} namespace which we refer to as \etl{} \emph{primitives} (see
 \ssecref{primitives}).  Additionally, the template can contain markup
 from arbitrary other namespaces (or unqualified elements) which we
 call \emph{literal result markup} (see \ssecref{literal-markup}).
 
-ETL templates are processed within the context of an HTTP request.
+\etl{} templates are processed within the context of an HTTP request.
 The path specified in the URL of the request selects a template where
-processing starts (see \ssecref{selection}).  The primary goal of
+processing starts.  The primary goal of
 executing a template is to generate an HTTP response including the
 markup document along with the various HTTP headers such as the
-content-type, cookie settings, and other meta-data.  Generally, an ETL
+content-type, cookie settings, and other meta-data.  Generally, an \etl{}
 template is similar to a method in an object-oriented programming
 language: it can invoke other templates as subroutines and can also
 perform subsidiary HTTP requests to other servers (see
@@ -466,8 +474,8 @@ perform subsidiary HTTP requests to other servers (see
 \subsection{Primitives, attributes, and slots}
 \label{ssec-primitives}
 
-An ETL primitive is an element in the \ns{bl} namespace that has a
-specific well-defined behaviour inside of an ETL template.  Primitives
+An \etl{} primitive is an element in the \ns{bl} namespace that has a
+specific well-defined behaviour inside of an \etl{} template.  Primitives
 either output text to the current destination stream (initially the
 response document) or perform some side-effect (or both).  For example
 the \smtexttt{bl:set} primitive assigns a variable a value without
@@ -483,10 +491,12 @@ primitives are allowed to be non-empty, using the markup generated by
 their contained elements as an extra implicit argument.  For example,
 in:
 
-\smtexttt{<bl:if var="showcopyright"> (C) 2002 </bl:if>}
+\begin{smallverbatim}
+<bl:if var="showcopyright"> (C) 2002 </bl:if>
+\end{smallverbatim}
 
 \noindent the contents of the \smtexttt{bl:if} are output if and
-only if the variable is non-empty.
+only if the variable's value is non-empty.
 
 Many primitives derive their arguments not from individual attributes
 but from pairs of attributes that are together called a \emph{slot}.  For
@@ -513,7 +523,8 @@ or \smtexttt{count="\$num"} to represent the literal number 2 or the
 desire to use the current value of the variable ``num'', respectively.
 (XSLT's \smtexttt{value-of} element uses this basic approach.)
 Unfortunately, when using a single attribute, the type for the
-attribute's value must be broadened and is hence less precise.
+attribute's value must be broadened and is hence less precise.  That
+lack of precision can allow more developer errors to go uncaught.
 
 Primitives can, of course, have numerous arguments, some of which are
 controlled by slots and others by individual attributes.  When an
@@ -532,7 +543,7 @@ some analyses and optimizations.
 \subsection{Variables and values}
 \label{ssec-variables}
 
-As with all imperative programming languages, ETL has the notion of
+As with all imperative programming languages, \etl{} has the notion of
 variables that store values. Variables can be declared inside a single
 \smtexttt{bl:header} element (which is required to be the first element
 in a template) and are assigned values using the
@@ -546,10 +557,8 @@ children of the \smtexttt{bl:set} element.  For example:
  var="hostname"/>/</bl:set>
 \end{smallverbatim}
 
-\noindent will set the variable named ``baseuri'' to the value
-``http://www.\B{}infospace.\B{}com'' when the request comes as an
-ordinary insecure HTTP request and the variable ``hostname'' contains
-the value ``www.\B{}infospace.\B{}com''.  While executing its contained
+\noindent might set the variable named ``baseuri'' to the value
+``http://www.\B{}infospace.\B{}com/''.  While executing its contained
 elements, \smtexttt{bl:set} redirects the default output stream to be
 used to construct a value to assign to the variable; the output stream
 is restored after the child elements are processed (e.g., allowing
@@ -566,7 +575,7 @@ live until the end of processing the current request, while declared
 variables have static scope and may only be referenced in the same
 template.
 
-ETL has the notion of special reserved variables that may have
+\etl{} has the notion of special reserved variables that may have
 side-effects and are used internally for conveying request parameters or
 other system-level details.  These reserved variables always start with
 the octothorpe (``\smtexttt{\#}'') character and may be read-only (e.g.,
@@ -575,9 +584,9 @@ on the value they are assigned.  Unlike ordinary variables, there is
 no guarantee that the value retrieved from a reserved variable equals
 what was last stored.
 
-Various other data is accessible to ETL templates via 
+Various other data is accessible to \etl{} templates via 
 \emph{buckets}. Buckets can be thought of as top-level elements in a virtual
-(lazily-evaluated) XML data model that is implicitly available to ETL
+(lazily-evaluated) XML data model that is implicitly available to \etl{}
 templates.  They replace field references and accessor methods of
 distinguished objects in languages such as Java.  For example, where a
 JSP developer might write:
@@ -586,7 +595,7 @@ JSP developer might write:
 <%= request.getHeader("User-Agent") %>
 \end{smallverbatim}
 
-\noindent the ETL developer accesses the \smtexttt{\#http}
+\noindent the \etl{} developer accesses the \smtexttt{\#http}
 bucket instead:
 
 \begin{smallverbatim}
@@ -603,7 +612,7 @@ variable is evaluated in a context that requires a string, the subtree
 is serialized in its XML syntax.  Additionally, a trailing XPath
 expression is allowed after the variable name when referencing the
 \smtexttt{\#xml} bucket.  This feature allows easy querying of XML
-values and integrates XPath cleanly into ETL\@.
+values and integrates XPath cleanly into \etl{}\@.
 
 
 \subsection{Transformers \& formatters}
@@ -615,7 +624,7 @@ representations.  For example, when passing a GET parameter to an HTTP
 request, the value is inserted into the URL using an URL-encoding
 format that involves (among other things) converting each
 \smtexttt{SPACE} character to a \smtexttt{+} character.  To support
-such encoding formats in a general way, ETL defines a set of
+such encoding formats in a general way, \etl{} defines a set of
 ``transformers.''
 
 A \emph{transformer} is a streaming converter from one byte sequence
@@ -623,7 +632,7 @@ to another.  For example, the \smtexttt{url-encode} transformer
 converts ``hello world'' into ``hello+world''.  Many transformers have
 an inverse that is also supported: the \smtexttt{url-decode}
 transformer converts ``hello+world'' into ``hello world''.
-Transformers can be used by ETL code whenever a variable is being set
+Transformers can be used by \etl{} code whenever a variable is being set
 (via \smtexttt{bl:set}) or accessed (via \smtexttt{bl:get}) using the
 \smtexttt{transform} attribute which specifies an ordered whitespace-separated
 list of transformers to apply.  For example:
@@ -660,13 +669,13 @@ the formatter's response string.
 \subsection{Control flow}
 \label{ssec-control}
 
-There are four primary means of control flow in ETL: template
+There are four primary means of control flow in \etl{}: template
 selection, conditionals and loops, exceptions, and remote invocations.  
 
 \subsubsection{Template selection}
 \label{ssec-selection}
 
-Requests made of the ETL server are always have an associated abstract
+Requests made of the \etl{} server always have an associated abstract
 \emph{site} that can be explicitly specified as part of the URL,
 or can be implicit based on the \smtexttt{Hostname} header of the HTTP
 request (e.g., when multiple hostnames refer to the same server).
@@ -674,7 +683,7 @@ That site name is used to select which template is invoked for the
 initial processing of a request and whenever the
 \smtexttt{bl:call} primitive is used to execute another template as a
 subroutine. Template selection is analogous to method dispatch in
-object-oriented programming languages.  Importantly, ETL only permits
+object-oriented programming languages.  Importantly, \etl{} only permits
 bounded recursion, thus ensuring termination.
 
 For example, an \smtexttt{index.htm} page may \smtexttt{bl:call} a
@@ -682,17 +691,16 @@ For example, an \smtexttt{index.htm} page may \smtexttt{bl:call} a
 page, then do some work to generate the meat of the page, and finally
 invoke \smtexttt{footer.htm} to generate another banner for the
 bottom.  The default \smtexttt{header.htm} at the top-level of the
-brand hierarchy may provide some basic functionality, while a
-sub-brand may provide an overriding \smtexttt{header.htm}
-implementation that specializes the banner.
+hierarchy may provide some basic functionality, while an overriding 
+\smtexttt{header.htm} implementation could specialize the banner.
 
 \subsubsection{Conditionals and loops}
 
-Both \smtexttt{bl:if} and
+Both \smtexttt{bl:if} and multi-way
 \smtexttt{bl:choose}/\B{}\smtexttt{bl:when}/\B{}\smtexttt{bl:otherwise}
 constructs are supported and behave much as they do in XSLT\@.  The
-primary difference is that ETL does not permit the generality of a
-domain specific expression language, and instead uses pairs of slots
+primary difference is that \etl{} does not permit the generality of a
+domain specific expression language, and instead uses two slots
 to represent the guard conditions.  For example:
 
 \begin{smallverbatim}
@@ -701,12 +709,13 @@ to represent the guard conditions.  For example:
 </bl:if>
 \end{smallverbatim}
 
-\noindent Although this is more verbose than a domain-specific
+\noindent Although this is slightly more verbose than a domain-specific
 language in a \smtexttt{test} attribute, it does make it easier to use
 XPath to find occurrences of specific operations being used in
-conditional guards.   Additionally, it allows us to specify the
-left-hand-side value of a comparison guard in \smtexttt{bl:choose} to
-approximate the convenience of a \smtexttt{switch} statement:
+conditional guards.   Additionally, it allows us to factor out the
+left-hand-side value of a comparison guard into the
+\smtexttt{bl:choose} parent element to approximate the convenience of
+a \smtexttt{switch} statement:
 
 \begin{smallverbatim}
 <bl:choose var="pagenum">
@@ -744,15 +753,16 @@ GETs and POSTs, are supported using a \smtexttt{bl:http-include}
 primitive that specifies the URL along with POST data, as required.
 Alternatively, a \smtexttt{bl:ws-call} primitive invokes a web service
 given its end-point and the arguments to the web service.\footnote{Web
-service invocation is a part of an upcoming version of ETLS.} In
+service invocation is a part of an upcoming version of \etls{}\@.} In
 both cases, the output of the primitive is the document returned by
 the server.
 
 \subsection{Literal markup}
 \label{ssec-literal-markup}
 
-While typical templating languages are text-based, ETL is
-markup-based.  It is this distinction that enables ETL to favor
+While typical templating languages are text-based, \etl{} is
+based instead on the higher level abstraction of markup.
+It is this distinction that enables \etl{} to favor
 generating well-formed output documents.  For example, an ASP template
 might read:
 
@@ -769,12 +779,12 @@ this snippet:
 \end{smallverbatim}
 
 \noindent is essentially the same as the preceding code, despite the
-fact that the second example contains several errors.
+fact that this second example contains several errors.
 
-As a markup-based templating language, ETL favors writing templates
+As a markup-based templating language, \etl{} favors writing templates
 that will generate well-formed and valid markup.  For example, to
 output a literal XML fragment such as ``\smtexttt{<b>Good</b>}'', that
-fragment can be written directly in the ETL template.  However, to
+fragment can be written directly in the \etl{} template.  However, to
 generate the ill-formed XML fragment ``\smtexttt{<a>Bad</b>}'', you
 must fall back on outputting individual characters and write:
 
@@ -782,7 +792,7 @@ must fall back on outputting individual characters and write:
 &lt;a&gt;Bad&lt;/b&gt;
 \end{smallverbatim}
 
-\noindent Note that ETL does not forbid outputting ill-formed
+\noindent Note that \etl{} does not forbid outputting ill-formed
 markup, it only encourages proper markup by making that common case
 far more natural to write.
 
@@ -812,10 +822,12 @@ contained by \smtexttt{at:href}.  The special namespace \smtexttt{at}
 is used to make this format more concise than the long-winded
 \smtexttt{xsl:attribute} variant that XSLT uses.  The local name of the
 \smtexttt{at:*} element is used as the name of the attribute, and the
-contents can be arbitrary ETL code (e.g., including conditionals and
+contents can be arbitrary \etl{} code (e.g., including conditionals and
 subroutines). No matter which form is used to specify dynamic
 attribute values, the language ensures that proper quotations and
-encoding are used.
+encoding are used.  Furthermore, by using the DTD or XSD of the
+output document's desired markup language, we can confirm that
+attribute names (and sometimes their values) are correct.
 
 Another common need is to conditionally include a tag.  For example,
 consider this ill-formed template fragment:
@@ -831,7 +843,7 @@ consider this ill-formed template fragment:
 \end{smallverbatim}
 
 \noindent Although the intent is reasonable, XML requires
-proper nesting of elements and thus disallows this code.  Instead, ETL
+proper nesting of elements and thus disallows this code.  Instead, \etl{}
 supports that behaviour using a special \smtexttt{bl:if-var} attribute
 on an arbitrary literal result element:
 
@@ -843,7 +855,10 @@ on an arbitrary literal result element:
 
 \noindent where the output of \emph{both} the open and close
 \smtexttt{b} tags is controlled by the test of the single variable
-(and the contents of the \smtexttt{b} element are always executed).
+(and the contents of the \smtexttt{b} element are always
+executed). This technique also lets us factor out the guard, thus
+eliminating the possibility of a mismatch between the test used for
+the start tag and the one used for the end tag.
 
 Comments are another subtle aspect of markup templating
 languages. They fall into two categories: 1) traditional comments
@@ -869,7 +884,9 @@ all places where literal text or markup would appear.  For example,
 instead of writing \smtexttt{Hi <bl:get var="name"/>}, a properly
 internationalized template might read:
 
-\noindent \smtexttt{<bl:tt id="greet1">Hi</bl:tt><bl:get var="name"/>}
+\begin{smallverbatim}
+<bl:tt id="greet1">Hi</bl:tt><bl:get var="name"/>
+\end{smallverbatim}
 
 \noindent Each template has a corresponding dictionary of token-translation
 definitions for the various locales that have been defined.  Based on
@@ -884,33 +901,37 @@ which the given identifier maps.
 Whitespace characters in a source template have mixed
 uses.\footnote{Whitespace that is not a part of the XML
 Infoset~\cite{XML-infoset}, such as whitespace between attributes
-inside element tags, is discarded by the XML processor and is not
+inside element tags, is discarded by the XML processor before the
+application sees it and is therefore not
 controlled by the rules described in this section.}  In some cases,
 the developer wishes to improve the readability of the program by
 using indentation or blank lines.  In other cases, the whitespace is
 intended to be copied into the output document or a variable's value.
 The \smtexttt{xml:space} attribute provided by the XML
 standard~\cite[2.10]{XML} is not sufficiently expressive to support
-the diverse needs of the template author. By allowing careful control
-over which whitespace is deemed meaningful, we improve performance
-and reduce memory and bandwidth consumption.
+the diverse needs of the template author. Careful control over which
+whitespace is deemed meaningful is critical to generating the right
+markup. It also can improve performance and reduce memory and
+bandwidth consumption by eliminating unnecessary extra characters from
+going over the wire.
 
 
 \begin{figure}[tb]
 \begin{centering}
 \includegraphics[height=1.5in]{etl-whitespace-rules.eps}
-\caption{XML has various kinds of whitespace nodes.  ETL permits
+\caption{XML has various kinds of whitespace nodes.  \etl{} permits
 careful control over which nodes are considered significant. \label{fig-ws-rules}}
 \end{centering}
 \end{figure}
 
-ETL permits fine-grained control over the whitespace that will be
+\etl{} permits fine-grained control over the whitespace that will be
 generated via two orthogonal special attributes that are allowed on
-every XML element in source ETL documents: \smtexttt{@bl:space-nodes}
+every XML element in source \etl{} documents: \smtexttt{@bl:space-nodes}
 and \smtexttt{@bl:text-nodes}.  These attributes are inherited by
 contained (i.e., children) elements and their contents unless
 overridden.  They control the various classes of whitespace
-illustrated in \figref{ws-rules}: \smtexttt{@bl:space-nodes} controls
+illustrated in \figref{ws-rules}: the \smtexttt{@bl:space-nodes}
+attribute controls
 whitespace-only (and whitespace-only content) nodes (1, 5, 6, and 7 in
 the figure), while \smtexttt{@bl:text-nodes} controls
 leading/internal/trailing whitespace of text nodes (2, 3, and 4 in the
@@ -922,23 +943,25 @@ The allowed settings for \smtexttt{@bl:space-nodes} are: a)
 \textbf{\smtexttt{preserve}}, to leave the whitespace unchanged; b)       
 \textbf{\smtexttt{compact}}, to replace sequences of 1 or more
       whitespace characters with a single space (0x20); c)      
-\textbf{\smtexttt{strip}}, to eliminate the whitespace entirely; or d)
+\textbf{\smtexttt{strip}}, to eliminate the text node entirely; or d)
 \textbf{\smtexttt{normalize}} to strip whitespace nodes that contain only
 newline (0x0A) characters entirely and replace sequences of 1 or more
 whitespace characters that include a space or a tab with a single
-space (0x20). 
+space (0x20). For \smtexttt{@bl:text-nodes}, the above settings are
+extended by \textbf{\smtexttt{trim}} which trims all leading and
+trailing whitespace.
 
 \subsection{Custom tags}
 \label{ssec-custom-tags}
 
-ETL allows custom tags to define new abstractions in terms of only
-built-in primitives.  The mechanism ETL provides is based on abstract
+\etl{} allows custom tags to define new abstractions only in terms of 
+built-in primitives.  The mechanism \etl{} provides is based on abstract
 syntax tree (AST) rewriting similar to Scheme's hygienic macros
-and other syntactic macro systems.~\cite{R5RS,Aitken97}
-Given that the AST of an ETL template is simply the XML source code
+and other syntactic macro systems~\cite{R5RS,Aitken97}.
+Given that the AST of an \etl{} template is simply the XML source code
 itself, we simply use XSLT to describe the rewrite rules (see
 \figref{processing-stages}).  Those rules are then applied to the
-source template thus reducing that template to contain only the core
+source template thus reducing that code to contain only the core
 language.  That reduced template is then byte-compiled for
 execution. This approach allows a great deal of flexibility in new
 abstractions without compromising our tight control over the limited
@@ -954,7 +977,7 @@ can be fairly involved. The pipeline (a) illustrates a mod\_perl-like
 system where the template is parsed and then byte-compiled into the
 runtime artifact, while (b) shows a JSP-like preprocessing system
 where the template is first converted into textual source code which
-then is parsed and compiled.  ETL's use of XML (c) allows the web
+then is parsed and compiled.  \etl{}'s use of XML (c) allows the web
 developer to manipulate and analyze the AST thus simplifying the
 system. \label{fig-processing-stages}}
 \end{centering}
@@ -965,30 +988,30 @@ system. \label{fig-processing-stages}}
 \label{sec-implementation}
 
 A byte-code compiler and runtime for the Extensible Templating
-Language is an integral part of InfoSpace's ETL Server 2.0.
+Language is an integral part of InfoSpace's \etl{} Server 2.0.
 Byte-compilation happens transparently and results in up to a
-100\% performance improvement over the interpreted language ETL
-replaces. The ETL Server is architected as an ISAPI extension to
+100\% performance improvement over the fully interpreted language \etl{}
+replaces. The \etl{} Server is architected as an ISAPI extension to
 Microsoft's IIS and could be easily ported to any web server that
 exposes a similar Extension Control Block interface.  IIS is used to
 manage the raw socket connections and many HTTP protocol details, but
-ETLS generates the response for all incoming requests.  The
-implementation of ETLS is about sixty thousand non-comment, non-blank
+\etls{} generates the response for all incoming requests.  The
+implementation of \etls{} is about sixty thousand non-comment, non-blank
 lines of C++ code.
 
-In addition to supporting the ETL language, our secondary design goals
-in building ETLS were: 1) to be an appliance network box, so that all
+In addition to supporting the \etl{} language, our secondary design goals
+in building \etls{} were: 1) to be an appliance network box, so that all
 interactions with the server could occur via simple network protocols
 such as HTTP and SMB fileshares; 2) support easy management via HTTP
 and platform specific management interfaces such as the Microsoft
-Management Console (MMC) and the Service Control Manager; 3) to
+Management Console (MMC) and the Service Control Manager; and 3) to
 provide support for secure debugging and run-time reflection on 
 template execution.
 
 \begin{figure}[tb]
 \begin{centering}
 \hspace*{-0.05\linewidth}\includegraphics[width=1.1\linewidth]{etls-admin-screenshot.eps}
-\caption{The ETL Server has a web-based administration interface to
+\caption{The \etl{} Server has a web-based administration interface to
 support configuration and management.
 \label{fig-etls-admin}}
 \end{centering}
@@ -998,18 +1021,17 @@ To support administrative management of the server, we implemented
 special primitives in a separate \smtexttt{admin} namespace that
 expose reflection and configuration capabilities.  For example, with
 these primitives you can retrieve an XML dump of the state of the
-cached URL-to-template mapping or resets that cache.  These special
+cached URL-to-template mapping or reset that cache.  These special
 capabilities are only available when the request is properly
 authenticated and authorized.  To facilitate easy management of the
-server, we implemented a web application (in ETL, of course) that
+server, we implemented a web application (in \etl{}, of course) that
 organizes and exposes these underlying primitives and integrates the
 documentation for the server (see \figref{etls-admin}).  All server
 parameters are settable via \smtexttt{admin:*} primitives, and the
 server is configured by executing a distinguished
-\smtexttt{etl-server-conf.etl} template prior to handling HTTP
-requests.
+\smtexttt{etl-server-conf.etl} template at startup.
 
-To facilitate debugging, ETLS supports numerous special URL
+To facilitate debugging, \etls{} supports numerous special URL
 parameters, each prefixed with \smtexttt{etl-}, that enable special
 processing of the request.  As with the special primitives, these
 extra behaviours function only when the request is authenticated and
@@ -1029,24 +1051,24 @@ capabilities enormously simplify regression testing.
 Template `books.html.etl' has 0 errors.
 0 template('books.html.etl') {
 1  set_simple(#xml/books := '...')
-2  #nocmd('<html>','</html>') {
-3   #nocmd('<table>','</table>') {
+2  #element('<html>','</html>') {
+3   #element('<table>','</table>') {
 4    for-each(#xml/books/book) {
-5     #nocmd('<tr>','</tr>') {
-6      #nocmd('<td>','</td>') {
+5     #element('<tr>','</tr>') {
+6      #element('<td>','</td>') {
 7       get(@author)
-       } // #nocmd('<td>','</td>')
-8      #nocmd('<td>','</td>') {
+       } // #element('<td>','</td>')
+8      #element('<td>','</td>') {
 9       get(@title)
-       } // #nocmd('<td>','</td>')
-      } // #nocmd('<tr>','</tr>')
-     } // for-each(#xml/books 'book')
-    } // #nocmd('<table>','</table>')
-   } // #nocmd('<html>','</html>')
+       } // #element('<td>','</td>')
+      } // #element('<tr>','</tr>')
+     } // for-each(#xml/books/book)
+    } // #element('<table>','</table>')
+   } // #element('<html>','</html>')
   } // template('books.html.etl')
 \end{smallverbatim}
-\caption{To support debugging, the ETL server permits decompilation of
-the internal representation of the ETL template from
+\caption{To support debugging, the \etl{} server permits decompilation of
+the internal representation of the \etl{} template from
 \figref{etl-books}.  The nesting of elements 
 is preserved, but the byte-codes have been linearized for performance.
 \label{fig-etl-decompile}}
@@ -1056,46 +1078,48 @@ Although the special \smtexttt{etl-*} parameters are very valuable,
 often single-stepping through code or using breakpoints still is the
 best way to track down specific problems.  To that end, we built an
 ActiveX-based debugger (\figref{debugger-screenshot}) that embeds
-itself in Internet Explorer and communicates with the ETL server via a
+itself in Internet Explorer and communicates with the \etl{} server via a
 separate persistent TCP connection.  It supports single stepping (both
 forwards and backwards) as well as the setting of breakpoints and the
 inspection of variables and request parameters.  The debugger also
 provides a convenient display mechanism for trace messages (output
-using \smtexttt{bl:trace} and other warning messages that would
+using \smtexttt{bl:trace}) and other warning messages that would
 normally be sent to the standard-error output.
 
 \begin{figure}[tb]
 \begin{centering}
 \hspace*{-0.03\linewidth}\includegraphics[width=1.1\linewidth]{debugger-screenshot.eps}
-\caption{The ETL debugger has five main components: 1) the byte-codes being
+\caption{The \etl{} debugger has five main components: 1) the byte-codes being
 executed; 2) the presentation of the response thus far generated; 3)
-the URL and toolbar; 4) the warning and trace message console; and 5)
+the address and tool bars; 4) the warning and trace message console; and 5)
 the variable inspection pane. \label{fig-debugger-screenshot}}
 \end{centering}
 \end{figure}
 
-InfoSpace's production web tree contains over sixty thousand ETL
-templates and the clusters of ETL Servers serve tens of millions of
+InfoSpace's production web tree contains over sixty thousand \etl{}
+templates and the clusters of \etl{} Servers serve millions of
 requests per day.  Many of the current templates were generated by a
 complex multi-step automatic migration process from a lower level
-proprietary templating language that pre-dates ETL\@.  The automatic
+proprietary templating language that pre-dates \etl{}\@.  The automatic
 migration was made possible by the fact that the preceding language,
 too, was very restrictive on the language level constructs it
 afforded.  However, that language, like ASP and JSP, was text-based,
 not markup-based, and used a proprietary and obscure syntax that made
 writing tools and analyzing the source code especially troublesome.
 
-As part of migrating from our legacy language to ETL, we wrote a
+As part of migrating from our legacy language to \etl{}, we wrote a
 lint-style checker to uncover ambiguities in the original source
 templates.  That script uncovered about forty-five thousand total
 major warnings spanning about fourteen thousand templates that required
 a human to resolve an ambiguity or an error. Fortunately, most of the
 corrections were straightforward and the entire process only took a
-couple of months of background processing by our web development
-teams.
+couple of months of background work by our web development
+teams.  The quantity of bugs found in the templates of the legacy
+language suggest the substantial additional value that the static checking
+of \etl{} provides.
 
-Thus far, only a couple hundred templates have been authored directly
-in ETL outside of the server development team.  Most notably the
+Currently, only a couple hundred templates have been authored directly
+in \etl{} outside of the server development team.  Most notably the
 administration interface was written using the tools described above,
 and the feedback from those web developers has been extraordinarily
 positive.
@@ -1104,16 +1128,16 @@ positive.
 \section{Related work}
 \label{sec-related-work}
 
-Earlier work, including JavaML, argues that XML proves very useful as
+Earlier work, including JavaML, argues that XML adds much value as
 a complementary representation for source
-code.~\cite{Badros-www9,Power2002,Schonger2002,Gondow2002} ETL takes
+code~\cite{Badros-www9,Power2002,Schonger2002,Gondow2002}. \etl{} takes
 the next step and uses XML as the primary representation for a markup
-templating language---an approach that proves valuable because
+templating language---an approach that proves especially worthwhile because
 template developers are already writing markup directly.
 
 XSLT~\cite{XSLT} is the only popular templating language that uses a
 restricted language.  Unfortunately, it suffers from three fatal
-weaknesses for common usage: 1) its declarative model confuses
+weaknesses for our intended usage scenario: 1) its declarative model confuses
 developers used to procedural programming; 2) it is a bit too limited,
 often causing the need to use it in conjunction with a server-side
 scripting language such as JavaScript or Visual Basic (in particular,
@@ -1122,33 +1146,33 @@ other HTTP requests); and 3) it lacks a streaming output mechanism,
 thus limiting its applicability to large incrementally-processable
 documents or situations where the desired user experience makes it
 important to send some HTML over the wire while the remainder of
-processing occurs.  XExpr~\cite{XEpr} and XInclude~\cite{XInclude} are
+processing occurs.  XExpr~\cite{XExpr} and XInclude~\cite{XInclude} are
 two other languages that use an XML representation but focus on
 domains even more restricted than the markup-generating template
-problem that ETL solves.
+problem that \etl{} solves.
 
-LAML~\cite{Laml,Laml-WWW2002} has similar goals to ETL, but takes the
-opposite approach: LAML takes the simpler markup languages and embeds
-them in Scheme, an especially powerful and expressive language.  Each
+LAML~\cite{Laml,Laml-WWW2002} has similar goals to \etl{}, but takes an
+opposite approach: LAML embeds the simpler markup languages 
+in Scheme, an especially powerful and expressive language.  Each
 markup element has a corresponding mirror procedure that outputs the
 appropriate tags, does validity checking, and otherwise reflects the
 semantics of the markup language.  Thus, LAML gets many of the same
-benefits of ETL with respect to increasing the probability of
+benefits of \etl{} with respect to increasing the probability of
 generating well-formed markup.  However, it uses the syntax of
 Scheme's S-expressions rather than XML markup, thus forgoing the
 ability to leverage XML-based tools for analysis.  Additionally, the
-extra power of Scheme is in direct contradiction of our approach of
+extra power of Scheme is in direct contradiction of our goal of
 reducing the expressiveness of the language.  A similar approach has
 been applied by embedding markup in Haskell and Curry, two other
-functional languages.~\cite{Thiemann2002,Meijer2000,Hanus2001}
+functional languages~\cite{Thiemann2002,Meijer2000,Hanus2001}.
 
 \verb|<bigwig>| is another significant research project~\cite{BigWig} that has
 similar goals.  That work adds a first class markup-fragment type to a
-general purpose programming language.  That system is more aggressive
+conventional programming language.  That system is more aggressive
 in its verification of the well-formedness of markup values: an
 iterative data-flow analysis bounds the possible values which can then
-be confirmed to be valid.~\cite{Brabrand2001} As with the other
-approaches that use a general-purpose language, the benefits ETL
+be confirmed to be valid~\cite{Brabrand2001}. As with the other
+approaches that use a general-purpose language, the benefits \etl{}
 provides in separating the presentation details from back-end
 applications are lost.
 
@@ -1156,40 +1180,41 @@ applications are lost.
 \section{Conclusions \& future work}
 \label{sec-conclusion}
 
-The Extensible Templating Language was born out of questioning the
-fundamental assumption that the front-end markup-generating engine of
+The Extensible Templating Language was born out of questioning a
+fundamental assumption: that the front-end markup-generating engine of
 a multi-tier web application requires a general-purpose programming
-language.  We designed ETL by carefully choosing the minimal required
+language.  We designed \etl{} by carefully choosing the minimal required
 language constructs, giving those features an XML syntax, and
 permitting them to be intermingled directly with literal markup.
 Limiting the power of the templating language forces improved
 separation of front-end presentation details from back-end application
-logic.  Additionally, ETL is simpler than other templating languages,
+logic.  Additionally, \etl{} is simpler than other templating languages,
 exposing a unified XML data model and integrating cleanly with modern
 Internet and web standards.
 
 By leveraging a 100\% XML syntax, we make analyses and tools
-especially easy to build.  In particular, we show how the structure of
+especially easy.  In particular, we show how the structure of
 the source program can be used to reduce the probability of generating
 ill-formed or invalid response documents. We introduced a novel use of
 pairs of attributes, called slots, to improve the type-safety of the
-XML syntax.  ETL also contributes a taxonomy of XML whitespace along
+XML syntax.  \etl{} also contributes a taxonomy of XML whitespace along
 with rules for finer-grained control of which whitespace is
-significant.  To support extensible abstractions, ETL uses XSLT as a
+significant.  To support extensible abstractions, \etl{} uses XSLT as a
 rewrite engine for macro-like custom-tags. We have over a year of
-experience running ETLS in production and it serves tens of millions
+experience running \etls{} in production and it serves millions
 of requests per day.
 
-While developing ETL, our novel uses of XML exposed a couple of
-limitations in important web standards.  First, ETL's slot syntax
+While developing \etl{}, our novel uses of XML exposed a couple of
+limitations in important web standards.  First, \etl{}'s slot syntax
 would be more precisely validated by the XML Schema Definition
 language if XSD supported better control over sets of attributes.
 There is currently no way to express the notion that exactly one of a
-pair of attributes must be given.  Second, we have found limitations
-in using XSLT for source to source transformations of ETL templates.
-An template developer may care about non-infoset syntactic artifacts
+pair of attributes must be given, thus our system must check this
+constraint procedurally.  Second, we have found limitations
+in using XSLT for source to source transformations of \etl{} templates.
+A template developer may care about non-infoset syntactic artifacts
 such as newlines between attributes, but XSLT discards those
-subtleties.~\cite{VanDeVanter2001}
+details~\cite{VanDeVanter2001}.
 
 Thus far, we have been satisfied with increasing our ability to catch
 markup errors statically.  Enabling provably well-formed response
@@ -1197,30 +1222,30 @@ documents is a noble goal and time will tell whether our needs will
 justify applying \verb|<bigwig>|'s lessons.  Another interesting area
 for future work is using Perl-like taint checking on input variables
 to improve the security of the server. Combined with server-integrated
-support form integrity, these features could defeat many
-attacks.~\cite{ScottSharp02}
+support for input parameter integrity and checking, these features could defeat many
+attacks~\cite{ScottSharp02}.
 
 Over the coming months, we expect to learn a great deal from the
 increased usage of the Extensible Templating Language and its server,
-but already ETL and ETLS have been an enormous success in revitalizing
+but already \etl{} and \etls{} have been an enormous success in revitalizing
 the InfoSpace platform.
 
 \section{Acknowledgments}
 \label{sec-ack}
 This research is supported by InfoSpace and its advanced server
 development group.  I thank Russ Arun and Steve Newman for their early
-recognition of the value of this approach and support.  ETL itself was
+recognition of the value of this approach and support.  \etl{} itself was
 designed in collaboration with Abhishek Parmar and is influenced by
 the legacy language of its predecessor which was implemented by
-Jean-Remy Facq.  The ETL Server was built by the author along with
+Jean-Remy Facq.  The \etl{} Server was built by the author along with
 Abhishek Parmar, Venkatesh Juryala, Sridhar Koneru, Mark Sandori,
 Michael Harrison, Kris Bradley, Angela Plyler, Sunil Thomas, and
-Howard Zhao.  Testing of ETLS was ably performed by Zine Rif, Sriram
+Howard Zhao.  Testing of \etls{} was ably performed by Zine Rif, Sriram
 Krishnan, Michael Schaffer, Shavkat Azimov, Jeff Wells, Ilian
 Georgeiw, and Russell Ashmun, and credit goes to Antonio Casacuberta
 for continued support of the server group.  I also thank Jeff
 Torgerson, Matthew Benedict, Vasanth Cattamanchi and all of the
-InfoSpace web developers for their contributions. ETLS is a trademark
+InfoSpace web developers for their contributions. \etls{} is a trademark
 of InfoSpace, Inc.
 
 
