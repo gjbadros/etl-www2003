@@ -1,30 +1,62 @@
 $Id$
 
 * Introduction
-** 
-** Outline of paper
+
+** Importance of dynamic web applications
+
+** General problem statement
+*** focus was making easy things easy & fast
+*** often at the expense of long-term understandability & maintainability
+*** complicates evolution of the systems
+*** testing costs and fire-fighting can dominate such systems
+*** analogy to dynamic vs. static languages
+*** flexibility & power vs. analyzability (everpresent but underappreciated balance)
+*** static checking can help
+
+** Outline of paper paragraph
 
 
 * Background
 
 ** Existing templating strategies & their problems
-*** servlets, php, jsp-xml, aspx custom controls
+*** raw programming approach (CGI, servlets) & their problems
+*** templating approach (PHP, mod_perl, JSP) & their problems
+**** mixed
+**** pure (using custom tags [jsp] or custom controls [asp.net])
+*** restricted templating approach
+**** XML-based (XSLT)
+**** Text-based (ESI)
+*** Embedding markup in language
+**** Scheme -- LAML (HTML & XML)
+**** Haskell
+**** New domain-specific languages -- Latte
 
-** Approaches available with XSLT
-*** controller is separate w/ literal-result stylesheet, using document(/...)
+** Summary of approaches and weaknesses
+*** reference related work section for other approaches
 
 
 * A better approach: ETL
 
-** desiderata
+** goals, design principles
+*** increase the probability that a program that checks does the right thing
+*** reduce development cycle time, greatly reduce testing costs
 
-** design guidelines
+** language features: slots, types, custom tags via XSLT, XML-typed variables, cobranding
+*** literal markup (cf XSLT)
+*** primitives (with slots, attributes, values)
+*** variables (string, xml) and buckets
+*** custom tag rewriting via XSLT
+*** profile variables and user variables
+*** cobranding template resolution
 
-** language features: slots, types, custom tags via XSLT, XML-typed variables
 
-** benefits
-
-** analysis examples
+* Benefits of ETL (Examples)
+** development environment completion
+** validation for deep checking before deployment
+** analysis 
+** pretty-printing 
+** source->source transformation 
+** new abstractions 
 
 
 * Implementation
@@ -38,6 +70,7 @@ $Id$
 ** screenshot of admin pages
 
 
+
 * Related work
 
 ** LAML
@@ -46,7 +79,19 @@ $Id$
 
 ** JavaML
 
-** IP
+** Simonyi's IP
+
+
+* Future work
+** XML infoset and non-infoset artifacts
+*** a bit problematic for source->source and for representing literal markup
+** alternate syntax (a la stylescript) for other purposes
+*** importantly, has an implied XML data model (e.g., can be algorithmically turned into the other syntax)
+** math and conditionals
+** generalized content-slot
+** improvements to XSD to enable better validation
+*** e.g., either/or attributes for slots
+*** custom tag element definitions
 
 
 * Conclusion
