@@ -29,7 +29,7 @@
 \newcommand{\B}{\discretionary{}{}{}}
 \newcommand{\smtt}{\small}
 \newcommand{\smtexttt}[1]{{\small\texttt{#1}}}
-\newcommand{\figref}[1]{Figure~\ref{#1}}
+\newcommand{\figref}[1]{Figure~\ref{fig-#1}}
 \newcommand{\tableref}[1]{Table~\ref{#1}}
 \newcommand{\tm}{{\scriptsize $^{\mbox{tm}}$}}
 
@@ -120,11 +120,11 @@ model (lines 7 and 9). % GREGB:FIXME:: check these line numbers
    <? } ?>
   </tr>
  </table>
-</html>
+</htm>
 \end{listing}%$
 \caption{PHP template illustrating the simplicity of the programming
 language constructs required by typical templates.
-\label{fig-php-template}}
+\label{fig-php-books}}
 \end{figure}
 
 Unfortunately, for most contemporary web application development
@@ -166,6 +166,10 @@ and second be valid with respect to the appropriate
 schemata~\cite{WML}.  Although HTML browsers are more forgiving of
 improper syntax, best-practices still dictate that the markup returned
 be in compliance with the HTML specification~\cite{HTML}.  
+Popular templating languages including PHP, JSP, ASP, and others
+all process arbitrary text and are ignorant of the rules of the markup
+being generated: the mistaken close tag on line 14 of \figref{php-books}
+goes unnoticed by PHP.
 
 Tools such as HTMLTidy~\cite{HTMLTidy} are available to check the
 responses from servers for conformance, but often testing involves
@@ -248,14 +252,14 @@ sixty thousand ETL templates.
 Section \ref{sec-} ....
 
 %%% 
-\section{Background}
+%\section{Background}
 
 %% JSP/XML
 %% XSLT
 
-\subsection{Current templating strategies}
+%\subsection{Current templating strategies}
 
-\subsection{Comparison of approaches}
+%\subsection{Comparison of approaches}
 
 %\begin{table}
 %\centering
@@ -267,14 +271,42 @@ Section \ref{sec-} ....
 
 
 %%% 
-\section{ETL: A better approach}
+\section{Extensible Templating Language}
+
+
 
 
 %%% 
 \section{Benefits of ETL}
 
+\begin{figure}[tb]
+\begin{centering}
+\hspace*{-0.05\linewidth}\includegraphics[width=1.1\linewidth]{homesite-screenshot.eps}
+
+\caption{A screenshot of the integrated development environment based
+on Homesite.  By using custom tag information generated automatically
+from the XSD schema for ETL, the environment supports automatic
+completion of names of elements and their valid attributes.  Help
+information extracted from the server codebase is also readily
+available in the IDE\@.
+\label{fig-homesite-screenshot}}
+\end{centering}
+\end{figure}
+
+
 %%% 
 \section{Implementation \& experience}
+
+ETL has a debugger (\figref{debugger-screenshot}).
+
+\begin{figure}[tb]
+\begin{centering}
+\hspace*{-0.07\linewidth}\includegraphics[width=1.15\linewidth]{debugger-screenshot.eps}
+\caption{A screenshot of the debugger.
+\label{fig-debugger-screenshot}}
+\end{centering}
+\end{figure}
+
 
 %%% 
 \section{Related work}
@@ -289,6 +321,21 @@ Section \ref{sec-} ....
 
 %ACKNOWLEDGMENTS are optional
 \section{Acknowledgments}
+This research is supported by InfoSpace and its advanced server
+development group.  I thank Russ Arun and Steve Newman for their early
+recognition of the value of this approach and their support.  ETL
+itself was designed in collaboration with Abhishek Parmar and is
+influenced by the legacy language of its predecessor web server which
+was implemented by Jean-Remy Facq.  The ETL Server system was built by
+the author along with Abhishek Parmar, Venkatesh Juryala, Sridhar
+Koneru, Mark Sandori, Michael Harrison, Kris Bradley, Sunil Thomas,
+Angela Plyler, and Howard Zhao.  Testing of ETLS was ably performed by
+Zine Rif, Sriram Krishnan, Michael Schaffer, Shavkat Azimov, Jeff
+Wells, Ilian Georgeiw, and Russell Ashmun, and credit goes to Antonio
+Casacuberta for continued support of the server group.  I also thank
+Jeff Torgerson, Matthew Benedict, and Vasanth Cattamanchi for their
+contributions to the system. ETLS is a trademark of InfoSpace, Inc.
+
 
 \bibliographystyle{abbrv}
 \bibliography{etl-www2003}  % sigproc.bib is the name of the Bibliography in this case
