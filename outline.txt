@@ -60,6 +60,8 @@ TBD
 ** goals, design principles
 *** increase the probability that a program that checks does the right thing
 *** reduce development cycle time, greatly reduce testing costs
+*** approximate analyses should be easy, precise analyses should be possible
+    (e.g., finding all the variables used by a template)
 
 ** language features: slots, types, custom tags via XSLT, XML-typed variables, cobranding
 *** literal markup (cf XSLT)
@@ -70,6 +72,7 @@ TBD
 *** custom tag rewriting via XSLT
 *** profile variables and user variables
 *** cobranding template resolution
+*** whitespace handling
 
 
 * Benefits of ETL (Examples)
