@@ -272,6 +272,14 @@ Section \ref{sec-} ....
 \section{Extensible Templating Language}
 
 
+*** increase the probability that a program that checks does the right thing
+
+*** reduce development cycle time, greatly reduce testing costs
+
+*** approximate analyses should be easy, precise analyses should be possible
+    (e.g., finding all the variables used by a template)
+
+
 \begin{figure}[htbp]
 \begin{listing}{1}
 <?xml version="1.0"?>
@@ -295,6 +303,39 @@ avoids the mistake from line 14 of the PHP example.
 \label{fig-etl-books}}
 \end{figure}
 
+\subsection{Primitives}
+
+\subsection{Variables \& slots}
+
+\subsection{Reserved variables}
+
+\subsection{Buckets}
+
+\subsection{Cobrand profiles}
+
+\subsection{Template selection}
+
+% bl:call, argument passing
+
+\subsection{Transformers \& formatters}
+
+\subsection{Comments}
+
+\subsection{Controlling whitespace}
+
+\subsection{Literal markup}
+
+% conditional tags
+% at:*
+% ?foo syntax
+% building URIs
+
+\subsection{Control constructs}
+
+\subsection{Custom tags}
+
+\subsection{Invoking applications}
+
 
 %%% 
 \section{Benefits of ETL}
@@ -302,6 +343,15 @@ avoids the mistake from line 14 of the PHP example.
 ETL has an integrated development environment that was very
 easy to build by leveraging the XSD schema that defines the language
 (\figref{homesite-screenshot}).
+
+** development environment completion
+** validation for deep checking before deployment
+** analysis 
+** pretty-printing 
+** source->source transformation 
+** new abstractions 
+** reduce app-level security holes (ref. scott & sharp)
+
 
 \begin{figure}[tb]
 \begin{centering}
@@ -320,7 +370,18 @@ available in the IDE\@.
 %%% 
 \section{Implementation \& experience}
 
-ETL has a debugger (\figref{debugger-screenshot}).
+** ETLS, its goals, backward-compatibility needs
+
+** Server principles
+*** be an appliance box: everything via HTTP
+*** support MS management interfaces (mmc, win* service)
+
+ETL has a debugger (\figref{debugger-screenshot}).  Solve fundamental
+problem of needing to have stderr output for web development.
+
+% ?etl-* parameters
+% security
+% inspadmin:* directives & the startup configuration file
 
 \begin{figure}[tb]
 \begin{centering}
@@ -378,6 +439,23 @@ is preserved, but the byte-codes have been linearized for performance.
 
 %%% 
 \section{Conclusions \& future work}
+
+* Restate contribution, stress in use
+
+
+** XML infoset and non-infoset artifacts
+*** a bit problematic for source->source and for representing literal markup
+** alternate syntax (a la stylescript) for other purposes
+*** importantly, has an implied XML data model (e.g., can be algorithmically turned into the other syntax)
+** math and conditionals
+** generalized content-slot
+** improvements to XSD to enable better validation
+*** e.g., either/or attributes for slots
+*** custom tag element definitions
+** levels of strictness
+** data flow analyses to infer needs for xmlencoding of variable values
+** taint tracking of input variables
+** better warning/error reporting in terms of the pre-macro-transformed source template
 
 
 %ACKNOWLEDGMENTS are optional
