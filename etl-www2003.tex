@@ -252,7 +252,8 @@ dictate that the markup returned comply with the HTML
 specification~\cite{HTML4}.  Popular templating languages including
 PHP, JSP, ASP, and many others process arbitrary text and are ignorant
 of the rules of the markup being generated: the mistaken close tag on
-line 11 of \figref{php-books} goes unnoticed by PHP.
+line 11 of \figref{php-books} goes unnoticed by PHP, yet will result
+in a user-perceived complete failure under an XHTML browser.
 
 Tools such as HTMLTidy~\cite{HTMLTidy} are available to check the
 responses from servers for conformance, but often testing involves
