@@ -69,39 +69,41 @@ ETL....
 
 \section{Introduction}
 
-Server-side dynamically-generated web pages have become increasingly
-common and more complex.  The loosely-coupled client/\B{}server model
-implied by the current breed of applications deployed via the World
-Wide Web presents substantial new complexities for application
-developers, and a variety of new programming languages and paradigms
-attempt to address these novel problems.  One important characteristic
-of this new world of software development is the need to generate HTML
-or other markup languages to describe the client-side presentation and
-behaviour.
+The loosely-coupled client/\B{}server model implied by the current
+breed of applications deployed via the World Wide Web presents
+substantial new complexities for application developers. A variety of
+new programming languages and paradigms attempt to address these novel
+problems.  One important characteristic of this new world of software
+development is the need to generate HTML, WML, or other markup
+languages to describe client-side presentation and behaviour.
 
 The original server-side dynamic markup-generation capabilities of the
-Web were defined by CGIs.\cite{CGI} For each request, the web server
-maps HTTP request details into environment variables, command-line
-arguments, and the standard file descriptors.  In particular, the
-standard output written by that process was sent by the Web server as
-the response to the client browser (instead of simply responding with
-an unchanging file from disk).  Over time, various techniques arose to
-reduce the cost of each request: extension mechanisms such as the
-Apache module system~\cite{ApacheModules} and scripting languages
-hosted by the Web server have increased performance by eliminating
-process creation overhead.
+Web were defined by the Common Gateway Interface.\cite{CGI} For each
+request of a CGI, the web server maps HTTP request details into environment
+variables, command-line arguments, and the standard file descriptors.
+In particular, the standard output written by that process was sent by
+the Web server as the response to the client browser (instead of
+simply responding with an unchanging file from disk).  Over time,
+various techniques arose to reduce the cost of each request: extension
+mechanisms such as the Apache module system~\cite{ApacheModules} and
+scripting languages hosted by the Web server have increased
+performance by eliminating process creation overhead.
 
-The variety of server-side scripting is dominated by expressive and
+Today, server-side markup generation is dominated by expressive and
 flexible general-purpose programming languages such as
 Java~\cite{Java}, Perl~\cite{Perl}, and PHP~\cite{PHP}.  Ironically,
 the languages are then used in fairly restricted ways, often being
-tied to a templating language (e.g., JSP~\cite{JSP} for Java or
+tied to a templating syntax (e.g., JSP~\cite{JSP} for Java or
 HTML::Template~\cite{HTML-Template} for Perl).  For example, consider
 the PHP template in \figref{php-books}.  The only constructs required
 by the template are a) some means of populating a data model from the
-back-end business logic (line 1); b) data-driven iteration (line
-4-5); and c) simple expression evaluation to access parts of the data
-model (lines 7 and 9). % GREGB:FIXME:: check these line numbers
+back-end business logic (line 1); b) data-driven iteration (line 4-5);
+and c) simple expression evaluation to access parts of the data model
+(lines 7 and 9). % GREGB:FIXME:: check these line numbers The extra
+power provided by typical templating languages not only goes unused,
+but it also complicates certain important analyses of the code.  For
+example, the obviously important property that a template execution
+terminates is undecidable for these general purpose languages.
 
 \begin{figure}[htbp]
 \begin{listing}{1}
@@ -131,7 +133,7 @@ are imposed only by process and convention.  Template authors are
 asked to limit themselves to a subset of the available features of a
 language as a means of facilitating scalable, secure, well-behaved
 systems.  Importantly, however, there is nothing inherent that
-prevents template executions from, for example, making individual
+prevents template-based code from, for example, making individual
 database connections (which would impact performance) or maintaining
 undesirable server-side state (which would impose additional
 requirements on the load-balancing mechanism and reduce scalability).
@@ -161,8 +163,8 @@ generate markup to be returned to the requesting user agent.  It is
 important that the markup created conforms to appropriate Internet
 standards.  For example, WML markup needs to first be well-formed XML
 and second be valid with respect to the appropriate
-schemata~\cite{WML}.  Although HTML browsers are more forgiving of
-improper syntax, best-practices still dictate that the markup returned
+schema or DTD~\cite{WML}.  Although HTML browsers are more forgiving of
+variations in syntax, best-practices still dictate that the markup returned
 be in compliance with the HTML specification~\cite{HTML}.  
 Popular templating languages including PHP, JSP, ASP, and others
 all process arbitrary text and are ignorant of the rules of the markup
@@ -174,7 +176,7 @@ responses from servers for conformance, but often testing involves
 simply using various browsers to exercise the application while
 looking for bugs.  Both of these approaches require exhaustively
 visiting every page of interest--often a very large search space.
-Ideally, we would prefer a way to analyze the source templates
+Ideally, we would prefer a way to statically analyze the source templates
 themselves to gain confidence that they will, in fact, generate proper
 markup.  If static analysis of templates can rule out the possibility
 of certain kinds of errors, testing time and costs can be dramatically
@@ -184,48 +186,49 @@ Another important requirement is to support ad-hoc queries of
 the source code templates. For small and simple dynamic web applications,
 the automated analysis of templates is often unnecessary: a web
 developer or two understands all of the code.  Over time, however,
-these simple applications easily grow in size and complexity such that
+these simple applications grow in size and complexity such that
 tools analyzing the templates become an essential part of maintaining
 and evolving the system. For example, a site may wish to add an extra
 input field to all of its registration forms.  If a generic form is
 not already factored out into a common location, the first step in
 approaching the task is finding all of the registration forms.  Or
-suppose a new handheld device has a bug in handling an HTTP response
-header: we need to identify all the code in the system that may
-generate that header.
+suppose a new handheld device has a limitation in its handling of cookies:
+we need a means of narrowing the scope of careful review to places
+where that cookie is manipulated.
 
 Typically, web developers approach to above scenarios with an arsenal
-of imprecise lexical tools such as \smtexttt{find} and
-\smtexttt{grep}.  While searching for a substring or regular
-expression may satisfy some simple queries, when the desired query has
-additional structure, lexical approaches fall short.  No regular
-expression will let us identify all unreachable templates (i.e., we
-want to find dead code) so that we can simplify the application by
-eliminating those templates.  To analyze more deeply, we need to
-uncover the structure of the templating language.  Typically, that
-requires a language-specific parsing approach for which fewer tools
-exist.
+of imprecise lexical tools such as \smtexttt{grep}.  While searching
+for a substring or regular expression may satisfy some simple queries,
+when the desired query has additional structure, lexical approaches
+fall short.  Suppose we wish to find dead code to simplify our
+application. No regular expression will let us identify all
+unreachable templates to satisfy that query.  To analyze more deeply,
+we need to uncover the semantic structure of the templating language.
+Typically, that requires a language-specific parsing approach and much
+greater effort in building a valuable tool.
 
 \subsection{XML supports analyses}
 
 An increasingly popular approach to performing structured queries of
 programming language source code is to use standard XML tools such as
 XSLT~\cite{XSLT} and XQuery~\cite{XQuery} to operate over a
-complementary XML-based representation~\cite{Badros-www9,others}.  With a
-carefully-chosen XML representation, valuable semantics of the code
-are immediately available to XPath expressions, thus facilitating a
-broad class of source code tools.  However, for a general-purpose
+complementary XML-based representation~\cite{Badros-www9,others}.
+With a carefully-chosen XML representation, valuable semantics of the
+code are immediately available to XPath expressions, thus facilitating
+a broad class of source code tools.  However, for a general-purpose
 programming language, XML is unwieldy for use as the primary
-representation: the conventional grammer-based language is edited by
-humans and is only converted into XML for the tools to leverage.
+representation.  Instead, the conventional grammer-based language is
+edited by humans and is only converted into XML for the tools to
+leverage.
 
 This research applies the benefits of an XML representation of source
-code to domain-specific markup templating languages.  Importantly,
-web developers working with templating languages are already writing
-markup directly, thus making it natural for them to express the logic
-of their dynamic templates directly in markup as well.  This
-observation eliminates the dual representation problem that limits the
-value of XML when applied to general purpose programming language.
+code to the domain of restricted markup templating languages.
+Importantly, web developers working with templating languages are
+already writing markup directly, thus making it natural for them to
+express the limited logic of their dynamic templates directly in markup as
+well.  This observation eliminates the dual representation problem
+that restricts the value of XML when applied to general purpose
+programming language.
 
 In this paper, I introduce the Extensible Templating Language.  From
 one perspective, ETL is a 100\% XML-based templating language that
@@ -236,14 +239,18 @@ programming language that uses XML as its surface syntax and
 simplifies the writing of programs that generate markup languages.
 
 ETL leverages the well-formedness and local-validity checks of the
-source template to support the correctness of the generated response
-markup.  Additionally, because of its use of XML as a representation,
-it simplifies ad-hoc software engineering analyses to better support
-evolution and maintenance of large dynamic web applications.  We have
-built an ETL runtime inside of a production-quality web server, the
-Extensible Templating Language Server.  ETLS is currently employed by
-InfoSpace to serve over forty million requests per day using over
-sixty thousand ETL templates.
+source template to support those same properties in the generated
+response markup.  By limiting the programming-language constructs to
+include only the features that are appropriate at the front-end of a
+scalable web application architectur, we ease numerous analyses and
+encourage proper separation of the presentation from the content and
+business logic. Finally, because of its use of XML as a
+representation, ETL simplifies ad-hoc software engineering analyses to
+better support evolution and maintenance of large dynamic web
+applications.  We have built an ETL runtime inside of a
+production-quality web server, the Extensible Templating Language
+Server.  ETLS is currently employed by InfoSpace to serve over forty
+million requests per day using over sixty thousand ETL templates.
 
 \subsection{Outline of paper}
 
@@ -271,6 +278,7 @@ Section \ref{sec-} ....
 %%% 
 \section{Extensible Templating Language}
 
+*** equally conscise
 
 *** increase the probability that a program that checks does the right thing
 
@@ -542,6 +550,11 @@ templates attribute annotations.
 \subsection{Control constructs}
 
 \subsection{Custom tags}
+
+** iterate until no more custom tags to expand
+
+** expand before or after WS handling
+
 
 \subsection{Invoking applications}
 
