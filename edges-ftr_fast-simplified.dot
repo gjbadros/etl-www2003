@@ -1,0 +1,25 @@
+digraph G {
+  node [
+    shape=box, width=0.2, height=0.2,
+    fontname="helvetica", fontsize=24,
+  ];
+"http://stagingetl/info/ftr_fast.htm" -> "ftr_fast_600.htm"
+"http://stagingetl/info/ftr_fast.htm" -> "indexslice.htm"
+"http://stagingetl/info/ftr_fast.htm" -> "ftr_include.htm"
+"ftr_fast_600.htm" -> "ftr_fast.htm"
+"ftr_fast_600.htm" -> "common/\nstyles/\ninc_pdcolors.htm"
+"ftr_fast_600.htm" -> "lotto/\ninc_more.htm"
+"ftr_fast_600.htm" -> "ftr_include.htm"
+"indexslice.htm" -> "common/\nforms/\ninc_yellow.htm"
+"indexslice.htm" -> "common/\nforms/\ninc_people3.htm"
+"indexslice.htm" -> "common/\nforms/\ninc_email.htm"
+"ftr_include.htm" -> "buttons/\nhdrftr/\nprotxtoswebftr.htm"
+"ftr_include.htm" -> "buttons/\nhdrftr/\nprotxtosypftr.htm"
+"ftr_include.htm" -> "buttons/\nhmp/\nprohmptxtos3.htm"
+"ftr_include.htm" -> "banners/\nprobotbanner.htm"
+"ftr_include.htm" -> "buttons/\nftr/\nprobutftrbot.htm"
+"ftr_include.htm" -> "inc/\nhomepage/\nbottomtbllink.htm"
+"ftr_include.htm" -> "localtime.htm"
+"ftr_include.htm" -> "pad.htm"
+
+}
