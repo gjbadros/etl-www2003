@@ -62,7 +62,20 @@
 \date{12 November 2002}
 \maketitle
 \begin{abstract}
-ETL.... \gjb{Write this!}
+Popular web templating languages typically embed general-purpose
+programming languages.  The Extensible Templating Language was born
+out of questioning the fundamental assumption that front-end
+markup-generating engine of a multi-tier web application requires all
+of the power and expressiveness implied by that design.  ETL restricts
+the set of language features to a useful subset that provide the
+necessary functionality without compromising the simplicity and
+understandability of templates.  Furthermore, ETL improves the
+analyzability of the source templates by using an XML-based
+representation where markup is intermingled with XML elements
+corresponding to programming constructs. This approach reduces the
+possibility of generating improper markup, improves the separation
+between presentation and business logic, and facilitates tool-building
+including semantically-aware editors and debuggers.
 
 \end{abstract}
 
@@ -137,10 +150,10 @@ is undecidable for these general purpose languages.
  </table>
 </htm>
 \end{listing}%$
-\caption{PHP templates have minimal programming language construct
-requirements.  Unfortunately, over the evolution of the presentation
-layer, PHP developers sometimes engage in far broader interactions
-because the power of the language allows them to do so.
+\caption{Cleanly-written PHP templates require only the simplest
+programming language constructs.  Unfortunately, over the evolution of
+the presentation layer, PHP developers sometimes engage in far broader
+interactions because the power of the language allows them to do so.
 \label{fig-php-books}}
 \end{figure}
 
@@ -662,48 +675,6 @@ DOM tree that is then transformed via the named stylesheet, letting the
 stylesheet generate the formatter's response string.
 
 
-\subsection{Literal markup}
-\label{ssec-literal-markup}
-
-\gjb{write this section!}
-
-** conditional tags
-
-** at:*
-
-** ?foo syntax, explain the tradeoff here
-
-** building URIs
-
-Markup comments fall into two categories: 1) traditional comments
-intended for the developers never to be part of the generated output;
-and 2) target-language markup comments that are intended to be sent
-over the wire as part of the response document.  Similar to XSLT, the
-former are written as simple XML comments using the \smtexttt{<!--
-... -->} syntax, while comments intended for the response are
-constructed using the \smtexttt{bl:comment} primitive.
-
-%For example:
-%\begin{smallverbatim}
-%<!-- This comment is not seen by end user -->
-%<bl:comment> 
-%This text gets copied into the response 
-%document inside of &lt;!-- .. --&gt; delimiters.
-%</bl:comment>
-%\end{smallverbatim}
-
-To support internationalization of templates, developers can choose to
-use the \smtexttt{bl:tt} (token translation) primitive in all places
-where literal text would appear.  For example, instead of writing
-\smtexttt{Hello <bl:get var="name"/>}, a properly internationalized
-template might read \smtexttt{<bl:tt id="greeting1">Hello</bl:tt>
-<bl:get var="name"/>}. Each template has a corresponding dictionary of
-token-translation definitions for the various locales that have been
-defined.  Based on the request's locale selection (either from a
-stylized URL or the \smtexttt{Accepts-language} header), the
-appropriate dictionary is used to replace each \smtexttt{bl:tt} use
-with the XML document fragment to which the given identifier maps.
-
 
 \subsection{Control flow}
 \label{ssec-control}
@@ -747,6 +718,139 @@ bl:call, template resolution order.  Probably need a figure of a
 directory tree to support this and the next section.  Give analogy to
 OO programming languages as the brand being an implicit receiver
 object.}
+
+\subsection{Literal markup}
+\label{ssec-literal-markup}
+
+The primary responsibility of templating languages is to generate an
+output document for each request.  While typical templating lanaguges
+are text-based, ETL is markup-based.  It is this distinction that
+enables ETL to favor generating well-formed output documents.  For
+example, an ASP template might read:
+
+\begin{smallverbatim}
+<a href="<%= target %>"><%= link_name %></a>
+\end{smallverbatim}
+
+\noindent which has semantics that are strictly textual---it concerns
+itself with outputting arbitrary character sequences.  Unfortunately,
+this snippet:
+
+\begin{smallverbatim}
+<a hre=<%= target %>><%= link_name %></b>
+\end{smallverbatim}
+
+\noindent is essentially the same as the preceding code, despite the
+fact that the first example is far more likely to generate proper
+markup.
+
+As a markup-based templating language, ETL makes it easier to write
+templates that will generate well-formed and valid markup than it is
+to force the output of improper XML.  For example, to output a literal
+XML fragment such as ``\smtexttt{<b>Good</b>}'', that fragment can be
+written directly in the ETL template.  However, to generate the
+string ``\smtexttt{<a>Bad</b>}'', you must fall back on outputting
+individual characters and write:
+
+\begin{smallverbatim}
+&lt;a&gt;Bad&lt;/b&gt;
+\end{smallverbatim}
+
+\noindent Note that ETL does not forbid you from outputting ill-formed
+markup, it only encourages proper markup by making that common case
+far more natural to write.
+
+Of course, often the markup we need to output includes dynamically
+computed attributes and content (as with our initial ASP example).
+To output an attribute with its value derived from the value of a
+variable, you can write:
+
+\begin{smallverbatim}
+<a href="?target">...</a>
+\end{smallverbatim}
+
+\noindent where the \smtexttt{?target} syntax means to use the value
+of variable ``target'' rather than the literal characters
+\smtexttt{?target}\footnote{A leading backslash is ignored and suppresses the special
+meaning of the question mark in case you really do want those seven
+characters to be the value of the attribute.}  Alternatively, one can
+write:
+
+\begin{smallverbatim}
+<a><at:href><bl:get var="target"></at:href>...</a>
+\end{smallverbatim}
+
+\noindent Here, the \smtexttt{href} attribute of the \smtexttt{a}
+element is given the value computed by evaluating the elements
+contained by \smtexttt{at:href}.  The special namespace \smtexttt{at}
+is used to make this format more concise than the long-winded
+\smtexttt{xsl:attribute} variant that XSLT uses.  The unqualified name of the
+\smtexttt{at:*} element is used as the name of the attribute, and the
+contents can be arbitrary ETL code (e.g., including conditionals and
+subroutines). No matter which form is used to specify dynamic
+attribute values, the language ensures that the proper quotations and
+encoding are used.
+
+Another common need is to conditionally include a tag.  For example,
+consider this illegal template fragment:
+
+\begin{smallverbatim}
+<bl:if var="#pro/usebold">
+  <b>
+</bl:if>
+    Possibly bolded text
+<bl:if var="#pro/usebold">
+  </b>
+</bl:if>
+\end{smallverbatim}
+
+\noindent Although the intent is reasonable, XML's requirement of
+proper nesting disallows this syntax.  Instead, ETL supports that
+behaviour using a special \smtexttt{bl:if-var} attribute on an
+arbitrary literal result element:
+
+\begin{smallverbatim}
+<b bl:if-var="#pro/wantbold">
+  Possibly bolded text
+</b>
+\end{smallverbatim}
+
+\noindent where the output of \emph{both} the open and close
+\smtexttt{b} tags is controlled by the test of the single variable
+(and the contents of the \smtexttt{b} element are always evaluated).
+
+Comments are another subtle aspect of markup templating
+languages. They fall into two categories: 1) traditional comments
+intended for the developers never to be part of the generated output;
+and 2) target-language markup comments that are intended to be sent
+over the wire as part of the response document.  Similar to XSLT, the
+former are written as simple XML comments using the \smtexttt{<!--
+... -->} syntax, while comments intended for the response are
+constructed using the \smtexttt{bl:comment} primitive.
+
+%For example:
+%\begin{smallverbatim}
+%<!-- This comment is not seen by end user -->
+%<bl:comment> 
+%This text gets copied into the response 
+%document inside of &lt;!-- .. --&gt; delimiters.
+%</bl:comment>
+%\end{smallverbatim}
+
+Finally, to support internationalization of templates, developers can choose to
+use the \smtexttt{bl:tt} (token translation) primitive in all places
+where literal text or markup would appear.  For example, instead of writing
+\smtexttt{Hi <bl:get var="name"/>}, a properly internationalized
+template might read:
+
+\noindent \smtexttt{<bl:tt id="greet1">Hi</bl:tt><bl:get var="name"/>}
+
+Each template has a corresponding dictionary of token-translation
+definitions for the various locales that have been defined.  Based on
+the request's locale selection (either from a stylized URL or the
+\smtexttt{Accepts-language} header), the appropriate dictionary is
+used to replace each \smtexttt{bl:tt} element with the XML document
+fragment to which the given identifier maps.
 
 \subsection{Controlling whitespace}
 
