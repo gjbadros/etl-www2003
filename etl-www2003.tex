@@ -161,6 +161,14 @@ evolve the complex systems~\cite{Badros00-spe,ErnstBadrosNotkin02}\cite[p.~424]{
 The precise analysis of an arbitrary JSP template necessarily requires
 full knowledge of both the rewrite rules and the semantics of Java.
 
+\gjb{Stress spaghetti code, separation of front and back end, describe
+how web service adoption changes the picture (reference the figure)}
+
+\gjb{Any references for importance of separation of front and back end?}
+
+\gjb{Question one assumption: do we need a full-blown general purpose
+programming language?}
+
 %% GIVE EXAMPLES OF VALUABLE ANALYSES!!!
 \subsection{Analysis of markup templates}
 
@@ -261,12 +269,23 @@ production-quality web server, the Extensible Templating Language
 Server.  ETLS is currently employed by InfoSpace to serve over forty
 million requests per day using over sixty thousand ETL templates.
 
+\begin{figure}[bt]
+\begin{centering}
+\includegraphics[width=1\linewidth]{web-service-ip-shift.eps}
+\caption{Web services enable the front-end templating tier to
+communicate with back-end applications via standard Internet Protocols
+such as XML and SOAP; they no longer need to be aware of distributed
+object protocols such as DCOM or Corba.\label{fig-ws-ip-shift}}
+\end{centering}
+\end{figure}
+
+
 \subsection{Outline of paper}
 
 The rest of this paper is organized as follows. \secref{etl} describes
 the Extensible Templating Language itself. \secref{benefits} gives
 several practical examples of the benefits of using a pure XML
-approach with a restricted programming language. 
+approach with a restricted programming language.
 \secref{implementation} details our implementation and
 describes our experiences in using ETL in production systems over the
 last year.  Finally, \secref{related-work} describes and contrasts
@@ -299,15 +318,27 @@ related work and \secref{conclusion} concludes.
 
 The Extensible Templating Language is an imperative markup templating
 language that allows web developers to intermingle literal XML markup
-with XML-based programming language constructs.  An ETL template must
-be well-formed XML that is valid with respect to several XML Schema
-Definitions.  The set of programming constructs available in ETL is
-intentionally restricted to limit the amount of logic performed in the
-front tier of a multi-tier web-delivered application and better
-enforce proper separation of presentation from content and business
-logic.  ETL is used by dozens of production applications serving over
-forty million requests per day, thus providing constructive evidence
-that the set of available constructs is sufficient for real-world use.
+with XML-based programming language constructs.  Our primary design
+goals for ETL were to:
+
+\begin{enumerate}
+\item Allow easy analyses of source templates to permit development of
+supporting tools; 
+\item support only the essential programming language constructs
+required by a templating layer; and
+\item utilize an XML data model pervasively to integrate seamlessly
+with Internet and Web standards.
+\end{enumerate}
+
+An ETL template must be well-formed XML that is valid with respect to
+several XML Schema Definitions.  The set of programming constructs
+available in ETL is intentionally restricted to limit the amount of
+logic performed in the front tier of a multi-tier web-delivered
+application and better enforce proper separation of presentation from
+content and business logic.  ETL is used by dozens of production
+applications serving over forty million requests per day, thus
+providing constructive evidence that the set of available constructs
+is sufficient for real-world use.
 
 \begin{figure}[tb]
 \begin{listing}{1}
