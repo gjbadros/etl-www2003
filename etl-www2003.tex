@@ -82,7 +82,7 @@ corresponding to programming constructs. This approach reduces the
 possibility of generating improper markup and facilitates tool-building
 including semantically-aware editors and debuggers. ETL runs inside of
 the Extensible Templating Language Server which is currently employed
-by InfoSpace to serve over forty million requests per day using over
+by InfoSpace to serve millions of requests per day using over
 sixty thousand ETL templates.
 
 \end{abstract}
@@ -124,20 +124,19 @@ performance by eliminating process creation overhead.
 
 Today, server-side markup generation is dominated by expressive and
 flexible general-purpose programming languages such as
-Java~\cite{Arnold98}, Perl~\cite{Camel3rd}, Visual Basic~\cite{VB},
-and PHP~\cite{pro_php}.  Ironically, the languages are then mostly
-used in fairly restricted ways, often being tied to a templating
-syntax (e.g., JSP~\cite{JSP12} for Java or
-HTML::Template~\cite{HTML-Template} for Perl).  For example, consider
-the PHP template in \figref{php-books}.  The only constructs required
-by the template are a) some means of populating a data model from the
-back-end business logic (line 1); b) data-driven iteration (line 4);
-and c) simple expression evaluation to access parts of the data model
-(lines 6 and 7). The extra power provided by typical templating
-languages not only goes unused, but it also complicates certain
-important analyses of the code.  For example, the obviously important
-property that a template execution terminates is undecidable for these
-general purpose languages.
+Java~\cite{Arnold98}, Perl~\cite{Camel3rd}, and PHP~\cite{pro_php}.
+Ironically, the languages are then mostly used in fairly restricted
+ways, often being tied to a templating syntax (e.g., JSP~\cite{JSP12}
+for Java or HTML::Template~\cite{HTML-Template} for Perl).  For
+example, consider the PHP template in \figref{php-books}.  The only
+constructs required by the template are a) some means of populating a
+data model from the back-end business logic (line 1); b) data-driven
+iteration (line 4); and c) simple expression evaluation to access
+parts of the data model (lines 6 and 7). The extra power provided by
+typical templating languages not only goes unused, but it also
+complicates certain important analyses of the code.  For example, the
+obviously important property that a template execution terminates is
+undecidable for these general purpose languages.
 
 % GREGB:FIXME:: check the above line numbers 
 
@@ -154,7 +153,8 @@ general purpose languages.
   <? } ?>
  </table>
 </htm>
-\end{smalllisting}%$
+\end{smalllisting}
+
 \caption{Cleanly-written PHP templates require only the simplest
 programming language constructs.  Unfortunately, over the evolution of
 the presentation layer, PHP developers sometimes engage in far broader
@@ -332,8 +332,8 @@ representation, ETL simplifies ad-hoc software engineering analyses to
 better support evolution and maintenance of large dynamic web
 applications.  We have built an ETL runtime inside of a
 production-quality web server, the Extensible Templating Language
-Server.  ETLS is currently employed by InfoSpace to serve over forty
-million requests per day using over sixty thousand ETL templates.
+Server.  ETLS is currently employed by InfoSpace to serve tens of
+millions of requests per day using over sixty thousand ETL templates.
 
 \subsection{Outline of paper}
 
@@ -377,9 +377,8 @@ constructs exposed is intentionally restricted to limit the amount of
 logic performed in the front-end of a multi-tier web-delivered
 application.  As a result, we achieve better separation of
 presentation and application.  ETL is used by dozens of production
-applications serving over forty million requests per day, thus
-providing constructive evidence that the set of available constructs
-is sufficient for real-world use.
+applications, thus providing constructive evidence that the set of
+available constructs is sufficient for real-world use.
 
 \begin{figure}[tb]
 \begin{smalllisting}{1}
@@ -397,7 +396,7 @@ is sufficient for real-world use.
   </table>
  </html>
 </bl:template>
-\end{smalllisting}%$
+\end{smalllisting}
 \caption{The ETL template corresponding to \figref{php-books}'s PHP
 code is required to be well-formed XML\@.  Thus, the developer
 avoids the mistake from line 11 of the PHP example.
@@ -416,15 +415,14 @@ call \emph{literal result markup} (see \ssecref{literal-markup}).
 
 ETL templates are processed within the context of an HTTP request.
 The path specified in the URL of the request selects a template where
-processing starts (see \ssecref{template-dispatch}).  URL and POST
-parameters, cookies, etc., are all available to the template (see
-\ssecref{buckets}). The primary goal of executing a template is to
-generate an HTTP response including the markup document along with the
-various HTTP headers such as the content-type, cookie settings, and
-other meta-data.  Generally, an ETL template is similar to a method in
-an object-oriented programming language: it can invoke other templates
-as subroutines and can also perform subsidiary HTTP requests to other
-servers (see \ssecref{control}).
+processing starts (see \ssecref{selection}).  The primary goal of
+executing a template is to generate an HTTP response including the
+markup document along with the various HTTP headers such as the
+content-type, cookie settings, and other meta-data.  Generally, an ETL
+template is similar to a method in an object-oriented programming
+language: it can invoke other templates as subroutines and can also
+perform subsidiary HTTP requests to other servers (see
+\ssecref{control}).
 
 \subsection{Primitives, attributes, and slots}
 \label{ssec-primitives}
@@ -487,7 +485,7 @@ to improve our ability to support static analyses.  For example,
 \smtexttt{bl:get} writes out the value of a variable and has a
 \smtexttt{@transform} attribute that supports various encodings or
 decodings of the value (e.g., \smtexttt{url-encode} or
-\smtexttt{xml-decode}---see \ssecref{transformations}).  We disallow the
+\smtexttt{xml-decode}---see \ssecref{transformers}).  We disallow the
 use of \smtexttt{@transform-var} because we want to always know from
 static inspection what transformations may occur, thus facilitating
 some analyses and optimizations.
@@ -1087,7 +1085,7 @@ general-purpose programming language.
 \end{figure}
 
 InfoSpace's production web tree contains over sixty thousand ETL
-templates and the clusters of ETL Servers serve over forty million
+templates and the clusters of ETL Servers serve tens of millions of
 requests per day.  The templates were generated by a complex
 multi-step automatic migration process from a lower level proprietary
 templating language that pre-dates ETL.  The automatic migration was
