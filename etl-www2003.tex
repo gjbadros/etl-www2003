@@ -145,11 +145,11 @@ larger architecture.
 Another substantial problem with existing templating technologies is
 that they often involve the lexical mixing of two separate programming
 paradigms.  JSP, for example, is implemented in terms of a
-pre-processing rewrite of the template into a Java servlet.~\cite{JaveServlet}
+pre-processing rewrite of the template into a Java servlet.~\cite{JavaServlet}
 Pre-processing approaches are convenient for programmer expressiveness
 but have a huge hidden cost in complicating software engineering
 analyses and tools that would otherwise help understand, maintain, and
-evolve the complex systems~\cite{PCP3,EvilMacros,StroustropDnEChapterAboutCpp}.
+evolve the complex systems~\cite{Badros00-spe,ErnstBadrosNotkin02}\cite[p.~424]{Stroustrup94}.
 The precise analysis of an arbitrary JSP template necessarily requires
 full knowledge of both the rewrite rules and the semantics of Java.
 
@@ -632,7 +632,7 @@ Template `books.html.etl' has 0 errors.
     } // #nocmd('<table>','</table>')
    } // #nocmd('<html>','</html>')
   } // template('books.html.etl')
-\end{verbatim}%$
+\end{verbatim}
 \caption{A server-generated decompilation of the internal representation
 of the ETL template from \figref{etl-books}.  The nesting of elements
 is preserved, but the byte-codes have been linearized for performance.
@@ -668,22 +668,22 @@ is preserved, but the byte-codes have been linearized for performance.
 ** better warning/error reporting in terms of the pre-macro-transformed source template
 
 
-%ACKNOWLEDGMENTS are optional
 \section{Acknowledgments}
 This research is supported by InfoSpace and its advanced server
 development group.  I thank Russ Arun and Steve Newman for their early
 recognition of the value of this approach and their support.  ETL
 itself was designed in collaboration with Abhishek Parmar and is
 influenced by the legacy language of its predecessor web server which
-was implemented by Jean-Remy Facq.  The ETL Server system was built by
-the author along with Abhishek Parmar, Venkatesh Juryala, Sridhar
-Koneru, Mark Sandori, Michael Harrison, Kris Bradley, Sunil Thomas,
-Angela Plyler, and Howard Zhao.  Testing of ETLS was ably performed by
-Zine Rif, Sriram Krishnan, Michael Schaffer, Shavkat Azimov, Jeff
-Wells, Ilian Georgeiw, and Russell Ashmun, and credit goes to Antonio
+was implemented by Jean-Remy Facq.  The ETL Server was built by the
+author along with Abhishek Parmar, Venkatesh Juryala, Sridhar Koneru,
+Mark Sandori, Michael Harrison, Kris Bradley, Angela Plyler, Sunil
+Thomas, and Howard Zhao.  Testing of ETLS was ably performed by Zine
+Rif, Sriram Krishnan, Michael Schaffer, Shavkat Azimov, Jeff Wells,
+Ilian Georgeiw, and Russell Ashmun, and credit goes to Antonio
 Casacuberta for continued support of the server group.  I also thank
-Jeff Torgerson, Matthew Benedict, and Vasanth Cattamanchi for their
-contributions to the system. ETLS is a trademark of InfoSpace, Inc.
+Jeff Torgerson, Matthew Benedict, Vasanth Cattamanchi and all of the
+InfoSpace web developers for their input and contributions to
+the system. ETLS is a trademark of InfoSpace, Inc.
 
 
 \bibliographystyle{abbrv}
