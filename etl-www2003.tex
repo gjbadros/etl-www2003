@@ -356,8 +356,8 @@ The Extensible Templating Language is an imperative markup templating
 language that allows web developers to intermingle literal XML markup
 with XML-based programming language constructs.  Our primary design
 goals for ETL were to:\footnote{A fifth important design goal was to
-enable automatic translation of our legacy templating language into ETL. That
-need occasionally complicated our design. This bulk of this paper
+enable automatic translation of our legacy templating language into
+ETL\@. That need occasionally complicated our design. This paper
 focuses on the essential language, and
 \secref{implementation} mentions our migration to ETL a bit more.}
 
@@ -366,17 +366,17 @@ focuses on the essential language, and
 supporting tools; 
 \item support only the essential programming language constructs
 required by a templating layer; 
-\item focus on an imperative (i.e., procedural) programming model; and
+\item focus on an imperative programming model; and
 \item utilize an XML data model pervasively to integrate seamlessly
 with Internet and Web standards.
 \end{enumerate}
 
 An ETL template must be well-formed XML that is valid with respect to
-several XML Schema Definitions.  The set of programming constructs
-available in ETL is intentionally restricted to limit the amount of
-logic performed in the front tier of a multi-tier web-delivered
-application and better enforce proper separation of presentation from
-content and business logic.  ETL is used by dozens of production
+XML Schemas~\cite{XMLSchema1,XMLSchema2}.  The set of programming
+constructs exposed is intentionally restricted to limit the amount of
+logic performed in the front-end of a multi-tier web-delivered
+application.  As a result, we achieve better separation of
+presentation and application.  ETL is used by dozens of production
 applications serving over forty million requests per day, thus
 providing constructive evidence that the set of available constructs
 is sufficient for real-world use.
@@ -399,50 +399,32 @@ is sufficient for real-world use.
 </bl:template>
 \end{smalllisting}%$
 \caption{The ETL template corresponding to \figref{php-books}'s PHP
-code is required to be well-formed XML.  Thus, the developer
+code is required to be well-formed XML\@.  Thus, the developer
 avoids the mistake from line 11 of the PHP example.
 \label{fig-etl-books}}
 \end{figure}
 
-Because ETL is 100\% XML and because the language is not a full-blown
-general purpose programming language, analyzing ETL templates for
-various properties or searching for certain constructs is very well
-supported.  In particular, because of the way literal markup is mixed
-with programming constructs, the well-formedness requirement on the
-source template greatly reduces the probability of common mistakes
-including mismatching tags.  Additionally, we can also perform local
-validity checks on literal markup elements to confirm their proper
-nesting and that they use the correct attributes.  A goal of ETL is to
-make approximate analyses easy and precise analyses possible.
-
 An example ETL template appears in \figref{etl-books} and is analogous
-to the PHP example from \figref{php-books}.  The program is simply an
-XML document with root element \smtexttt{bl:template}\footnote{We use
-namespace prefixes consistently to unambiguously refer to elements in
-the distinguished namespace URIs recognized by the ETL server.}  The
-template contains other elements in the \ns{bl} namespace which we
-call ETL \emph{primitives} (see \ssecref{primitives}).  Additionally,
-the template can contain markup from arbitrary other namespaces which
-we call \emph{literal result markup} (see \ssecref{literal-markup}).
+to the PHP example from \figref{php-books}.  The source code is simply
+an XML document with root element \smtexttt{bl:template}\footnote{For
+brevity, we use namespace prefixes consistently to refer to elements
+in distinguished namespace URIs.} The template contains other elements
+in the \ns{bl} namespace which we refer to as ETL \emph{primitives} (see
+\ssecref{primitives}).  Additionally, the template can contain markup
+from arbitrary other namespaces (or unqualified elements) which we
+call \emph{literal result markup} (see \ssecref{literal-markup}).
 
 ETL templates are processed within the context of an HTTP request.
-The path specified in the URL of the request is used to choose a
-template from which processing begins (see
-\ssecref{template-dispatch}).  URL and POST parameters, cookies, etc.,
-are all available to the template (see
+The path specified in the URL of the request selects a template where
+processing starts (see \ssecref{template-dispatch}).  URL and POST
+parameters, cookies, etc., are all available to the template (see
 \ssecref{buckets}). The primary goal of executing a template is to
 generate an HTTP response including the markup document along with the
 various HTTP headers such as the content-type, cookie settings, and
 other meta-data.  Generally, an ETL template is similar to a method in
-a general purpose object-oriented programming language: it can invoke
-other templates as subroutines and can also perform subsidiary HTTP
-requests to other servers.  In fact, HTTP-bound
-web-service~\cite{WebServicesActivity} calls are the primary means of using
-back-end application logic.
-
-The remainder of this section informally describes the structure and
-semantics of the Extensible Templating Language.
-
+an object-oriented programming language: it can invoke other templates
+as subroutines and can also perform subsidiary HTTP requests to other
+servers (see \ssecref{control}).
 
 \subsection{Primitives, attributes, and slots}
 \label{ssec-primitives}
@@ -455,14 +437,13 @@ the \smtexttt{bl:set} primitive assigns a variable a value without
 outputting any text, while the
 \smtexttt{bl:http} primitive outputs either \smtexttt{http} or
 \smtexttt{https} based on whether the current request arrived over an
-ordinary or secure socket connection.
+ordinary or secure connection.
 
-The behaviour of a primitive is parameterized by the various
-attributes allowed on that element.  Some primitives, such as
-\smtexttt{http} mentioned above, are always empty---they never are
-allowed to contain child elements. 
-Other primitives are allowed to be non-empty, using the markup generated
-by their contained elements as an extra implicit argument.  For example,
+The behaviour of a primitive is controlled by its attributes.
+Some primitives, such as \smtexttt{http} mentioned above, are always
+empty---they never are allowed to contain child elements. Other
+primitives are allowed to be non-empty, using the markup generated by
+their contained elements as an extra implicit argument.  For example,
 in:
 
 \smtexttt{<bl:if var="showcopyright"> (C) 2002 </bl:if>}
@@ -481,14 +462,14 @@ the same \smtexttt{bl:cr} element.  The \smtexttt{count} attribute has
 type \smtexttt{xsd:integer} and is used to provide a literal integer
 argument to the primitive.  In contrast, the \smtexttt{count-var}
 attribute has type \smtexttt{bl:identifierType} (a restriction of
-\smtexttt{xsd:string}) and names a variable to evaluate at runtime to
-determine the argument to the primitive.  In both cases, the integer
-value of the argument is used as the number of linefeeds to generate,
-but for \smtexttt{@count} that number is set statically while for
-\smtexttt{@count-var} it is determined dynamically (at run-time).
+\smtexttt{xsd:string}) and names a variable to evaluate at runtime.
+In both cases, the resulting value is used as the number of linefeeds
+to generate, but for \smtexttt{@count} that number is set statically
+while for \smtexttt{@count-var} it is determined dynamically (at
+run-time).
 
 Using a pair of attributes to represent a logical field is a novel
-mechanism to improve the type-safety and ease analysis.  The common
+mechanism to improve type-safety and ease analysis.  The common
 alternative is using a small domain-specific language inside the value
 of an attribute.  For example, we could have used \smtexttt{count="2"}
 or \smtexttt{count="\$num"} to represent the literal number 2 or the
@@ -496,18 +477,12 @@ desire to use the current value of the variable ``num'', respectively.
 (XSLT's \smtexttt{value-of} element uses this basic approach.)
 Unfortunately, when using a single attribute, the type for the
 attribute's value must be broadened and is hence less precise.
-Additionally, developers must learn various ad-hoc syntactic rules to
-ensure full-fidelity of values: how do you express the literal string
-``\$num'' when that sequence of characters means a reference to the
-variable ``num''?  All analysis tools the become burdened with the
-need to handle the case of, say, a backslashed ``\$'' character and
-the rest of the quirks of the syntax.
 
 Primitives can, of course, have numerous arguments, some of which are
 controlled by slots and others by individual attributes.  When an
 argument is allowed to be set only via an attribute instead of a slot,
 that parameter of the directive cannot be influenced at
-runtime---often this restriction is imposed to permit optimizations or
+runtime. Often this restriction is imposed to permit optimizations or
 to improve our ability to support static analyses.  For example,
 \smtexttt{bl:get} writes out the value of a variable and has a
 \smtexttt{@transform} attribute that supports various encodings or
@@ -521,14 +496,10 @@ some analyses and optimizations.
 \label{ssec-variables}
 
 As with all imperative programming languages, ETL has the notion of
-variables that can be assigned to and can later have that value
-recovered. Variables can be declared inside a single 
+variables that store values. Variables can be declared inside a single
 \smtexttt{bl:header} element (which is required to be the first element
 in a template) and are assigned values using the
-\smtexttt{bl:set} primitive. Undeclared variables have dynamic scope and
-are live until the end of processing the current request, while
-declared variables have static scope and may only be reference in
-the same template.  The target variable is named via the
+\smtexttt{bl:set} primitive.  The target variable is named via the
 \smtexttt{@var} attribute and the value is given by
 \smtexttt{@value}, \smtexttt{@value-var}, or by executing the
 children of the \smtexttt{bl:set} element.  For example:
@@ -549,19 +520,23 @@ nesting of \smtexttt{bl:set} primitives).\footnote{Several other
 primitives follow this same pattern.  For example
 \smtexttt{bl:set-mime-type} evaluates its contained elements to
 generate a value to be used for the MIME content-type of the
-response.}  Values are later retrieved by referencing them by name
-in a slot, and they can be copied directly to the output stream using
-\smtexttt{bl:get}.
+response.}  
+
+After assignment, values are retrieved by referencing them by name in
+a slot or by copying them directly to the output stream using
+\smtexttt{bl:get}.  Undeclared variables have dynamic scope and
+live until the end of processing the current request, while declared
+variables have static scope and may only be referenced in the same
+template.
 
 ETL has the notion of special reserved variables that may have
 side-effects and are used internally for conveying request parameters or
 other system-level details.  These reserved variables always start with
 the octothorpe (``\smtexttt{\#}'') character and may be read-only (e.g.,
 \smtexttt{\#browsertype}) or may alter the behaviour of primitives based
-on the value they are assigned (e.g., \smtexttt{\#currencysign}).  
-Unlike ordinary variables, there is no guarantee that the value
-retrieved from a variable is identical to the value last stored in that
-variable.
+on the value they are assigned.  Unlike ordinary variables, there is
+no guarantee that the value retrieved from a reserved variable equals
+what was last stored.
 
 Various other data is accessible to ETL templates via 
 \emph{buckets}. Buckets can be thought of as top-level elements in a virtual
@@ -583,21 +558,15 @@ bucket instead:
 
 \noindent Numerous buckets exist in the XML data model providing ways
 to access URL parameters, HTTP headers, user settings,
-configuration data for applications and brands, and cookies.  Where
-appropriate, the buckets are mutable as well (e.g., saving user
-settings to the user database).
+configuration data for applications and brands, and cookies.
 
-One additional bucket, \smtexttt{\#xml} is unique in that the values
-its variables are bound to are XML DOM trees, not just strings.
-When the variable is evaluated in a context that requires a string,
-the DOM is serialized to a string as a node is serialized by XSLT when
-using
-\smtexttt{xsl:value-of}.  Additionally, a trailing XPath expression is
-allowed after the variable name when referencing the \smtexttt{\#xml}
-bucket.  That XPath expression, when applied to the root element of the
-DOM tree referenced by the variable named, must evaluate to a node-set
-and the nodes in the resulting node set are serialized in turn to
-generate the resulting single string.
+One additional bucket, \smtexttt{\#xml}, is unique in that the values
+its variables bind to are XML trees instead of just strings.  When the
+variable is evaluated in a context that requires a string, the subtree
+is serialized in its XML syntax.  Additionally, a trailing XPath
+expression is allowed after the variable name when referencing the
+\smtexttt{\#xml} bucket.  This feature allows easy querying of XML
+values and integrates XPath cleanly into ETL\@.
 
 
 \subsection{Transformers \& formatters}
@@ -609,19 +578,18 @@ representations.  For example, when passing a GET parameter to an HTTP
 request, the value is inserted into the URL using an URL-encoding
 format that involves (among other things) converting each
 \smtexttt{SPACE} character to a \smtexttt{+} character.  To support
-such encoding formats in a general way, ETL has defined a set of
+such encoding formats in a general way, ETL defines a set of
 ``transformers.''
 
-A \emph{transformer} is a streaming converter from one byte sequence to
-another byte sequence.  For example, the \smtexttt{url-encode}
-transformer converts ``hello world'' into ``hello+world''.  Many
-transformers have an inverse that is also supported: the
-\smtexttt{url-decode} transformer converts ``hello+world'' into ``hello
-world''.  Transformers can be used by ETL code whenever a variable is
-being set (via \smtexttt{bl:set}) or accessed (via \smtexttt{bl:get})
-using the \smtexttt{transform} attribute of those directives.
-Transformers can also be chained together by including the names of
-multiple transformers in a whitespace-separated list.  For example:
+A \emph{transformer} is a streaming converter from one byte sequence
+to another.  For example, the \smtexttt{url-encode} transformer
+converts ``hello world'' into ``hello+world''.  Many transformers have
+an inverse that is also supported: the \smtexttt{url-decode}
+transformer converts ``hello+world'' into ``hello world''.
+Transformers can be used by ETL code whenever a variable is being set
+(via \smtexttt{bl:set}) or accessed (via \smtexttt{bl:get}) using the
+\smtexttt{transform} attribute which specifies an ordered whitespace-separated
+list of transformers to apply.  For example:
 
 \begin{smallverbatim}
 <bl:get var="a" transform="trim urlencode"/>
@@ -629,8 +597,8 @@ multiple transformers in a whitespace-separated list.  For example:
 
 \noindent results in writing out the value of the variable \smtexttt{a}
 after first eliminating leading and trailing whitespace and then
-subsequently URL-encoding the resulting trimmed string.  Importantly,
-transformation ordering \textbf{is} significant: changing the order to:
+URL-encoding the resulting trimmed string.  The order of
+transformations does matter.  Using
 
 \begin{smallverbatim}
 <bl:get var="a" transform="urlencode trim"/>
@@ -640,23 +608,23 @@ transformation ordering \textbf{is} significant: changing the order to:
 ``\smtexttt{ Hello World }'', the former example produces ``\smtexttt{Hello+World}'' while
 the latter variant generates ``\smtexttt{+Hello+World+}'' because the
 trimming occurs on the URL-encoded string which already has spaces
-replaced by plus (``\smtexttt{+}'') characters.
+replaced by ``\smtexttt{+}'' characters.
 
 \emph{Formatters} are similar to transformers, but their input is a streaming
-virtual XML document (similar to SAX, the Simple API for XML~\cite{SAX})
-and their output is a text stream.  Numerous primitives that generate
-XML as their output have a \smtexttt{formatter} slot that names the
-formatter to use. Several built-in formatters exist, but the most
-important feature of formatters is that they can name an XSLT
-transformation file.   The events will be used to directly construct a
-DOM tree that is then transformed via the named stylesheet, letting the
-stylesheet generate the formatter's response string.
+virtual XML document (similar to SAX, the Simple API for
+XML~\cite{SAX}) and their output is a text stream.  Numerous
+primitives that generate XML as their output have a
+\smtexttt{formatter} slot that names the formatter to use. Several
+built-in formatters exist or XSLT stylesheets can be used.  When using
+XSLT as a formatter, the events first construct a DOM that is then
+transformed via the named stylesheet, letting the stylesheet generate
+the formatter's response string.
 
 \subsection{Control flow}
 \label{ssec-control}
 
 There are four primary means of control flow in ETL: template
-selection, conditionals, exceptions, and remote invocations.  
+selection, conditionals and loops, exceptions, and remote invocations.  
 
 \subsubsection{Template selection}
 \label{ssec-selection}
@@ -687,7 +655,7 @@ object-oriented programming languages.  Importantly, ETL only permits
 bounded recursion, thus avoiding the possibility of infinite
 recursion.
 
-\subsubsection{Conditionals}
+\subsubsection{Conditionals and loops}
 
 Both \smtexttt{bl:if} and
 \smtexttt{bl:choose}/\smtexttt{bl:when}/\smtexttt{bl:otherwise}
@@ -720,7 +688,10 @@ specialize that construct into something similar to a
 \end{smallverbatim}
 
 \noindent where each of the \smtexttt{bl:when} clauses compares the
-same variable (without needing to redundantly specify its name) .
+same variable (without needing to redundantly specify its name).
+
+With regard to looping, only data-driven loops are supported.  Because
+only finite data structures exist, this ensures that loops terminate.
 
 \subsubsection{Exception handling}
 
@@ -878,6 +849,7 @@ used to replace each \smtexttt{bl:tt} element with the XML document
 fragment to which the given identifier maps.
 
 \subsection{Controlling whitespace}
+\label{ssec-whitespace}
 
 Whitespace characters in a source template have mixed
 uses.\footnote{Whitespace that is not a part of the XML
