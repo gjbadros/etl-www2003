@@ -1,0 +1,104 @@
+$Id$
+
+See:
+
+http://www2003.org/cfp.htm for Call For Papers
+
+
+IMPORTANT DATES
+Tutorial/workshop proposals deadline:
+ October 15, 2002
+ 
+Paper submission deadline: 
+ November 15, 2002
+ 
+Poster submission deadline: 
+ January 15, 2003
+ 
+Author notification (papers): 
+ January 31, 2003
+ 
+Final papers due: 
+ February 28, 2003
+ 
+Author notification (posters): 
+ February 28, 2003
+ 
+Conference: 
+ May 20-24, 2003
+ 
+
+
+Likely topic area: Web Engineering (Area 11)
+
+Web Engineering
+The World Wide Web and its associated technologies have become a major implementation and delivery platform for a large variety of applications, ranging from simple institutional information websites to sophisticated supply-chain management systems, financial applications, e-government, distance learning, and entertainment, among others. Such applications, in addition to their intrinsic functionality, also exhibit the more complex behavior of distributed applications. 
+
+Recently, there have been some advances towards making the development - design and implementation - of Web applications a disciplined and systematic endeavor, but the vast majority of existing applications have been developed in an ad-hoc way, leading to problems of maintainability, quality and reliability. Web applications are software artifacts, and as such can benefit from established practices from several related disciplines such as Software Engineering, Hypermedia and HCI to create, manage, and reuse structures of the information space and enhance the end user experience. In addition, it has its own characteristics that must be addressed, such as a varied user population, very short development turnaround times, diverse runtime environments, accessibility through multiple devices, etc. 
+
+Web Engineering addresses these issues and focuses on systematic, disciplined and quantifiable approaches to the cost-effective development and evolution of high-quality, ubiquitously useable Web-based systems and applications. 
+
+The Web Engineering area of the Refereed Papers Track covers processes, methodologies, system design, lifecycle and management of large Web-based systems, and education and research issues. In addition, illustrative case studies and best practices, showing how Web Engineering techniques and principles have been successfully employed are also welcome. 
+
+Topics of interest include, but are not limited to:
+
+Web application development processes and methodologies 
+Design models and methods 
+OO technology and component-based Web engineering 
+Web application frameworks and architectures 
+Feederated Web services and service-oriented Web application approaches 
+Peer-to-Peer approaches for Web application architectures 
+Reuse and integration 
+Use and integration of meta-data in Web applications 
+Web design patterns and pattern mining 
+Managing system evolution and maintenance 
+Web personalization 
+Adaptive Web applications 
+Web metrics 
+Quality measures and evaluation 
+Web usability 
+Web application testing 
+Web application deployment 
+Performance modeling, monitoring and evaluation 
+Development teams and Web project management 
+Legal obligations 
+Case studies 
+Papers discussing relationships and interactions among Web development and other disciplines are also invited. 
+
+
+See template files in submission-templates/
+
+These are modified versions of the ACM proceedings style files. More information on the style files can be found at 
+
+http://www.acm.org/sigs/pubs/proceed/template.html 
+
+Notes for LaTeX users: 
+
+
+To ensure your submission is formatted for Letter paper, use
+\documentclass[letterpaper]{www2003-submission} in your LaTeX file,
+and use "dvips -t letter".
+
+All authors should be listed on the front page. For instructions for
+more than 3 authors, see
+http://www.acm.org/sigs/pubs/proceed/sigfaq.htm#a18
+
+We encourage authors to submit concise papers with up to 8 pages;
+however, papers with up to 10 pages may be submitted, and an
+additional 2 pages (for a maximum of 12) may be purchased at a cost of
+$100/page. Over-length or incorrectly formatted submissions may be
+rejected without reviews. Final copies of accepted papers will be
+required in both PDF and XHTML formats. XHTML formatting details will
+be provided at a later date.
+
+Authors must also include a short 30-word statement with their
+submission which emphasizes the contribution of their paper. The
+statement will be seen by reviewers. For accepted papers, the final
+statement will appear in the Table of Contents of the conference
+proceedings and will be edited for clarity and accuracy by the program
+committee.
+
+Submissions must be made at http://witanweb.www2003.org/ 
+
+Inquiries can be sent to www2003-pc-chairs@necmail.com. 
+
