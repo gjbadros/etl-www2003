@@ -102,7 +102,7 @@ sixty thousand \etl{} templates.
 %% See http://www.acm.org/class/1998/overview.html
 \category{D.2}{Software}{Software Engineering}
 \category{D.3}{Software}{Programming Languages}
-\category{C.2}{Computer Systems Organization}{Computer-communication networks}
+\category{C.2}{Computer Systems Organization}{Networks}
 
 % GREGB:FIXME:: any terms?
 %\terms{}
@@ -201,7 +201,7 @@ full knowledge of both the rewrite rules and the semantics of Java.
 
 \subsection{Restricting the language}
 
-All popular markup templating languages integrate with a
+Almost all popular markup templating languages integrate with a
 general-purpose programming language.  This approach offers some
 advantages.  For example, undoubtedly the language is sufficiently
 powerful and expressive for the needs of markup generation.
@@ -304,7 +304,7 @@ development environment~\cite{Soroker97,Eclipse}.
 
 \subsection{XML supports analyses and tools}
 
-An increasingly popular approach to performing structured queries of
+An increasingly popular way to perform structured queries of
 programming language source code is to use standard XML tools such as
 XSLT~\cite{XSLT} and XQuery~\cite{XQuery} to operate over a
 complementary XML-based representation~\cite{Badros-www9,Schonger2002,Gondow2002,Power2002}.
@@ -696,9 +696,8 @@ hierarchy may provide some basic functionality, while an overriding
 
 \subsubsection{Conditionals and loops}
 
-Both \smtexttt{bl:if} and multi-way
-\smtexttt{bl:choose}/\B{}\smtexttt{bl:when}/\B{}\smtexttt{bl:otherwise}
-constructs are supported and behave much as they do in XSLT\@.  The
+\etl{} supports both \smtexttt{bl:choose}/\B{}\smtexttt{bl:when}/\B{}\smtexttt{bl:otherwise}
+and \smtexttt{bl:if} constructs. They behave much as they do in XSLT\@.  The
 primary difference is that \etl{} does not permit the generality of a
 domain specific expression language, and instead uses two slots
 to represent the guard conditions.  For example:
@@ -719,10 +718,10 @@ a \smtexttt{switch} statement:
 
 \begin{smallverbatim}
 <bl:choose var="pagenum">
-  <bl:when less-than="1">...</bl:when>
-  <bl:when equals="1">...</bl:when>
-  <bl:when greater-than-var="max-page">...</bl:when>
-  <bl:otherwise>...</bl:otherwise>
+  <bl:when less-than="1">..</bl:when>
+  <bl:when equals="1">..</bl:when>
+  <bl:when greater-than-var="max-page">..</bl:when>
+  <bl:otherwise>..</bl:otherwise>
 </bl:choose>
 \end{smallverbatim}
 
@@ -1180,7 +1179,7 @@ applications are lost.
 \section{Conclusions \& future work}
 \label{sec-conclusion}
 
-The Extensible Templating Language was born out of questioning a
+The Extensible Templating Language questions a
 fundamental assumption: that the front-end markup-generating engine of
 a multi-tier web application requires a general-purpose programming
 language.  We designed \etl{} by carefully choosing the minimal required
