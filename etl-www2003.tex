@@ -75,7 +75,10 @@ representation where markup is intermingled with XML elements
 corresponding to programming constructs. This approach reduces the
 possibility of generating improper markup, improves the separation
 between presentation and business logic, and facilitates tool-building
-including semantically-aware editors and debuggers.
+including semantically-aware editors and debuggers. ETL runs inside of
+the Extensible Templating Language Server which is currently employed
+by InfoSpace to serve over forty million requests per day using over
+sixty thousand ETL templates.
 
 \end{abstract}
 
@@ -681,6 +684,7 @@ There are four primary means of control flow in ETL: template
 selection, conditionals, exceptions, and remote invocations.  
 
 \subsubsection{Template selection}
+\label{ssec-selection}
 
 Requests made of the ETL server always have an associated abstract
 ``brand''.  The brand can be explicitly specified as part of the URI
@@ -1038,38 +1042,22 @@ simple Perl script. \label{fig-call-graph}}
 \label{sec-implementation}
 
 A byte-code compiler and runtime for the Extensible Templating Language is
-an integral part of InfoSpace's ETL Server.  ETLS is architected as an
+an integral part of InfoSpace's ETL Server 2.0.  ETLS is architected as an
 ISAPI extension to Microsoft's IIS and could be easily ported to any
 web server that exposes a similar Extension Control Block interface.
 IIS is used to manage the raw socket connections and many HTTP
 protocol details, but ETLS generates the response for all incoming
 requests (including static files which are still subject to template
-selection rules).
+selection rules~\ssecref{selection}).
 
-** ETLS, its goals, backward-compatibility needs
-
-** Server principles
-*** be an appliance box: everything via HTTP
-*** support MS management interfaces (mmc, win* service)
-
-ETL has a debugger (\figref{debugger-screenshot}).  Solve fundamental
-problem of needing to have stderr output for web development.
-
-% ?etl-* parameters
-% security
-% inspadmin:* directives & the startup configuration file
-
-%%% MAYBE MOVE THIS TO THE BENEFITS SECTION??
-\begin{figure}[tb]
-\begin{centering}
-\hspace*{-0.03\linewidth}\includegraphics[width=1.1\linewidth]{debugger-screenshot.eps}
-\caption{The ETL debugger is an important part of making the
-ETL development experience comparable to templates built on top of a
-general-purpose programming language.
-\label{fig-debugger-screenshot}}
-\end{centering}
-\end{figure}
-
+In addition to supporting the ETL language, our secondary design goals
+in building ETLS were: 1) to be an appliance network box, so that all
+interactions with the server could occur via simple network protocols
+such as HTTP and SMB fileshares; 2) support easy management via HTTP
+and platform specific management interfaces such as the Microsoft
+Management Console (MMC) and the Service Control Manager; 3) to
+provide support for secure debugging and run-time reflection on 
+template execution.
 
 \begin{figure}[tb]
 \begin{centering}
@@ -1080,7 +1068,38 @@ support configuration and management.
 \end{centering}
 \end{figure}
 
+To meet the needs for administrative management of the server, we
+implemented special primitives in the \smtexttt{admin} namespace that
+expose reflection and configuration capabilities.  For example,
+\smtexttt{admin:show-urlcache} generates an XML dump of the state of
+the cached URL to template mapping and \smtexttt{admin:reset-urlcache}
+resets that cache.  These special primitives are only available when
+the request being served is properly authenticated and authorized
+(e.g., by originating on distinguished port that is blocked at the
+networking level from access by the Internet at large).  To facilitate
+easy management of the server, we implemented a web application (in
+ETL, of course) that organizes and exposes these underlying primitives
+and integrates the documentation for the server (see
+\figref{etls-admin}).  All server parameters are settable via
+\smtexttt{admin:*} primitives, and the server is bootstrapped and
+configured by executing a distinguished \smtexttt{etl-server-conf.etl}
+template prior to handling HTTP requests.
 
+To facilitate debugging, ETLS supports numerous special URL
+parameters, each prefixed with \smtexttt{etl-}, that enable special
+processing of the request.  As with the special primitives, these
+extra behaviours function only when the request is authenticated and
+authorized. For example, \smtexttt{?etl-show-resolution} suppresses
+the normal response document and instead generates an XML document
+that describes the dynamic call graph used in servicing the request.
+Another parameter, \smtexttt{?etl-decompile} can be added to a URL to
+request that the server dump the internal byte-compiled representation
+as the response (see \figref{etl-decompile}).  Other parameters, such
+as \smtexttt{?etl-no-random} and
+\smtexttt{?etl-dummy-ads}, simplify testing by making eliminating some
+major points of non-determinism in template execution.  These
+capabilities enormously simplify confirming that web applications
+behave the same as templates or the server itself are changed.
 
 \begin{figure}[htbp]
 \begin{smallverbatim}
@@ -1110,6 +1129,53 @@ is preserved, but the byte-codes have been linearized for performance.
 \label{fig-etl-decompile}}
 \end{figure}
 
+Although the special \smtexttt{etl-*} parameters are very valuable,
+often single-stepping through code or using breakpoints still is the
+best way to track down specific problems.  To that end, we built an
+ActiveX-based debugger (\figref{debugger-screenshot}) that embeds
+itself in Internet Explorer and communicates with the ETL server via a
+separate persistent TCP connection.  It supports single stepping (both
+forwards and backwards) as well as the setting of breakpoints and the
+inspection of variables and request parameters.  The debugger also
+provides a convenient display mechanism for trace messages (output
+using \smtexttt{bl:trace} and other warning messages that would
+normally be sent to the standard-error output.
+
+\begin{figure}[tb]
+\begin{centering}
+\hspace*{-0.03\linewidth}\includegraphics[width=1.1\linewidth]{debugger-screenshot.eps}
+\caption{The ETL debugger is an important part of making the
+ETL development experience comparable to templates built on top of a
+general-purpose programming language.
+\label{fig-debugger-screenshot}}
+\end{centering}
+\end{figure}
+
+InfoSpace's production web tree contains over sixty thousand ETL
+templates and the clusters of ETL Servers serve over forty million
+requests per day.  The templates were generated by a complex
+multi-step automatic migration process from a lower level proprietary
+templating language that pre-dates ETL.  The automatic migration was
+made possible by the fact that the preceding language, too, was very
+restrictive on the language level constructs it afforded.  However,
+that language, like ASP and JSP, was text-based, not markup-based, and
+used a proprietary and obscure syntax that made writing tools and
+analyzing the source code especially troublesome.  
+
+As part of migrating from our legacy language to ETL, we wrote a
+lint-style checker to uncover ambiguities in the original source
+templates.  That script uncovered about forty-five thousand total
+major warnings spanning about fourteen thosand templates that required
+a human to resolve an ambiguity or an error. Fortunately, most of the
+corrections were straightforward and the entire process only took a
+couple of months of background processing by our web development
+teams.
+
+Thus far, only a couple hundred templates have been authored directly
+in ETL outside of the server development team.  Most notably the
+administration interface was written using the tools described above,
+and the feedback from those web developers has been extraordinarily
+positive.
 
 %%% 
 \section{Related work}
