@@ -66,7 +66,7 @@ ETL....
 % GREGB:FIXME:: any terms?
 %\terms{}
 
-\keywords{Static analysis, web server, templates, XML, XSLT, HTML.}
+\keywords{Static analysis, web server, templates, XML, XSLT, markup, WML, HTML.}
 
 \section{Introduction}
 
@@ -146,21 +146,90 @@ larger architecture.
 Another substantial problem with existing templating technologies is
 that they often involve the lexical mixing of two separate programming
 paradigms.  JSP, for example, is implemented in terms of a
-pre-processing rewrite of the template into an equivalent servlet.
+pre-processing rewrite of the template into a Java servlet.~\cite{JaveServlet}
 Pre-processing approaches are convenient for programmer expressiveness
 but have a huge hidden cost in complicating software engineering
 analyses and tools that would otherwise help understand, maintain, and
 evolve the complex systems~\cite{PCP3,EvilMacros,StroustropDnEChapterAboutCpp}.
 The precise analysis of an arbitrary JSP template necessarily requires
-full knowledge of the semantics of Java.
+full knowledge of both the rewrite rules and the semantics of Java.
 
 %% GIVE EXAMPLES OF VALUABLE ANALYSES!!!
-\subsection{Analysis of dynamic web pages}
+\subsection{Analysis of markup templates}
 
-\subsection{Flexibility vs.\ analyzability}
+The various templating languages all have one primary goal: to
+generate markup to be returned to the requesting user agent.  It is
+important that the markup created conforms to appropriate Internet
+standards.  For example, WML markup needs to first be well-formed XML
+and second be valid with respect to the appropriate
+schemata~\cite{WML}.  Although HTML browsers are more forgiving of
+improper syntax, best-practices still dictate that the markup returned
+be in compliance with the HTML specification~\cite{HTML}.  
+
+Tools such as HTMLTidy~\cite{HTMLTidy} are available to check the
+responses from servers for conformance, but often testing involves
+simply using various browsers to exercise the application while
+looking for bugs.  Both of these approaches require exhaustively
+visiting every page of interest--often a very large search space.
+Ideally, we would prefer a way to analyze the source templates
+themselves to gain confidence that they will, in fact, generate proper
+markup.  If static analysis of templates can rule out the possibility
+of certain kinds of errors, testing time and costs can be dramatically
+reduced.
+
+Another important requirement is to support ad-hoc queries of
+the source code templates. For small and simple dynamic web applications,
+the automated analysis of templates is often unnecessary: a web
+developer or two understands all of the code.  Over time, however,
+these simple applications easily grow in size and complexity such that
+tools analyzing the templates become an essential part of maintaining
+and evolving the system. For example, a site may wish to add an extra
+input field to all of its registration forms.  If a generic form is
+not already factored out into a common location, the first step in
+approaching the task is finding all of the registration forms.  Or
+suppose a new handheld device has a bug in handling an HTTP response
+header: we need to identify all the code in the system that may
+generate that header.
+
+Typically, web developers approach to above scenarios with an arsenal
+of imprecise lexical tools such as \smtexttt{find} and
+\smtexttt{grep}.  While searching for a substring or regular
+expression may satisfy some simple queries, when the desired query has
+additional structure, lexical approaches fall short.  No regular
+expression will let us identify all unreachable templates (i.e., we
+want to find dead code) so that we can simplify the application by
+eliminating those templates.  To analyze more deeply, we need to
+uncover the structure of the templating language.  Typically, that
+requires a language-specific parsing approach for which fewer tools
+exist.
+
+\subsection{XML supports analyses}
+
+An increasingly popular approach to performing structured queries of
+programming language source code is to use standard XML tools such as
+XSLT~\cite{XSLT} and XQuery~\cite{XQuery} to operate over a
+complementary XML-based representation~\cite{JavaML,others}.  With a
+carefully-chosen XML representation, valuable semantics of the code
+are immediately available to XPath expressions, thus facilitating a
+broad class of source code tools.  However, for a general-purpose
+programming language, XML is unwieldy for use as the primary
+representation: the conventional grammer-based language is edited by
+humans and is only converted into XML for the tools to leverage.
+
+This research applies the benefits of an XML representation of source
+code to domain-specific markup templating languages.  Importantly,
+web developers working with templating languages are already writing
+markup directly, thus making it natural for them to express the logic
+of their dynamic templates directly in markup as well.  This
+observation eliminates the dual representation problem that limits the
+value of XML when applied to general purpose programming language.
+
+In this paper, I introduce the Extensible Templating Language. ...
+
 
 \subsection{Outline of paper}
 
+Section 
 
 %%% 
 \section{Background}
