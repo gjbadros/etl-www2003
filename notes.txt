@@ -1,5 +1,9 @@
 $Id$
 
+There were about 45,000 total lint warnings that needed to be addressed.
+About 14,000 BL templates needed at least one lint change (out of about 60,000 templates)
+
+
 
 // Straight Java Servlet
 public void doGet(HttpServletRequest req, HttpServletResponse res) ... {
