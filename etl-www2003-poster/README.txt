@@ -7,27 +7,23 @@ We attempted to follow submission directions from:
 
 http://www2003.org/poster/submission.htm
 
-The four files:
+The submission in XHTML format is named:
 
-index.html
-index.xhtml
-etl-wwww2003-poster.html
-etl-wwww2003-poster.xhtml
+p310-badros.html
 
-are all identical and are each the main text of the paper.  Those XHTML
-documents reference the included *.png files and *.css files.  The CSS
-files are unchanged as from the distribution site.
+It references the included *.css files which are unchanged as from the
+distribution site.
 
 Also included in the distribution is:
 
-etl-www-2003-poster.pdf
+p310-badros.pdf
 
 which is the PDF version of the document (more suitable for the print
 proceedings).
 
 For questions, please feel free to contact either of the authors:
 
-Abhishek Parmar, aparmar@infospace.com, 425.201-6100
+Abhishek Parmar, aparmar@infospace.com, 425.201-8513
 Greg Badros, badros@cs.washington.edu, 650.330-0100 x2182
 
 Thanks!
