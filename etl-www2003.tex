@@ -305,19 +305,170 @@ avoids the mistake from line 14 of the PHP example.
 
 \subsection{Primitives}
 
-\subsection{Variables \& slots}
+Primitives are in the bl: namespace\footnote{Not gonna use URI, but that's what matters.}
+
+\subsection{Attributes \& slots}
+
+The behaviour of a primitive is parameterized by the various
+attributes allowed on that element.  Some primitives are always
+empty---they never are allowed to contain child elements.  For example,
+\smtexttt{<bl:http/>} just outputs either ``http'' or ``https''
+depending on the protocol being used to serve the current request.
+Other primitives are allowed to be non-empty, using the markup generated
+by their contained elements as an extra implicit argument.  For example,
+in \smtexttt{<bl:if var="showcopyright">(C) 2002, InfoSpace,
+  Inc.</bl:if>} the contents of the \smtexttt{bl:if} are output if and
+only if the variable is non-empty.
+
+Many primitives derive their arguments not from individual attributes
+but from pairs of attributes that are together called a \emph{slot}.  For
+example, the \smtexttt{bl:cr} directive outputs linefeeds, and the
+number of linefeeds it generates is determined by a slot called
+\smtexttt{count}.  That slot is specified using a pair of attributes:
+\smtexttt{count} and \smtexttt{count-var}.  The attributes are
+mutually-exclusive: it is a statically-checked error to specify both on
+the same \smtexttt{bl:cr} element.  The \smtexttt{count} attribute has
+type \smtexttt{xsd:integer} and is used to provide a literal integer
+argument to the primitive.  In contrast, the \smtexttt{count-var}
+attribute has type \smtexttt{bl:identifierType} (a restriction of
+\smtexttt{xsd:string}) and names a variable to evaluate at runtime to
+determine the argument to the primitive.  In both cases, the integer
+value of the argument is used as the number of linefeeds to generate,
+but for \smtexttt{@count} that number is set statically while for
+\smtexttt{@count-var} it is determined dynamically (at run-time).
+
+Primitives can, of course, have numerous arguments, some of which are
+controlled by slots (pairs of attributes) and others by individual
+attributes.  When an argument is set only via an attribute instead of a
+slot, that parameter of the directive cannot be influenced at
+runtime---often this restriction is imposed to permit optimizations or
+to improve our ability to support static analyses.
 
 \subsection{Reserved variables}
 
-\subsection{Buckets}
+ETL has the notion of special reserved variables that may have
+side-effects and are used internally for conveying request parameters or
+other system-level details.  These reserved variables always start with
+the octothorpe (``\smtexttt{\#}'') character and may be read-only (e.g.,
+\smtexttt{\#browsertype}) or may alter the behaviour of primitives based
+on the value they are assigned (e.g., \smtexttt{\#currencysign}).  A
+full list of reserved variables is available
+online.~\cite{etl-reserved-variables}
 
-\subsection{Cobrand profiles}
+Unlike ordinary variables, there is no guarantee that the value
+retrieved from a variable is identical to the value last stored in that
+variable.  Indeed, subsequent accesses of the same reserved
+variable may evaluate to completely different strings and may have
+subtle side-effects elsewhere in the system.  The documentation for each
+reserved variable details their behaviour.
+
+\subsection{Buckets}
+As with all imperative programming languages, ETL has the notion of
+variables that can be assigned to and can later have that value
+recovered.  The \smtexttt{bl:set} primitive is used to perform
+assignment, and various primitives evaluate variables. In particular,
+\smtexttt{bl:get}'s primary purpose is to evaluate a variable, but
+every primitive that accepts a slot permits the use of variables.  Most
+variables are ordinary in the sense that there is no special behaviour
+associated with them: the variable just holds a value to be retrieved and
+there are no further side-effects.  (Those variables that do have special
+side-effects are called ``reserved'' and are discussed in the next
+section.)
+
+There are several \emph{buckets} into which variables are grouped.  The
+different buckets are used to hold variables that have values derived
+from different places.  The buckets are:
+
+\begin{description}
+\item[url] URL and input form parameters
+\item[cki] Variables from a special single cookie's encoded value
+\item[http] HTTP headers
+\item[usr] Variables associated with the current user's profile
+\item[pro] Variables associated with the current cobrand's settings
+\item[local] Local variables with string values, set by \smtexttt{bl:set}
+\item[xml] Local variables with DOM-typed values, set by \smtexttt{bl:set}
+\item[table] Variables from the current enclosing \smtexttt{bl:table}
+\item[cgi] Variables from the top-level CGI query
+\item[querycgi] Variables from the current enclosing \smtexttt{bl:query}
+\item[ss] (experimental) Variables associated with the current server-side session
+      state
+\end{description}
+
+\noindent Variables from a specific bucket can be explicitly referenced
+by using the bucket name preceded by a ``\#'' (octothorpe) as a prefix.
+For example, the syntax \smtexttt{\#pro/wantcolor} explicitly refers to
+the ``wantcolor'' profile variable. Unadorned references to a variable
+refer to a pseudo-bucket named ``top'' that searches several buckets in
+this order: 1) \textbf{querycgi}; 2) \textbf{local}; and finally 3)
+\textbf{url}.
+
+The ``xml'' bucket is unique in that the values its variables are bound
+to are XML DOM trees, not ordinary strings.  When the variable is
+evaluated in a context that requires a string, the DOM is serialized to
+a string as a node is serialized by XSLT when using
+\smtexttt{xsl:value-of}.  Additionally, a trailing XPath expression is
+allowed after the variable name when referencing the \smtexttt{\#xml}
+bucket.  That XPath expression, when applied to the root element of the
+DOM tree referenced by the variable named, must evaluate to a node-set
+and the nodes in the resulting node set are serialized in turn to
+generate the resulting single string.
+
 
 \subsection{Template selection}
+
+\subsection{Cobrand profiles \& localization}
 
 % bl:call, argument passing
 
 \subsection{Transformers \& formatters}
+
+HTTP and XML standards have various different encoding formats to
+support arbitrary data over channels that allow limited
+representations.  For example, when passing a GET parameter to an HTTP
+request, the value is inserted into the URL using an URL-encoding format
+that involves (among other things) converting each \smtexttt{SPACE}
+character to a \smtexttt{+} character.  To support such encoding formats
+in a general way, ETL has defined a set of ``transformers.''  
+
+A \emph{transformer} is a streaming converter from one byte sequence to
+another byte sequence.  For example, the \smtexttt{url-encode}
+transformer converts ``hello world'' into ``hello+world''.  Many
+transformers have an inverse that is also supported: the
+\smtexttt{url-decode} transformer converts ``hello+world'' into ``hello
+world''.  Transformers can be used by ETL code whenever a variable is
+being set (via \smtexttt{bl:set}) or accessed (via \smtexttt{bl:get})
+using the \smtexttt{transform} attribute of those directives.
+Transformers can also be chained together by including the names of
+multiple transformers in a whitespace-separated list.  For example:
+
+\begin{verbatim}
+<bl:get var="a" transform="trim urlencode"/>
+\end{verbatim}
+
+\noindent results in writing out the value of the variable \smtexttt{a}
+after first eliminating leading and trailing whitespace and then
+subsequently URL-encoding the resulting trimmed string.  Importantly,
+transformation ordering \textbf{is} significant: changing the order to:
+
+\begin{verbatim}
+<bl:get var="a" transform="urlencode trim"/>
+\end{verbatim}
+
+\noindent results in a different output string.  If \smtexttt{a} contains
+``\smtexttt{ Hello World }'', the former example produces ``\smtexttt{Hello+World}'' while
+the latter variant generates ``\smtexttt{+Hello+World+}'' because the
+trimming occurs on the URL-encoded string which already has spaces
+replaced by plus (``\smtexttt{+}'') characters.
+
+\emph{Formatters} are similar to transformers, but their input is a streaming
+virtual XML document (similar to SAX, the Simple API for XML~\cite{SAX})
+and their output is a text stream.  Numerous primitives that generate
+XML as their output have a \smtexttt{formatter} slot that names the
+formatter to use. Several built-in formatters exist, but the most
+important feature of formatters is that they can name an XSLT
+transformation file.   The events will be used to directly construct a
+DOM tree that is then transformed via the named stylesheet, letting the
+stylesheet generate the formatter's response string.
 
 \subsection{Comments}
 
@@ -441,6 +592,7 @@ problem of needing to have stderr output for web development.
 % security
 % inspadmin:* directives & the startup configuration file
 
+%%% MAYBE MOVE THIS TO THE BENEFITS SECTION??
 \begin{figure}[tb]
 \begin{centering}
 \hspace*{-0.07\linewidth}\includegraphics[width=1.15\linewidth]{debugger-screenshot.eps}
