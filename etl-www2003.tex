@@ -22,6 +22,16 @@
 
 \documentclass{www2003-submission}
 \usepackage{times}
+\usepackage{moreverb}
+\usepackage{floatflt}
+
+\newcommand{\B}{\discretionary{}{}{}}
+\newcommand{\smtt}{\small}
+\newcommand{\smtexttt}[1]{{\small\texttt{#1}}}
+\newcommand{\figref}[1]{Figure~\ref{#1}}
+\newcommand{\tableref}[1]{Table~\ref{#1}}
+\newcommand{\tm}{{\scriptsize $^{\mbox{tm}}$}}
+
 \begin{document}
 %
 \title{The Extensible Templating Language: \\
@@ -60,6 +70,64 @@ ETL....
 
 \section{Introduction}
 
+Server-side dynamically-generated web pages have become increasingly
+common and more complex.  The loosely-coupled client/\B{}server model
+implied by the current breed of applications deployed via the World
+Wide Web presents substantial new complexities for application
+developers, and a variety of new programming languages and paradigms
+attempt to address these novel problems.  One important characteristic
+of this new world of software development is the need to generate HTML
+or other markup languages to describe the client-side presentation and
+behaviour.
+
+The original server-side dynamic markup-generation capabilities of the
+Web were defined by CGIs.\cite{CGI} For each request, the web server
+maps HTTP request details into environment variables, command-line
+arguments, and the standard file descriptors.  In particular, the
+standard output written by that process was sent by the Web server as
+the response to the client browser (instead of simply responding with
+an unchanging file from disk).  Over time, various techniques arose to
+reduce the cost of each request: extension mechanisms such as the
+Apache module system~\cite{ApacheModules} and scripting languages
+hosted by the Web server have increased performance by eliminating
+process creation overhead.
+
+The variety of server-side scripting is dominated by expressive and
+flexible general-purpose programming languages such as
+Java~\cite{Java}, Perl~\cite{Perl}, and PHP~\cite{PHP}.  Ironically,
+the languages are then used in fairly restricted ways, often being
+tied to a templating language (e.g., JSP~\cite{JSP} for Java or
+HTML::Template~\cite{HTML-Template} for Perl).  For example, consider
+the PHP template in \figref{php-books}.  The only constructs required
+by the template are a) some means of populating a data model from the
+``back-end'' business logic (line 1); b) data-driven iteration (line
+5-6); and c) simple expression evaluation to access parts of the data
+model (lines 7 and 9). % GREGB:FIXME:: check these line numbers
+
+\begin{figure}[htbp]
+\begin{listing}{1}
+<? $books = GetBooks(...); ?>
+<html>
+ <table>
+  <tr>
+   <? for ($i = 0; 
+           $i < count($books); ++$i) { ?>
+     <td><? print($books[$i][author]); ?>
+         </td>
+     <td><? print($books[$i][title]); ?>
+         </td>
+   <? } ?>
+  </tr>
+ </table>
+</html>
+\end{listing}%$
+\caption{PHP template illustrating the simplicity of the programming
+language constructs required by typical templates.
+\label{fig-php-template}}
+\end{figure}
+
+
+
 \subsection{Long-term maintainability}
 
 \subsection{Flexibility vs.\ analyzability}
@@ -93,14 +161,14 @@ ETL....
 \section{Benefits of ETL}
 
 %%% 
-\section{Implementation and experience}
+\section{Implementation \& experience}
 
 %%% 
 \section{Related work}
 
 
 %%% 
-\section{Conclusions & Future work}
+\section{Conclusions \& future work}
 
 
 %ACKNOWLEDGMENTS are optional
