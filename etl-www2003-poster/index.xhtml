@@ -18,8 +18,18 @@ content="The Extensible Templating Language: An XML-based Restricted Markup-Gene
 <meta http-equiv="Content-Type"
 content="text/html; charset=iso-8859-1" />
 <meta name="Generator" content="LaTeX2HTML v99.2beta8" />
-<meta http-equiv="Content-Style-Type" content="text/css" />
-<link rel="STYLESHEET" href="etl-www2003-poster.css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<SCRIPT type="text/javascript">
+       <!--
+       if (navigator.appName == "Microsoft Internet Explorer") {
+       document.write('<link rel="stylesheet" href="http://www2003.org/poster/poster-ie-html.css" type="text/css">');
+       }
+       else {
+       document.write('<link rel="stylesheet" href="http://www2003.org/poster/poster-nav-html.css" type="text/css">');
+       }
+       // -->
+</SCRIPT>
+<!-- <link rel="STYLESHEET" href="etl-www2003-poster.css" /> -->
 </head>
 <body>
 <p></p>
@@ -32,17 +42,12 @@ content="text/html; charset=iso-8859-1" />
  An XML-based Restricted Markup-Generating Language<br />
 </h1>
 
-<p align="CENTER"><strong>Greg J. Badros*, Abhishek Parmar<br />
- InfoSpace, Inc., 601 108th Ave. NE, Suite 1200, Bellevue, WA
-98004, USA<br />
-</strong></p>
+<H6>Greg J. Badros*<BR/>InfoSpace, Inc.<BR/>601 108th Ave. NE, Suite 1200<BR/>Bellevue, WA 98004<BR/>
+<A href="mailto:badros@cs.washington.edu">badros@cs.washington.edu</A></H6>
+<H6>Abhishek Parmar<BR/>InfoSpace, Inc.<BR/>601 108th Ave. NE, Suite 1200<BR/>Bellevue, WA 98004<BR/>
+<A href="mailto:aparmar@infospace.com">aparmar@infospace.com</A></H6>
 
 <p align="CENTER"><strong>17 February 2003</strong></p>
-
-<p align="LEFT"><small><a id="tex2html1" name="tex2html1"
-href="mailto:badros@cs.washington.edu">badros@cs.washington.edu</a>,
-<a
-href="mailto:aparmar@infospace.com">aparmar@infospace.com</a></small></p>
 
 <p align="LEFT"><small>*Current affiliation: Google, Inc.,
 2400 Bayshore Pkwy, Mountain View, CA 94043, USA</small></p>
@@ -73,10 +78,10 @@ analysis, web server, templates, XML, XSLT, markup, WML, HTML.</p>
 
 <p></p>
 
-<h1><a id="SECTION00010000000000000000"
+<h3><a id="SECTION00010000000000000000"
 name="SECTION00010000000000000000"></a> <a id="sec-intro"
 name="sec-intro"></a><br />
-1 Introduction</h1>
+1. Introduction</h3>
 
 <p>Server-side markup generation is dominated by expressive and
 flexible general-purpose programming languages such as Java, Perl,
@@ -111,9 +116,7 @@ alt="\begin{figure}\renewcommand {\baselinestretch}{1}\small\listing {1} &lt;? \
 </div>
 
 <p>Instead of embedding a general-purpose programming language, the
-Extensible Templating Language<a id="tex2html3" name="tex2html3"
-href="#foot186"><sup><img align="BOTTOM" border="1" alt="[*]"
-src="file:/opt/lib/latex2html/icons/footnote.png" /></sup></a> is a
+Extensible Templating Language is a
 domain-specific language specifically tailored to the needs of
 generating markup. This approach limits the capabilities of the
 front-end and helps separate front-end presentation from back-end
@@ -165,10 +168,10 @@ alt="\begin{figure}\renewcommand {\baselinestretch}{1}\small\listing {1} &lt;?xm
 
 <p></p>
 
-<h1><a id="SECTION00020000000000000000"
+<h3><a id="SECTION00020000000000000000"
 name="SECTION00020000000000000000"></a> <a id="sec-etl"
 name="sec-etl"></a><br />
-2 Extensible Templating Language</h1>
+2. Extensible Templating Language</h3>
 
 <p>An ETL template must be well-formed XML that is valid with
 respect to the language's XML Schema Definitions. This requirement
@@ -325,10 +328,10 @@ the clusters of ETL Servers serve millions of requests per day.</p>
 
 <p></p>
 
-<h1><a id="SECTION00030000000000000000"
+<h3><a id="SECTION00030000000000000000"
 name="SECTION00030000000000000000"></a> <a id="sec-related-work"
 name="sec-related-work"></a><br />
-3 Related work &amp; conclusion</h1>
+3. Related work &amp; conclusion</h3>
 
 <p>LAML has similar goals to ETL, but takes an opposite approach:
 LAML embeds the simpler markup languages in Scheme, an especially
@@ -350,12 +353,17 @@ faster and less error-prone.</p>
 
 <p></p>
 
-<h2><a id="SECTION00040000000000000000"
-name="SECTION00040000000000000000">Bibliography</a></h2>
+<h3><a id="SECTION00040000000000000000"
+name="SECTION00040000000000000000"></a>4. Acknowledgements</h3>
 
+<p>This research is supported by InfoSpace's advanced server
+development group. ETL and ETLS are trademarks of InfoSpace,
+Inc.</p>
+
+<h3><a id="SECTION00050000000000000000"
+name="SECTION00050000000000000000"></a>5. References</h3>
 <dl compact="compact">
 <dt><a id="Badros-www9" name="Badros-www9">1</a></dt>
-
 <dd>G.&nbsp;J. Badros.<br />
 JavaML: A markup language for Java source code.<br />
 In <em>Proc. of the Ninth Intl. Conf. on the World Wide Web</em>,
@@ -370,17 +378,6 @@ The Extensible Templating Language: An XML-based restricted
 markup-generating language, November 2002.<br />
 <tt><a id="tex2html6" name="tex2html6"
 href="http://www.cs.washington.edu/homes/gjb/papers/etl-full.pdf">http://www.cs.washington.edu/homes/gjb/papers/etl-full.pdf</a></tt>.</dd>
-</dl>
-
-<dl>
-<dt><a id="foot186" name="foot186">... Language</a><a id="foot186"
-name="foot186" href="etl-www2003-poster.html#tex2html3"><sup><img
-align="BOTTOM" border="1" alt="[*]"
-src="file:/opt/lib/latex2html/icons/footnote.png" /></sup></a></dt>
-
-<dd>This research is supported by InfoSpace's advanced server
-development group. ETL and ETLS are trademarks of InfoSpace,
-Inc.</dd>
 </dl>
 
 <br />
