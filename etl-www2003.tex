@@ -809,11 +809,14 @@ annotations.
 ** mention Scheme hygienic macro system; similar to that, except uses
 XSLT for rewrite rules.
 
-** Cite Simonyi, et al.'s ``Transformation in Intentional Programming''
+** IP ~\cite{Aitken97}
+
+metamorphic syntax macros \cite{Brabrand2002}
 
 ** iterate until no more custom tags to expand
 
 ** expand before or after WS handling
+
 
 
 
@@ -969,11 +972,15 @@ XSLT -- declarative and that confuses folks.  Plus too limited in
 terms of ability to interact with external components -- you end up
 having to use a mix of XSLT and a scripting language with all the
 problems that entails.  Also, no streaming mechanism -- a DOM is built-up
-internally then serialized. 
+internally then serialized.~\cite{XSLT}
 
 LAML -- the dual of ETL -- took markup and embedded it in Scheme,
 whereas ETL takes only the most critical programming constructs and
-embeds them in XML.  Mention S-exp and XML similarity.
+embeds them in XML.  Mention S-exp and XML similarity.~\cite{Laml,Laml-WWW2002}
+
+Modeling HTML in Haskell \& Typed representation for HTML \& XML in
+Haskell, WASH. Web Scripting in
+Curry.~\cite{Thiemann2002,Meijer2000,Meijer2001,Hanus2001}
 
 BigWig -- similar goals, but take a general purpose programming
 language and extend it with a first class markup fragment type with
@@ -981,9 +988,9 @@ gaps that can be plugged.  They do lattice-theoretic iterative
 data-flow analyses, ETL focuses on practical aspects of limiting
 common mistakes:  it'd be interesting to apply the data flow analyses
 to ETL to make it provably generate correct markup, but that wasn't an
-a priori goal.
+a priori goal.~\cite{BigWig,Brabrand2001,Brabrand2002}
 
-Modeling HTML in Haskell \& Typed representation for HTML \& XML in Haskell
+XExpr~\cite{XExpr}
 
 
 %%% 
@@ -994,7 +1001,7 @@ Modeling HTML in Haskell \& Typed representation for HTML \& XML in Haskell
 
 
 ** XML infoset and non-infoset artifacts
-*** a bit problematic for source->source and for representing literal markup
+*** a bit problematic for source->source and for representing literal markup \cite{VanDeVanter2001}
 ** alternate syntax (a la stylescript) for other purposes
 *** importantly, has an implied XML data model (e.g., can be algorithmically turned into the other syntax)
 ** math and conditionals
